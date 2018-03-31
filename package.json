@@ -1,0 +1,29 @@
+{
+  "name": "msful",
+  "version": "0.0.1",
+  "description": "Web API server for micro service.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "micro",
+    "service",
+    "json",
+    "web",
+    "api",
+    "RESTful"
+  ],
+  "author": "masahito suzuki <maachang@gmail.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/maachang/msful.git"
+  },
+  "bugs": {
+    "url": "https://github.com/maachang/msful/issues"
+  },
+  "homepage": "https://github.com/maachang/msful#readme",
+  "dependencies": {},
+  "devDependencies": {}
+}
