@@ -22,5 +22,4 @@
     port = p
   }
   require('./lib/index.js').createMsFUL(port);
-}
-
+})()
