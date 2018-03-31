@@ -29,9 +29,11 @@ Create WebApi placement folder.
 Place a static file in the html folder and place a javascript file that generates RESTful in the api folder.
 
 > $ vi html/index.html
-> <html><head></head><body>hoge!!</body></html>
+
+> ＜html＞＜head＞＜/head＞＜body＞hoge!!＜/body＞＜/html＞
 
 > $ vi api/index.js
+
 > return {hello: "world"};
 
 Execute the msful command.
