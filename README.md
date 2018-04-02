@@ -62,3 +62,30 @@ Open the browser and try accessing http://localhost:3333/api/
 - Specify the port as the first argument.
 > msful 8080
 
+
+## WebAPI.
+
+- Three pieces of information are available.
+
+> `params`：   Parameter information such as PostData, json, Query.
+
+> `request`：  http.createServer:request object.
+
+> `response`： http.createServer:response object.
+
+- example
+
+> $ vi api/index.js
+
+```javascript
+value =  " hoge: [" + params.hoge + "]"
+value += " method: [" + request.method + "]"
+value += " url: [" + request.url + "]"
+
+return {value: value}
+```
+
+http://localhost:3333/api/?hoge=abc
+
+> {value: "hoge: hoge: [abc] method: [GET] url: [/api/?hoge=abc]"}
+
