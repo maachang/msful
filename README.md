@@ -89,3 +89,6 @@ http://localhost:3333/api/?hoge=abc
 
 > {value: "hoge: hoge: [abc] method: [GET] url: [/api/?hoge=abc]"}
 
+- binary POST params.
+
+At the time of binary transmission, `application/octet-stream` is set for the `Content-Type` of the header in response to the POST request.
