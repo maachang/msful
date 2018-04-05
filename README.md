@@ -69,9 +69,11 @@ Open the browser and try accessing http://localhost:3333/api/
 
 > `params`：   Parameter information such as PostData, json, Query.
 
-> `request`：  http.createServer:request object.
+> `request`：  http.createServer => request object.
 
-> `response`： http.createServer:response object.
+> `response`： http.createServer => response object.
+
+> `headers`： response Headers.
 
 - example
 
