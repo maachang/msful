@@ -8,6 +8,8 @@
 
 (function() {
   'use strict';
+  
+  // ポート取得.
   var port = null;
   if (process.argv.length > 2) {
     var p = null
@@ -21,5 +23,22 @@
     }
     port = p
   }
-  require('./lib/index.js').createMsFUL(port);
+
+  // クラスタ起動.
+  var cluster = require('cluster');
+  var MAX_SERVER = require('os').cpus().length;
+  if (cluster.isMaster) {
+    
+    // マスター起動.
+    for (var i = 0; i < MAX_SERVER; ++i) {
+      cluster.fork();
+    }
+    cluster.on('exit', function (worker, code, signal) {
+      cluster.fork();
+    });
+  } else {
+    
+    // ワーカー起動.
+    require('./lib/index.js').createMsFUL(port);
+  }
 })()
