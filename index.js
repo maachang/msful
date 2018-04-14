@@ -2,7 +2,7 @@
 
 /*!
  * msful(micro service RESTFul API Server).
- * Copyright(c) 2018 masahito suzuki.
+ * Copyright(c) 2018 maachang.
  * MIT Licensed
  */
 
@@ -24,6 +24,15 @@
       // ヘルプ情報を表示.
       require('./lib/help.js').helpMsFul();
       return;
+    } else if (cmd == "console" || cmd == "con") {
+      // コンソール実行.
+      var cons = require("./lib/console");
+      if(process.argv.length > 3) {
+        cons.createConsole("" + process.argv[3]);
+      } else {
+        cons.createConsole();
+      }
+      return;
     } else {
       // ポート取得.
       var p = null
@@ -43,6 +52,13 @@
   var cluster = require('cluster');
   var MAX_SERVER = require('os').cpus().length;
   if (cluster.isMaster) {
+    
+    // 起動時に表示する内容.
+    var constants = require('./lib/constants.js').getConstants();
+    console.log(constants.NAME+"(" + constants.DETAIL_NAME + ") v" + constants.VERSION);
+    console.log(constants.COPY_RIGHT);
+    console.log("");
+    constants = null;
     
     // マスター起動.
     for (var i = 0; i < MAX_SERVER; ++i) {
