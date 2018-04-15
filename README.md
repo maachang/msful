@@ -21,16 +21,10 @@ Create a folder and go to that folder.
  $ cd myFolder
 ```
 
-Create content placement folder.
+Create a project for msful.
 
 ```
- $ mkdir html
-```
-
-Create WebApi placement folder.
-
-```
- $ mkdir api
+ $ msful project
 ```
 
 Place a static file in the html folder and place a javascript file that generates RESTful in the api folder.
@@ -88,6 +82,10 @@ Open the browser and try accessing http://localhost:3333/api/
  msful 8080
 ```
 
+```javascript
+## listen: 8080
+```
+
 
 ## WebAPI.
 
@@ -138,6 +136,16 @@ At the time of binary transmission, `application/octet-stream` is set for the `C
  $ mkdir example
  $ cd example
  $ msful project
+ new project!! version: v0.0.16
+  [html]directory.
+    It stores static files (HTML, JS, CSS, Images) here.
+  [api]directory
+    Here, we store RESTFul API programs implemented by JS.
+  [lib]directory
+    This is a folder for storing JS libraries.
+  [conf]directory
+    This is a folder for storing configuration information in JSON format.
+ 
  $ ls -la
 ```
 
@@ -164,7 +172,26 @@ msful [cmd]
    project: Create a template for the new project.
    help:    Display help information.
    [Number] Set the server bind port number.
+   console: At the console, run JS on line.
+   console [file]: Run the specified file on the console.
 ```
+
+### console
+
+- Execute file in interactive mode or file specification in the msful environment.
+
+```
+msful console
+```
+
+It is executed in interactive mode in the msful environment.
+
+```
+msful console [js-filename]
+```
+
+Execute JS of specified file in msful environment.
+
 
 ## configs
 
@@ -172,7 +199,7 @@ msful [cmd]
 
 You can import the contents of the config file by creating a JSON format file under the conf folder.
 
-For example, if you create a file called `./conf/hogehoge.conf` , the JSON format information of the file is expanded into a variable named `hogehoge` in msful, and you can use it.
+For example, if you create a file called `./conf/hogehoge.conf` , the JSON format information of the file is expanded into a variable named `config.hogehoge` in msful, and you can use it.
 
 
 ## Basic module for msful
@@ -183,7 +210,7 @@ For example, if you create a file called `./conf/hogehoge.conf` , the JSON forma
 
 You can create `json-web-token`, acquire payload, check issue issuance.
 
-#### create(key, payload)
+#### jwt.create(key, payload)
 
 Generate JWT.
 
@@ -205,7 +232,7 @@ jwt.create("hoge", "{a:100}");
 "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.e2E6MTAwfQ.lKzDfCDW/AbAFq639ZoT0t2RrBmGGsBKo7WUck8ZTi0"
 ```
 
-#### payload(jwt)
+#### jwt.payload(jwt)
 
 Get payload information from jwt information.
 
@@ -216,14 +243,15 @@ Set jwt information.
 - example
 
 ```javascript
-jwt.payload("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.e2E6MTAwfQ.lKzDfCDW/AbAFq639ZoT0t2RrBmGGsBKo7WUck8ZTi0");
+jwt.payload(
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.e2E6MTAwfQ.lKzDfCDW/AbAFq639ZoT0t2RrBmGGsBKo7WUck8ZTi0");
 ```
 
 ```
 {a:100}
 ```
 
-#### validate(key, jwt)
+#### jwt.validate(key, jwt)
 
 Confirm that the specified JWT information is the information generated with the specified key and the payload information etc. have not been changed.
 
@@ -238,7 +266,8 @@ Set jwt information.
 - example
 
 ```javascript
-jwt.validate("hoge", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.e2E6MTAwfQ.lKzDfCDW/AbAFq639ZoT0t2RrBmGGsBKo7WUck8ZTi0");
+jwt.validate("hoge",
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.e2E6MTAwfQ.lKzDfCDW/AbAFq639ZoT0t2RrBmGGsBKo7WUck8ZTi0");
 ```
 
 ```
@@ -246,11 +275,327 @@ true
 ```
 
 ```javascript
-jwt.validate("moge", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.e2E6MTAwfQ.lKzDfCDW/AbAFq639ZoT0t2RrBmGGsBKo7WUck8ZTi0");
+jwt.validate("moge",
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.e2E6MTAwfQ.lKzDfCDW/AbAFq639ZoT0t2RrBmGGsBKo7WUck8ZTi0");
 ```
 
 ```
 false
 ```
 
+## strs
+
+Utility for character string manipulation.
+
+### strs.isNull(value)
+
+Determines null and undefined.
+
+- value.
+
+Set the variable to be determined.
+
+- example
+
+```javascript
+var a = null;
+strs.isNull(a);
+```
+
+```
+true
+```
+
+### strs.useString(value)
+
+It checks whether the contents of the character string are valid.
+
+Even if everything is a space, line feed, tab, etc., it is not recognized as character information.
+
+- value
+
+Set the variable to be determined.
+
+- example
+
+```javascript
+var a = "aaaaa   ";
+strs.useString(a);
+```
+
+```
+true
+```
+
+```javascript
+var a = "";
+strs.useString(a);
+```
+
+```
+false
+```
+
+```javascript
+var a = "     ";
+strs.useString(a);
+```
+
+```
+false
+```
+
+### strs.startsWith(value,chk)
+
+Check if chk character matches the beginning of value.
+
+- value
+
+Set the variable to be determined.
+
+- chk
+
+A string to check if it matches the first character of value.
+
+- example
+
+```javascript
+var a = "abcdefg";
+strs.startsWith(a,"abc");
+```
+
+```
+true
+```
+
+
+### strs.endsWith(value,chk)
+
+Check if chk character matches the end of value.
+
+- value
+
+Set the variable to be determined.
+
+- chk
+
+A string to check if it matches the last character of value.
+
+- example
+
+```javascript
+var a = "abcdefg";
+strs.endsWith(a,"efg");
+```
+
+```
+true
+```
+
+### strs.changeString(base, src, dest)
+
+Replace the src string in the base string with the dest string.
+
+- base
+
+Sets the original character string.
+
+- src
+
+Sets the character string to be converted.
+
+- dest
+
+Sets the replacement character for src.
+
+- example
+
+```javascript
+var a = "abcdefabcdefabcdef";
+strs.changeString(a,"abc","xyz");
+```
+
+```
+"xyzdefxyzdefxyzdef"
+```
+
+## nums
+
+Utility for numerical operation.
+
+### nums.isNumeric(value)
+
+It checks whether the specified argument is numeric.
+
+- value
+
+Set the variable to be determined.
+
+- example
+
+```javascript
+var a = "100.123";
+nums.isNumeric(a);
+```
+
+```
+true
+```
+
+```javascript
+var a = "100.123aa";
+nums.isNumeric(a);
+```
+
+```
+false
+```
+
+### nums.parseDecimal(mode, num, position)
+
+Floating point is rounded off or truncated.
+
+- mode
+
+If set to true, round off.
+
+- num
+
+Sets the target floating point number.
+
+- position
+
+Sets the number of digits of rounding and truncation.
+
+- example
+
+```javascript
+var a = "10.4567";
+nums.parseDecimal(true, a, 2);
+```
+
+```
+10.46
+```
+
+```javascript
+var a = "10.4567";
+nums.parseDecimal(false, a, 2);
+```
+
+```
+10.45
+```
+
+### nums.halfUp(num, position)
+
+We will round off.
+
+- num
+
+Sets the target floating point number.
+
+- position
+
+Set the number of digits.
+
+- example
+
+```javascript
+var a = "10.4567";
+nums.halfUp(a, 2);
+```
+
+```
+10.46
+```
+
+### nums.halfDown(num, position)
+
+We will truncate.
+
+- num
+
+Sets the target floating point number.
+
+- position
+
+Set the number of digits.
+
+- example
+
+```javascript
+var a = "10.4567";
+nums.halfDown(a, 2);
+```
+
+```
+10.45
+```
+
+### nums.floor(num)
+
+Round down the nearest decimal point.
+
+- num
+
+Sets the target floating point number.
+
+- example
+
+```javascript
+var a = "10.6789";
+nums.floor(a);
+```
+
+```
+10
+```
+
+### nums.round(num)
+
+Round up the nearest decimal point.
+
+- num
+
+Sets the target floating point number.
+
+- example
+
+```javascript
+var a = "10.6789";
+nums.round(a);
+```
+
+```
+11
+```
+
+## nums.abs(num)
+
+Calculate the absolute value.
+
+- num
+
+Set numeric information.
+
+- example
+
+```javascript
+var a = "10";
+nums.round(a);
+```
+
+```
+10
+```
+
+```javascript
+var a = "-10";
+nums.round(a);
+```
+
+```
+10
+```
 
