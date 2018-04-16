@@ -13,18 +13,12 @@ Install.
  $ npm install -g msful
 ```
 
-
-Create a folder and go to that folder.
-
-```
- $ mkdir myFolder
- $ cd myFolder
-```
-
 Create a project for msful.
 
 ```
- $ msful project
+ $ msful project myProject
+ $ cd myProject
+
 ```
 
 Place a static file in the html folder and place a javascript file that generates RESTful in the api folder.
@@ -151,7 +145,10 @@ fetch('http://localhost:3333/api/binaryUpload', {
  $ mkdir example
  $ cd example
  $ msful project
- new project!! version: v0.0.16
+ msful(micro service RESTFul API Server) v0.0.19
+ Copyright(c) 2018 maachang.
+ 
+ new project!!
   [html]directory.
     It stores static files (HTML, JS, CSS, Images) here.
   [api]directory
@@ -160,11 +157,27 @@ fetch('http://localhost:3333/api/binaryUpload', {
     This is a folder for storing JS libraries.
   [conf]directory
     This is a folder for storing configuration information in JSON format.
- 
- $ ls -la
 ```
 
+or
+
 ```
+ $ msful project example
+ msful(micro service RESTFul API Server) v0.0.19
+ Copyright(c) 2018 maachang.
+ 
+ new example project.
+  [html]directory.
+    It stores static files (HTML, JS, CSS, Images) here.
+  [api]directory    Here, we store RESTFul API programs implemented by JS.
+  [lib]directory.
+    This is a folder for storing JS libraries.
+  [conf]directory.
+    This is a folder for storing configuration information in JSON format.
+  
+  $ cd example
+```
+ $ ls -la
 drwxr-xr-x 1 root 197121 0 Apr 14 23:29 .
 drwxr-xr-x 1 root 197121 0 Apr  8 17:27 ..
 drwxr-xr-x 1 root 197121 0 Apr  5 18:38 api
@@ -178,17 +191,18 @@ drwxr-xr-x 1 root 197121 0 Apr 14 23:29 lib
 - commands help.
 
 ```
-msful help
+ $ msful help
 ```
 
 ```
-msful [cmd]
- [cmd]
-   project: Create a template for the new project.
-   help:    Display help information.
-   [Number] Set the server bind port number.
-   console: At the console, run JS on line.
-   console [file]: Run the specified file on the console.
+ msful [cmd]
+  [cmd]
+    project: Create a template for the new project.
+    project [name]: Expand the project structure under the project name folder.
+    help:    Display help information.
+    [Number] Set the server bind port number.
+    console: At the console, run JS on line.
+    console [file]: Run the specified file on the console.
 ```
 
 ### console
