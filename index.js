@@ -18,7 +18,11 @@
   if (cmd != null) {
     if (cmd == "project") {
       // 新規プロジェクトを作成.
-      require('./lib/project.js').createMsFulProject();
+      if(process.argv.length > 3) {
+        require('./lib/project.js').createMsFulProject("" + process.argv[3]);
+      } else {
+        require('./lib/project.js').createMsFulProject();
+      }
       return;
     } else if (cmd == "help" || cmd == "-h" || cmd == "--help") {
       // ヘルプ情報を表示.
@@ -55,8 +59,7 @@
     
     // 起動時に表示する内容.
     var constants = require('./lib/constants.js').getConstants();
-    console.log(constants.NAME+"(" + constants.DETAIL_NAME + ") v" + constants.VERSION);
-    console.log(constants.COPY_RIGHT);
+    constants.viewTitle(function(n){console.log(n);});
     console.log("");
     constants = null;
     
