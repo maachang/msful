@@ -177,6 +177,8 @@ or
   
   $ cd example
 ```
+
+```
  $ ls -la
 drwxr-xr-x 1 root 197121 0 Apr 14 23:29 .
 drwxr-xr-x 1 root 197121 0 Apr  8 17:27 ..
