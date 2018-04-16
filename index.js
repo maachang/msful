@@ -59,7 +59,7 @@
     
     // 起動時に表示する内容.
     var constants = require('./lib/constants.js').getConstants();
-    constants.viewTitle(function(n){console.log(n);});
+    constants.viewTitle(function(n){console.log(n);}, false);
     console.log("");
     constants = null;
     
