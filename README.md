@@ -125,6 +125,21 @@ http://localhost:3333/api/?hoge=abc
 
 At the time of binary transmission, `application/octet-stream` is set for the `Content-Type` of the header in response to the POST request.
 
+- example
+
+For ajax call, set `application / octet-stream` for HTTP header` Content-Type` at POST.
+
+```javascript
+fetch('http://localhost:3333/api/binaryUpload', {
+  method: 'POST',
+  body: binaryData,
+  headers: {
+    'Content-Type': 'application/octet-stream'
+  }
+}).
+......
+```
+
 
 ## commands
 
@@ -201,6 +216,32 @@ You can import the contents of the config file by creating a JSON format file un
 
 For example, if you create a file called `./conf/hogehoge.conf` , the JSON format information of the file is expanded into a variable named `config.hogehoge` in msful, and you can use it.
 
+- example
+
+`./conf/dbInfo.conf`
+```javascript
+{
+    name: "testDB",
+    host: "localhost",
+    port: 5432
+}
+```
+
+We will implement the following API implementation.
+
+`./api/dbInfo.js`
+```javascript
+console.log("dbInfo-name: " + config.dbInfo.name);
+console.log("dbInfo-host: " + config.dbInfo.host);
+console.log("dbInfo-port: " + config.dbInfo.port);
+```
+
+Please access `http://localhost:3333/api/dbInfo` and browse the terminal where msful is started.
+```
+dbInfo-name: testDB
+dbInfo-host: localhost
+dbInfo-port: 5432
+```
 
 ## Basic module for msful
 
