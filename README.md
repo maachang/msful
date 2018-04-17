@@ -656,3 +656,34 @@ nums.round(a);
 10
 ```
 
+## closeable
+
+api Used when closing is done after the call is over.
+
+※ However, it can not be used from Console.
+
+### closeable.register(obj)
+
+Register for closeable.
+
+- obj
+
+The target is an object type and must contain a close method inside. In addition, this close method is called after api is executed.
+
+- example
+
+```javascript
+closeable.register({close:function(){ console.log("hoge"); }});
+```
+
+After executing the API with the above contents, the following will be displayed on the terminal.
+
+```
+hoge
+```
+
+### closeable.close()
+
+Close all contents registered by register method.
+However, this process does not usually need to be called, it is called immediately after api execution.
+
