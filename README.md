@@ -6,7 +6,15 @@
   <a href="https://www.npmjs.com/package/msful"><img src="https://img.shields.io/npm/l/msful.svg" alt="License"></a>
 </p>
 
-## useage
+msdul is a very simple and very simple web application server aiming at creating ideas as soon as possible.
+
+msful does not need to perform existing URL mapping in RESTful, it adopts directory-based WebAPI I/O, so more intuitive development is possible.
+
+msful, with a simple and thin framework, those who can build Javascript programs will be able to learn and develop without requiring much learning cost.
+
+I hope that you can provide a fun development environment.
+
+## usage
 
 Install.
 ```
@@ -658,7 +666,7 @@ nums.round(a);
 
 ## closeable
 
-api Used when closing is done after the call is over.
+Api used when closing is done after the call is over.
 
 ※ However, it can not be used from Console.
 
