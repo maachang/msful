@@ -58,7 +58,7 @@
   if (cluster.isMaster) {
     
     // 起動時に表示する内容.
-    var constants = require('./lib/constants.js').getConstants();
+    var constants = require('./lib/constants.js').get;
     constants.viewTitle(function(n){console.log(n);}, false);
     console.log("");
     constants = null;
