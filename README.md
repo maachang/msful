@@ -276,21 +276,22 @@ We will implement the following API implementation.
 
 `./api/dbInfo.js`
 ```javascript
-console.log("dbInfo-name: " + config.dbInfo.name);
-console.log("dbInfo-host: " + config.dbInfo.host);
-console.log("dbInfo-port: " + config.dbInfo.port);
+return {
+  "dbInfo-name": config.dbInfo.name,
+  "dbInfo-host": config.dbInfo.host,
+  "dbInfo-port": config.dbInfo.port
+};
 ```
 
 Please access `http://localhost:3333/api/dbInfo` and browse the terminal where msful is started.
+
 ```
-dbInfo-name: testDB
-dbInfo-host: localhost
-dbInfo-port: 5432
+{"dbInfo-name": "testDB", "dbInfo-host": "localhost", "dbInfo-port": "5432"}
 ```
 
 ## Basic module for msful
 
-- msful modules.
+I will explain the necessary modules in micro service development.
 
 ### jwt
 
@@ -431,53 +432,6 @@ strs.useString(a);
 false
 ```
 
-### strs.startsWith(value,chk)
-
-Check if chk character matches the beginning of value.
-
-- value
-
-Set the variable to be determined.
-
-- chk
-
-A string to check if it matches the first character of value.
-
-- example
-
-```javascript
-var a = "abcdefg";
-strs.startsWith(a,"abc");
-```
-
-```
-true
-```
-
-
-### strs.endsWith(value,chk)
-
-Check if chk character matches the end of value.
-
-- value
-
-Set the variable to be determined.
-
-- chk
-
-A string to check if it matches the last character of value.
-
-- example
-
-```javascript
-var a = "abcdefg";
-strs.endsWith(a,"efg");
-```
-
-```
-true
-```
-
 ### strs.changeString(base, src, dest)
 
 Replace the src string in the base string with the dest string.
@@ -571,118 +525,6 @@ nums.parseDecimal(false, a, 2);
 
 ```
 10.45
-```
-
-### nums.halfUp(num, position)
-
-We will round off.
-
-- num
-
-Sets the target floating point number.
-
-- position
-
-Set the number of digits.
-
-- example
-
-```javascript
-var a = "10.4567";
-nums.halfUp(a, 2);
-```
-
-```
-10.46
-```
-
-### nums.halfDown(num, position)
-
-We will truncate.
-
-- num
-
-Sets the target floating point number.
-
-- position
-
-Set the number of digits.
-
-- example
-
-```javascript
-var a = "10.4567";
-nums.halfDown(a, 2);
-```
-
-```
-10.45
-```
-
-### nums.floor(num)
-
-Round down the nearest decimal point.
-
-- num
-
-Sets the target floating point number.
-
-- example
-
-```javascript
-var a = "10.6789";
-nums.floor(a);
-```
-
-```
-10
-```
-
-### nums.round(num)
-
-Round up the nearest decimal point.
-
-- num
-
-Sets the target floating point number.
-
-- example
-
-```javascript
-var a = "10.6789";
-nums.round(a);
-```
-
-```
-11
-```
-
-## nums.abs(num)
-
-Calculate the absolute value.
-
-- num
-
-Set numeric information.
-
-- example
-
-```javascript
-var a = "10";
-nums.round(a);
-```
-
-```
-10
-```
-
-```javascript
-var a = "-10";
-nums.round(a);
-```
-
-```
-10
 ```
 
 ## closeable
