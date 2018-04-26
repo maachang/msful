@@ -101,6 +101,8 @@ Open the browser and try accessing http://localhost:3333/api/
 > response： http.createServer => response object.
 
 > headers： response Headers.
+
+> httpError: function(status, message) => Call this to terminate processing with http error.
 ```
 
 ### example
@@ -122,6 +124,25 @@ http://localhost:3333/api/?hoge=abc
 ```
  {value: "hoge: hoge: [abc] method: [GET] url: [/api/?hoge=abc]"}
 ```
+
+### example httpError function.
+
+```
+ $ vi api/index.js
+```
+
+```javascript
+httpError(500, "test Error");
+
+・・・・
+```
+
+http://localhost:3333/api/index
+
+```
+{error: 500, message: "test Error"}
+```
+
 
 ### [Supplement] binary POST params.
 
