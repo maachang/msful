@@ -14,7 +14,7 @@ msful, with a simple and thin framework, those who can build Javascript programs
 
 I hope that you can provide a fun development environment.
 
-## usage
+# usage
 
 Install.
 ```
@@ -64,7 +64,7 @@ You can see something like this;
 ## listen: 3333
 ```
 
-## See execution result of msful
+# See execution result of msful
 
 Open the browser and try accessing http://localhost:3333/
 ```
@@ -76,7 +76,7 @@ Open the browser and try accessing http://localhost:3333/api/
  {"hello": "world"}
 ```
 
-## option
+# option
 
 - Specify the port as the first argument.
 
@@ -89,7 +89,7 @@ Open the browser and try accessing http://localhost:3333/api/
 ```
 
 
-## WebAPI.
+# WebAPI.
 
 - Three pieces of information are available.
 
@@ -105,7 +105,7 @@ Open the browser and try accessing http://localhost:3333/api/
 > httpError: function(status, message) => Call this to terminate processing with http error.
 ```
 
-### example
+## example
 
 ```
  $ vi api/index.js
@@ -125,7 +125,7 @@ http://localhost:3333/api/?hoge=abc
  {value: "hoge: hoge: [abc] method: [GET] url: [/api/?hoge=abc]"}
 ```
 
-### example httpError function.
+## example httpError function.
 
 ```
  $ vi api/index.js
@@ -144,7 +144,7 @@ http://localhost:3333/api/index
 ```
 
 
-### [Supplement] binary POST params.
+## [Supplement] binary POST params.
 
 At the time of binary transmission, `application/octet-stream` is set for the `Content-Type` of the header in response to the POST request.
 
@@ -164,9 +164,9 @@ fetch('http://localhost:3333/api/binaryUpload', {
 ```
 
 
-## commands
+# commands
 
-### project
+## project
 
 - new project.
 
@@ -217,7 +217,7 @@ drwxr-xr-x 1 root 197121 0 Apr  3 01:17 html
 drwxr-xr-x 1 root 197121 0 Apr 14 23:29 lib
 ```
 
-### help
+## help
 
 - commands help.
 
@@ -236,7 +236,7 @@ drwxr-xr-x 1 root 197121 0 Apr 14 23:29 lib
     console [file]: Run the specified file on the console.
 ```
 
-### console
+## console
 
 - Execute file in interactive mode or file specification in the msful environment.
 
@@ -253,7 +253,7 @@ msful console [js-filename]
 Execute JS of specified file in msful environment.
 
 
-## configs
+# configs
 
 - config file
 
@@ -289,15 +289,15 @@ Please access `http://localhost:3333/api/dbInfo` and browse the terminal where m
 {"dbInfo-name": "testDB", "dbInfo-host": "localhost", "dbInfo-port": "5432"}
 ```
 
-## Basic module for msful
+# Basic module for msful
 
 I will explain the necessary modules in micro service development.
 
-### jwt
+## jwt
 
 You can create `json-web-token`, acquire payload, check issue issuance.
 
-#### jwt.create(key, payload)
+### jwt.create(key, payload)
 
 Generate JWT.
 
@@ -319,7 +319,7 @@ jwt.create("hoge", "{a:100}");
 "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.e2E6MTAwfQ.lKzDfCDW/AbAFq639ZoT0t2RrBmGGsBKo7WUck8ZTi0"
 ```
 
-#### jwt.payload(jwt)
+### jwt.payload(jwt)
 
 Get payload information from jwt information.
 
@@ -338,7 +338,7 @@ jwt.payload(
 {a:100}
 ```
 
-#### jwt.validate(key, jwt)
+### jwt.validate(key, jwt)
 
 Confirm that the specified JWT information is the information generated with the specified key and the payload information etc. have not been changed.
 
@@ -370,11 +370,11 @@ jwt.validate("moge",
 false
 ```
 
-## strs
+# strs
 
 Utility for character string manipulation.
 
-### strs.isNull(value)
+## strs.isNull(value)
 
 Determines null and undefined.
 
@@ -393,7 +393,7 @@ strs.isNull(a);
 true
 ```
 
-### strs.useString(value)
+## strs.useString(value)
 
 It checks whether the contents of the character string are valid.
 
@@ -432,7 +432,7 @@ strs.useString(a);
 false
 ```
 
-### strs.changeString(base, src, dest)
+## strs.changeString(base, src, dest)
 
 Replace the src string in the base string with the dest string.
 
@@ -459,11 +459,11 @@ strs.changeString(a,"abc","xyz");
 "xyzdefxyzdefxyzdef"
 ```
 
-## nums
+# nums
 
 Utility for numerical operation.
 
-### nums.isNumeric(value)
+## nums.isNumeric(value)
 
 It checks whether the specified argument is numeric.
 
@@ -491,7 +491,7 @@ nums.isNumeric(a);
 false
 ```
 
-### nums.parseDecimal(mode, num, position)
+## nums.parseDecimal(mode, num, position)
 
 Floating point is rounded off or truncated.
 
@@ -527,13 +527,13 @@ nums.parseDecimal(false, a, 2);
 10.45
 ```
 
-## closeable
+# closeable
 
 Api used when closing is done after the call is over.
 
 ※ However, it can not be used from Console.
 
-### closeable.register(obj)
+## closeable.register(obj)
 
 Register for closeable.
 
@@ -553,7 +553,7 @@ After executing the API with the above contents, the following will be displayed
 hoge
 ```
 
-### closeable.close()
+## closeable.close()
 
 Close all contents registered by register method.
 However, this process does not usually need to be called, it is called immediately after api execution.

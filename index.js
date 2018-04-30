@@ -11,6 +11,7 @@
   
   var port = null;
   var cmd = null;
+  var consoleFlag = false;
   // コマンドが存在するかチェック.
   if (process.argv.length > 2) {
     cmd = "" + process.argv[2];
@@ -30,13 +31,7 @@
       return;
     } else if (cmd == "console" || cmd == "con") {
       // コンソール実行.
-      var cons = require("./lib/console");
-      if(process.argv.length > 3) {
-        cons.createConsole("" + process.argv[3]);
-      } else {
-        cons.createConsole();
-      }
-      return;
+      consoleFlag = true;
     } else {
       // ポート取得.
       var p = null
@@ -51,6 +46,26 @@
       port = p
     }
   }
+  
+  // 必要なフォルダ構成をチェック.
+  var constants = require('./lib/constants.js').get;
+  var fs = require("fs");
+  fs.statSync(constants.HTML_DIR);
+  fs.statSync(constants.API_DIR);
+  fs.statSync(constants.CONF_DIR);
+  fs.statSync(constants.LIB_DIR);
+  fs = null;
+  
+  // コンソール実行.
+  if (consoleFlag) {
+    var cons = require("./lib/console");
+    if(process.argv.length > 3) {
+      cons.createConsole("" + process.argv[3]);
+    } else {
+      cons.createConsole();
+    }
+    return;
+  }
 
   // クラスタ起動.
   var cluster = require('cluster');
@@ -58,7 +73,6 @@
   if (cluster.isMaster) {
     
     // 起動時に表示する内容.
-    var constants = require('./lib/constants.js').get;
     constants.viewTitle(function(n){console.log(n);}, false);
     console.log("");
     constants = null;
