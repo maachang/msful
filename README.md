@@ -558,3 +558,322 @@ hoge
 Close all contents registered by register method.
 However, this process does not usually need to be called, it is called immediately after api execution.
 
+# validate
+
+Validation processing of POST and GET parameters can be performed.
+
+## validation.check
+
+- arguments
+
+You can exclude method limits and accesses other than specified methods as the first argument. In addition, the method limit can be omitted.
+For subsequent arguments, define `parameter name`, `parameter type`, `processing content`, to perform validation.
+
+- Setting definition explanation.
+
+```
+validate.check(method,
+    paramName, dataType, executeAndCheck,
+    paramName, dataType, executeAndCheck,
+    paramName, dataType, executeAndCheck
+)
+```
+
+**method**:
+
+ Set an accessible Http method. If omitted, all Http methods are allowed.
+
+**paramName**:
+
+ Set the target parameter name.
+
+**dataType**:
+
+ Set the data type for the target parameter name. The settings that can be set are as follows.
+
+| typeName | Conversion contents |
+|:---------|:--------------------|
+| string | Convert to a string. |
+| number | Convert to an integer. |
+| float | Convert to an float. |
+| bool | Convert to an boolean. |
+| date | Convert to an DateObject. |
+| list | Convert to an ArrayObject. |
+| object | Convert to an object. |
+
+The object and list type are specified when the contents of params are the same type.
+
+**executeAndCheck**:
+
+ You can check the existence, check the contents, and set the default value when no data exists.
+
+| definition | example | example Description |
+|:-----------|:--------|:--------------------|
+| none | "none" |  I do not set anything. |
+| required | "required" | Data existence check. |
+| min num | "min 5" | Error when the number of characters is less than 5 characters. |
+| max num | "max 5" | Error when the number of characters is 5 or more characters. |
+| range min max | "range 5 12" | Error when the number of characters is 5 or less and 12 or more characters. |
+| regex | "regex 'hoge'" | Error when /hoge/ does not match regex. |
+| url | "url" | Error when not matching URL. |
+| email | "email" | Error when not matching email. |
+| date | "date" | Error if it does not match Date (yyyy-MM-dd). |
+| time | "time" | Error if it does not match Time (HH:mm). |
+| timestamp | "timestamp" | Error when format can not be converted with Date object. |
+| default | "default 0" | Set the default value when data is not set. |
+| rename | "rename 'abc'" | Change the parameter name to "abc". |
+
+It is separated by a space.
+
+This definition can be set consecutively with `|`.
+
+**＜example＞**
+```
+"min 5 | max 12 | url"
+```
+
+- example
+
+/api/exampleValidate.js
+```javascript
+validate.check("POST",
+    "name",          "string", "req",
+    "age",           "number", "default 18",
+    "lat",           "float",  "default 0.0",
+    "comment",       "string", "max 128",
+    "X-Test-Code",   "string", "req"
+);
+
+return {value: JSON.stringify(params)};
+```
+
+**POST transmission processing.**
+```javascript
+fetch('http://localhost:3333/api/exampleValidate', {
+  method: 'POST',
+  body: JSON.stringify(sendParams),
+  headers: {
+    'Content-Type': 'application/json; charset=utf-8;',
+    'X-Test-Code': 'test'
+  }
+}).
+......
+```
+
+success params.
+```javascript
+var sendParams = {
+  name: "maachang",
+  age: 30,
+  comment: "hogehoge",
+}
+```
+
+**result**:
+```
+{"name": "maachang", "age": 30, "lat": 0.0, "comment": "hogehoge", "X-Test-Code": "test"}
+```
+
+**error params.**
+```javascript
+var sendParams = {
+  age: 30,
+  comment: "hogehoge",
+}
+```
+
+**result**:
+```
+{status: 400, message: "Contents of 'name' are mandatory"}
+```
+
+# entity
+
+ Formatting data in JSON format.
+
+## entity.expose
+
+ We will define JSON formatting.
+
+Define to format the data in JSON format, and set the definition name as the first argument.
+For the second and later arguments, set `parameter name`,` parameter type`, `processing content` for the definition.
+
+- Setting definition explanation.
+
+```
+entity.expose(name,
+    paramName, dataType, executeAndCheck,
+    paramName, dataType, executeAndCheck,
+    paramName, dataType, executeAndCheck
+)
+```
+
+**method**:
+
+ Set an accessible Http method. If omitted, all Http methods are allowed.
+
+**paramName**:
+
+ Set the target parameter name.
+
+**dataType**:
+
+ Set the data type for the target parameter name. The settings that can be set are as follows.
+
+| typeName | Conversion contents |
+|:---------|:--------------------|
+| string | Convert to a string. |
+| number | Convert to an integer. |
+| float | Convert to an float. |
+| bool | Convert to an boolean. |
+| date | Convert to an DateObject. |
+| list | Convert to an ArrayObject. |
+| object | Convert to an object. |
+| $name | Set another entity.expose definition name. |
+| { | Start indenting the object. |
+| } | Finish indenting the object. |
+
+The object and list type are specified when the contents of params are the same type.
+
+I will explain `$name` based on example.
+
+**＜example＞**
+```javascript
+entity.expose("user",
+  "name",  "string",  "",
+  "age",   "number",  "",
+);
+entity.expose("users",
+  "list",  "$user",   ""
+);
+
+var res = {
+  list: [
+    {name: "maachang", age:18},
+    {name: "saito",    age:21}
+  ]
+};
+
+return entity.make("users", res);
+```
+
+**＜result＞**
+```
+{
+  "list": [
+    {"name": "maachang", "age": 18},
+    {"name": "saito", "age": 21}
+  ]
+}
+```
+
+We will explain the indentation of `{` or `}` based on examples.
+
+**＜example＞**
+```javascript
+entity.expose("user",
+  "name",  "string",    "",
+  "age",   "number",    "",
+  "details": "{",       "",
+  "nickName": "string", "",
+  "comment": "string",  "",
+  "details": "}",       ""
+);
+
+{
+  name: "maachang",
+  age:18,
+  nickName: "hoge",
+  comment: "mogemoge"
+}
+
+return entity.make("user", res);
+```
+
+**＜result＞**
+```
+{
+  name: "maachang",
+  age:18,
+  details: {
+    nickName: "hoge",
+    comment: "mogemoge"
+  }
+}
+```
+
+**executeAndCheck**:
+
+ You can check the existence, check the contents, and set the default value when no data exists.
+
+| definition | example | example Description |
+|:-----------|:--------|:--------------------|
+| none | "none" |  I do not set anything. |
+| required | "required" | Data existence check. |
+| min num | "min 5" | Error when the number of characters is less than 5 characters. |
+| max num | "max 5" | Error when the number of characters is 5 or more characters. |
+| range min max | "range 5 12" | Error when the number of characters is 5 or less and 12 or more characters. |
+| regex | "regex 'hoge'" | Error when /hoge/ does not match regex. |
+| url | "url" | Error when not matching URL. |
+| email | "email" | Error when not matching email. |
+| date | "date" | Error if it does not match Date (yyyy-MM-dd). |
+| time | "time" | Error if it does not match Time (HH:mm). |
+| timestamp | "timestamp" | Error when format can not be converted with Date object. |
+| default | "default 0" | Set the default value when data is not set. |
+| rename | "rename 'abc'" | Change the parameter name to "abc". |
+
+It is separated by a space.
+
+This definition can be set consecutively with `|`.
+
+**＜example＞**
+```
+"min 5 | max 12 | url"
+```
+
+## entity.make
+
+We will perform JSON formatting.
+
+- name
+
+Set the definition name defined by entity.expose.
+
+- value
+
+Set the object to be shaped by JSON.
+
+- example
+
+```javascript
+entity.expose("user",
+  "name",  "string",    "",
+  "age",   "number",    "",
+  "details": "{",       "",
+  "nickName": "string", "",
+  "comment": "string",  "",
+  "details": "}",       ""
+);
+
+{
+  name: "maachang",
+  age:18,
+  nickName: "hoge",
+  comment: "mogemoge"
+}
+
+return entity.make("user", res);
+```
+
+**result**:
+```
+{
+  name: "maachang",
+  age:18,
+  details: {
+    nickName: "hoge",
+    comment: "mogemoge"
+  }
+}
+```
+
