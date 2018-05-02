@@ -163,6 +163,16 @@ fetch('http://localhost:3333/api/binaryUpload', {
 ......
 ```
 
+## filter.
+
+Filter processing is invoked whenever a specified folder is accessed.
+
+The filter file creates the `@filter.js` file.
+
+If you want to allow access to the access target via the filter file, return `return true`.
+
+You can return `return false` or stop processing with a filter file by JSON return as usual.
+
 
 # commands
 
