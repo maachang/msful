@@ -582,7 +582,7 @@ For subsequent arguments, define `parameter name`, `parameter type`, `processing
 - Setting definition explanation.
 
 ```
-validate.check(method,
+validate(method,
     paramName, dataType, executeAndCheck,
     paramName, dataType, executeAndCheck,
     paramName, dataType, executeAndCheck
@@ -646,7 +646,7 @@ This definition can be set consecutively with `|`.
 
 /api/exampleValidate.js
 ```javascript
-validate.check("POST",
+validate("POST",
     "name",          "string", "req",
     "age",           "number", "default 18",
     "lat",           "float",  "default 0.0",
