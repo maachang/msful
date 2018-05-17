@@ -572,7 +572,7 @@ However, this process does not usually need to be called, it is called immediate
 
 Validation processing of POST and GET parameters can be performed.
 
-## validation.check
+## validation
 
 - arguments
 
