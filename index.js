@@ -9,7 +9,27 @@
 (function() {
   'use strict';
   
+  // コマンド引数取得.
+  var getCmdArgs = function() {
+    var names = arguments;
+    var nlen = names.length;
+    var args = process.argv;
+    var len = args.length;
+    for(var i = 2; i < len; i ++) {
+      for(var j = 0; j < nlen; j ++) {
+        if(names[j] == args[i]) {
+          if(i + 1 >= len) {
+            return null;
+          }
+          return args[i+1];
+        }
+      }
+    }
+    return null;
+  }
+  
   var port = null;
+  var contentsCache = null;
   var cmd = null;
   var consoleFlag = false;
   // コマンドが存在するかチェック.
@@ -36,7 +56,7 @@
       // ポート取得.
       var p = null
       try {
-        p = parseInt(process.argv[2]);
+        p = parseInt(getCmdArgs("-p", "--port"));
         if (port > 0 && port < 65535) {
           p = port;
         }
@@ -44,6 +64,17 @@
         p = null
       }
       port = p
+      // コンテンツキャッシュ情報を取得.
+      try {
+        p = getCmdArgs("-c", "--cache");
+        if(p == "true" || p == "t") {
+          contentsCache = true;
+        } else if(p == "false" || p == "f") {
+          contentsCache = false;
+        }
+      } catch (e) {
+        contentsCache = null;
+      }
     }
   }
   
@@ -87,6 +118,6 @@
   } else {
     
     // ワーカー起動.
-    require('./lib/index.js').createMsFUL(port);
+    require('./lib/index.js').createMsFUL(port, contentsCache);
   }
 })()

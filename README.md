@@ -61,7 +61,7 @@ Execute the msful command.
 You can see something like this;
 
 ```javascript
-## listen: 3333
+## listen: 3333 contentCache:true pid:3696
 ```
 
 # See execution result of msful
@@ -78,16 +78,39 @@ Open the browser and try accessing http://localhost:3333/api/
 
 # option
 
-- Specify the port as the first argument.
+- Set the port number as an argument.
 
 ```
- msful 8080
+ msful -p 8080
+```
+
+or 
+
+```
+ msful --port 8080
 ```
 
 ```javascript
-## listen: 8080
+## listen: 8080 contentCache:true pid:3696
 ```
 
+- Sets whether or not content cache exists.
+
+For example, it may be troublesome to cache static content files such as HTML and js files while developing. You should use it at that time.
+
+```
+ msful -c false
+```
+
+or 
+
+```
+ msful --cache false
+```
+
+```javascript
+## listen: 3333 contentCache:false pid:3696
+```
 
 # WebAPI.
 
@@ -225,6 +248,7 @@ drwxr-xr-x 1 root 197121 0 Apr  5 18:38 api
 drwxr-xr-x 1 root 197121 0 Apr 14 23:14 conf
 drwxr-xr-x 1 root 197121 0 Apr  3 01:17 html
 drwxr-xr-x 1 root 197121 0 Apr 14 23:29 lib
+drwxr-xr-x 1 root 197121 0 Apr 14 23:29 package.json
 ```
 
 ## help
@@ -236,14 +260,15 @@ drwxr-xr-x 1 root 197121 0 Apr 14 23:29 lib
 ```
 
 ```
- msful [cmd]
-  [cmd]
-    project: Create a template for the new project.
-    project [name]: Expand the project structure under the project name folder.
-    help:    Display help information.
-    [Number] Set the server bind port number.
-    console: At the console, run JS on line.
-    console [file]: Run the specified file on the console.
+msful [cmd]
+ [cmd]
+   project: Create a template for the new project.
+   project [name]: Expand the project structure under the project name folder.
+   help:    Display help information.
+   console: At the console, run JS on line.
+   console [file]: Run the specified file on the console.
+   -p [--port] number Set the server bind port number.
+   -c [--cache] [true/false] Configure the content cache.
 ```
 
 ## console
