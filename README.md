@@ -6,6 +6,9 @@
   <a href="https://www.npmjs.com/package/msful"><img src="https://img.shields.io/npm/l/msful.svg" alt="License"></a>
 </p>
 
+日本語のドキュメントは [こちら](https://github.com/maachang/msful/blob/master/README_JP.md)
+
+
 msdul is a very simple and very simple web application server aiming at creating ideas as soon as possible.
 
 msful does not need to perform existing URL mapping in RESTful, it adopts directory-based WebAPI I/O, so more intuitive development is possible.
@@ -18,14 +21,14 @@ I hope that you can provide a fun development environment.
 
 Install.
 ```
- $ npm install -g msful
+$ npm install -g msful
 ```
 
 Create a project for msful.
 
 ```
- $ msful project myProject
- $ cd myProject
+$ msful project myProject
+$ cd myProject
 
 ```
 
@@ -114,7 +117,7 @@ or
 
 # WebAPI.
 
-- Three pieces of information are available.
+- On WebApi, the following functions are available.
 
 ```
 > params：   Parameter information such as PostData, json, Query.
@@ -126,6 +129,10 @@ or
 > headers： response Headers.
 
 > httpError: function(status, message) => Call this to terminate processing with http error.
+
+> redirect: function(url, status) => A method to use when redirecting.
+
+> status: function(state) => HTTP status read/write method.
 ```
 
 ## example
@@ -167,7 +174,7 @@ http://localhost:3333/api/index
 ```
 
 
-## [Supplement] binary POST params.
+## To do POST transmission for binary
 
 At the time of binary transmission, `application/octet-stream` is set for the `Content-Type` of the header in response to the POST request.
 
@@ -185,6 +192,10 @@ fetch('http://localhost:3333/api/binaryUpload', {
 }).
 ......
 ```
+
+- Receive
+
+The reception result is set to `params` as it is
 
 ## filter.
 
@@ -405,163 +416,6 @@ jwt.validate("moge",
 false
 ```
 
-# strs
-
-Utility for character string manipulation.
-
-## strs.isNull(value)
-
-Determines null and undefined.
-
-- value.
-
-Set the variable to be determined.
-
-- example
-
-```javascript
-var a = null;
-strs.isNull(a);
-```
-
-```
-true
-```
-
-## strs.useString(value)
-
-It checks whether the contents of the character string are valid.
-
-Even if everything is a space, line feed, tab, etc., it is not recognized as character information.
-
-- value
-
-Set the variable to be determined.
-
-- example
-
-```javascript
-var a = "aaaaa   ";
-strs.useString(a);
-```
-
-```
-true
-```
-
-```javascript
-var a = "";
-strs.useString(a);
-```
-
-```
-false
-```
-
-```javascript
-var a = "     ";
-strs.useString(a);
-```
-
-```
-false
-```
-
-## strs.changeString(base, src, dest)
-
-Replace the src string in the base string with the dest string.
-
-- base
-
-Sets the original character string.
-
-- src
-
-Sets the character string to be converted.
-
-- dest
-
-Sets the replacement character for src.
-
-- example
-
-```javascript
-var a = "abcdefabcdefabcdef";
-strs.changeString(a,"abc","xyz");
-```
-
-```
-"xyzdefxyzdefxyzdef"
-```
-
-# nums
-
-Utility for numerical operation.
-
-## nums.isNumeric(value)
-
-It checks whether the specified argument is numeric.
-
-- value
-
-Set the variable to be determined.
-
-- example
-
-```javascript
-var a = "100.123";
-nums.isNumeric(a);
-```
-
-```
-true
-```
-
-```javascript
-var a = "100.123aa";
-nums.isNumeric(a);
-```
-
-```
-false
-```
-
-## nums.parseDecimal(mode, num, position)
-
-Floating point is rounded off or truncated.
-
-- mode
-
-If set to true, round off.
-
-- num
-
-Sets the target floating point number.
-
-- position
-
-Sets the number of digits of rounding and truncation.
-
-- example
-
-```javascript
-var a = "10.4567";
-nums.parseDecimal(true, a, 2);
-```
-
-```
-10.46
-```
-
-```javascript
-var a = "10.4567";
-nums.parseDecimal(false, a, 2);
-```
-
-```
-10.45
-```
-
 # closeable
 
 Api used when closing is done after the call is over.
@@ -743,9 +597,9 @@ entity.expose(name,
 )
 ```
 
-**method**:
+**name**:
 
- Set an accessible Http method. If omitted, all Http methods are allowed.
+ Set the definition name.
 
 **paramName**:
 
