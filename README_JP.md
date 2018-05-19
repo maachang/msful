@@ -782,7 +782,6 @@ return entity.make("user", res);
 ```
 "min 5 | max 12 | url"
 ```
-```
 
 ## entity.make
 
@@ -808,7 +807,7 @@ entity.expose("user",
   "details": "}",       ""
 );
 
-{
+var res = {
   name: "maachang",
   age:18,
   nickName: "hoge",

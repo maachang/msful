@@ -744,7 +744,7 @@ entity.expose("user",
   "details": "}",       ""
 );
 
-{
+var res = {
   name: "maachang",
   age:18,
   nickName: "hoge",
