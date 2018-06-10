@@ -1,3 +1,2 @@
 ARGS=${*}
-
 node ${MSFUL_HOME}/index ${ARGS}
