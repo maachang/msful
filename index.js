@@ -29,6 +29,7 @@
   }
   
   var port = null;
+  var timeout = null;
   var contentsCache = null;
   var cmd = null;
   var consoleFlag = false;
@@ -57,13 +58,23 @@
       var p = null
       try {
         p = parseInt(getCmdArgs("-p", "--port"));
-        if (port > 0 && port < 65535) {
-          p = port;
+        if (!(p > 0 && p < 65535)) {
+          p = null;
         }
       } catch (e) {
         p = null
       }
       port = p
+      // タイムアウト取得.
+      try {
+        p = parseInt(getCmdArgs("-t", "--timeout"));
+        if (p <= 0) {
+          p = null;
+        }
+      } catch (e) {
+        p = null
+      }
+      timeout = p
       // コンテンツキャッシュ情報を取得.
       try {
         p = getCmdArgs("-c", "--cache");
@@ -118,6 +129,6 @@
   } else {
     
     // ワーカー起動.
-    require('./lib/index.js').createMsFUL(port, contentsCache);
+    require('./lib/index.js').createMsFUL(port, timeout, contentsCache);
   }
 })()
