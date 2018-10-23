@@ -124,6 +124,7 @@
       cluster.fork();
     }
     cluster.on('exit', function (worker, code, signal) {
+      console.debug("## cluster exit to reStart.")
       cluster.fork();
     });
   } else {
