@@ -90,7 +90,7 @@
   }
   
   // 必要なフォルダ構成をチェック.
-  var constants = require('./lib/constants.js').get;
+  var constants = require('./lib/constants.js');
   var fs = require("fs");
   fs.statSync(constants.HTML_DIR);
   fs.statSync(constants.API_DIR);
