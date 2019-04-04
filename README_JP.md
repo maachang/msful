@@ -18,7 +18,7 @@ msfulはRESTfulで既存のURLマッピングを実行する必要はなく、�
 
 # msfulの導入方法
 
-- インストール
+## インストール
 
 ※ nodejsがインストールされていって npm が利用できることが前提です。
 
@@ -26,7 +26,7 @@ msfulはRESTfulで既存のURLマッピングを実行する必要はなく、�
 $ npm install -g msful
 ```
 
-- プロジェクトを作成する.
+## プロジェクトを作成する.
 
 ここでは myProject と言う新しいプロジェクトを作成しています。
 
@@ -35,7 +35,7 @@ $ msful project myProject
 $ cd myProject
 ```
 
-- コンテンツファイルの作成
+## コンテンツファイルの作成
 
 まずはじめに、静的なHTMLファイルを作成します。HTMLなどの静的なファイルは、htmlフォルダ配下に作成します。
 
@@ -52,7 +52,7 @@ $ cd myProject
 </html>
 ```
 
-- webapiファイルの作成
+## webapiファイルの作成
 
 次に動的なWebAPIを作成します。WebAPIのファイルは、apiフォルダ配下に作成します。
 
@@ -61,7 +61,7 @@ $ cd myProject
 ```
 
 ```javascript
-return {hello: "world"};
+rtx.send({hello: "world"});
 ```
 
 - msful起動
@@ -74,9 +74,10 @@ msfulをサーバ実行します。
 
 実行すると、以下のような内容が表示されます。
 このような表示がされた場合、正常に起動しています。
+（以下listen内容はCPU数出ます)
 
 ```javascript
-## listen: 3333 contentCache:true pid:3696
+## listen: 3333 env:[development] timeout:15(sec) contentCache:true pid:13400
 ```
 
 # msfulのサーバ実行結果を確認します。
@@ -105,9 +106,9 @@ msfulをサーバ実行します。
 非常に簡単ではありますが、msfulはこんな感じで簡単に直感的に、利用することが出来ます。
 
 
-# msfulサーバ起動オプション.
+# msfulサーバ起動オプションについて説明.
 
-- ポート番号を変更して起動します.
+## ポート番号を変更して起動します.
 
 ```
  msful -p 8080
@@ -120,10 +121,48 @@ or
 ```
 
 ```javascript
-## listen: 8080 contentCache:true pid:3696
+## listen: 8080 env:[development] timeout:15(sec) contentCache:true pid:13400
+
 ```
 
-- 静的なコンテンツに対して、キャッシュを行う／行わないように設定します。
+## 実行環境を設定します.
+
+confで取得される定義が、指定実行環境名と同じ、対象フォルダ名をカレントディレクトリとします. 
+
+たとえば、conf配下のフォルダ構成が以下だとして 
+
+~~~
+[conf]
+ |
+ +-[test.js] => {a:1}
+ |
+ +-[staging]
+     |
+     +-[test.js] => {a:10}
+~~~
+
+コレに対して、実行環境を[staging]にしない場合は,conf.test.a = 1 が取得されます. 
+
+実行環境を[staging]にした場合は、conf.test.a = 10 となります. 
+
+このように、実行環境に対する、conf定義の切り替えが可能となっています.
+
+```
+ msful -e staging
+```
+
+or 
+
+```
+ msful --env staging
+```
+
+```javascript
+## listen: 3333 env:[staging] timeout:15(sec) contentCache:true pid:13400
+
+```
+
+## 静的なコンテンツに対して、キャッシュを行う／行わないように設定します。
 
 このオプションはたとえば、システムの開発中にHTMLやjsファイルなどの静的コンテンツファイルがキャッシュされることで、更新内容が反映されてないなどの問題がありますが、そのような場合に利用するとよいでしょう。
 
@@ -138,12 +177,54 @@ or
 ```
 
 ```javascript
-## listen: 3333 contentCache:false pid:3696
+## listen: 3333 env:[development] timeout:15(sec) contentCache:false pid:13400
+
+```
+
+## 通信タイムアウト値を設定.
+
+このオプションはレスポンスを返却するタイムアウトを設定します。またこの単位は「ミリ秒」単位で設定します
+
+```
+ msful -t 25000
+```
+
+or 
+
+```
+ msful --timeout 25000
+```
+
+```javascript
+## listen: 3333 env:[development] timeout:25(sec) contentCache:true pid:13400
+```
+
+## 環境変数でも設定可能
+
+また、これらの設定は環境変数上でも同様に行えます.
+
+```command
+MSFUL_PORT
+  export MSFUL_PORT=4444
+  msful起動時のバインドポートが変更できます.
+
+MSFUL_TIMEOUT
+  export MSFUL_TIMEOUT=25000
+  レスポンスタイムアウト値を「ミリ秒」単位で設定します.
+
+MSFUL_CONTENTS_CACHE
+  export MSFUL_CONTENTS_CACHE=false
+  静的なコンテンツに対して、キャッシュをする(true)、しない(false)を設定します.
+
+MSFUL_ENV
+  export MSFUL_ENV=staging
+  実行環境を設定します.
+  この設定により、confファイル配下のフォルダに[conf]命令で取得可能な条件が切り替わります.
 ```
 
 # WebAPI固有の機能
 
-- WebApi上では、以下の機能が利用できます。
+## WebApi上では、以下の機能が利用できます。
 
 ```
 > params：   HTTPパラメータ,POSTやGETQueryパラメータなどの情報。
@@ -154,16 +235,208 @@ or
 
 > headers：  HTTPレスポンス用HTTPヘッダ群(連想配列)
 
-> httpError: function(status, message) => HTTPエラーで返却させたい場合に利用するメソッド.
-
-> redirect: function(url, status) => リダイレクトする場合に利用するメソッド.
-
-> status: function(state) => HTTPステータスの読み込み、書き込みメソッド.
+> rtx: HTTPレスポンスコンテンツを提供します.
+       これらについては、後に説明します.
 ```
 
-## 使用例
+## rtx(Response-Context) 機能について.
 
-- 実装
+_
+
+_
+
+### rtx.send = function(body, status)
+```
+ 返却するJSONデータを設定します.
+
+  body : 返却するJSONを設定します. 
+
+  status : 返却するステータスを設定します. 
+```
+<例>
+```
+rtx.send({hello: "world"}, 200);
+ {hello: "world"} を送信する.
+```
+
+_
+
+_
+
+### rtx.binary = function(body, status, charset)
+```
+ 返却するバイナリデータを設定します.
+
+  body : 返却するJSONを設定します. 
+
+  status : 返却するステータスを設定します. 
+
+  charset : 文字コードを指定します。指定しない場合は、utf-8になります。
+```
+<例>
+```
+rtx.binary(new Buffer([0xe3, 0x81, 0x82]), 200);
+ 'あ' のデータを送信する
+```
+
+_
+
+_
+
+### rtx.redirect = function(url, status)
+```
+ リダイレクト先を設定します。
+
+  url : リダイレクト先のURLを設定します.
+
+  status : 返却するステータスを設定します. 
+           これは通常設定する必要はありません.
+```
+<例>
+```
+rtx.redirect("https://www.yahoo.co.jp/");
+ 指定URLにリダイレクトされる.
+```
+
+_
+
+_
+
+### rtx.error = function(status, message, e)
+```
+ エラーメッセージを返却します.
+
+  status : エラーステータスを設定します.
+
+  message : エラーメッセージを設定します.
+
+  e : 例外情報を設定します.
+```
+<例>
+```
+rtx.error(500, "エラーが発生しました");
+ httpエラー500 で {result: "error", error: 500, message: "エラーが発生しました"} 
+ が返却されます.
+```
+
+_
+
+_
+
+### rtx.status = function(status)
+```
+ 返却ステータスを設定します.
+
+  status : エラーステータスを設定します.
+```
+<例>
+```
+rtx.status(status);
+ 返却ステータスを優先的に設定します.
+ つまり、ステータスが未設定の場合はこの値が利用されます。
+```
+
+_
+
+_
+
+### rtx.isSendScript = function()
+```
+ rtx.send, rtx.binary, rtx.error, rtx.redirect などの処理を行ったい場合、trueが返却されます.
+```
+<例>
+```
+rtx.isSendScript();
+ すでに送信済みの場合は、trueが返却されます.
+```
+
+_
+
+_
+
+### rtx.isErrorSendScript = function()
+```
+ rtx.error 処理を行ったい場合、trueが返却されます.
+```
+<例>
+```
+rtx.isErrorSendScript();
+ すでにエラーが送信済みの場合は、trueが返却されます.
+```
+
+_
+
+_
+
+### rtx.$ について。
+```
+<例>
+return rtx.$()
+  .then(function(value) {
+    rtx.send({
+      message:"成功"
+    });
+  })
+  .catch(e) {
+    console.log(e);
+  }
+
+promiseが返却されます.
+最終的に上記のように、promiseの結果をreturnすることで、処理結果が反映されます.
+また最初の then に対するfunction(value) の第一引数には [rtx] の情報がセットされます.
+また、例外などは、catch(e)で渡されます.
+```
+
+_
+
+_
+
+### rtx.push = function(call)
+```
+ rtx.next()で実行する、スクリプトを挿入します.
+```
+<例>
+```
+rtx.push(function() {
+  var a = 100;
+})
+
+上記処理はrtx.next()の呼び出しを行った時に処理が実行されます.
+```
+
+_
+
+_
+
+### rtx.size = function()
+```
+ rtx.next()で実行可能な数を取得します.
+```
+<例>
+```
+rtx.size()
+```
+
+_
+
+_
+
+### rtx.next = function()
+```
+ rtx.pushでセットされたスクリプトを実行します.
+ 大体の場合、@filter.js がある場合、元の処理がpushされて、@filter.jsが実行され、内部的にrtx.next()が呼び出されます.
+```
+<例>
+```
+rtx.next()
+```
+_
+
+_
+
+## WebAPI固有の機能の使用例
+
+### 実装
 
 ```
  $ vi api/index.js
@@ -174,66 +447,26 @@ value =  " hoge: [" + params.hoge + "]"
 value += " method: [" + request.method + "]"
 value += " url: [" + request.url + "]"
 
-return {value: value}
+rtx.send({value: value})
 ```
 
-- ブラウザで閲覧
+### ブラウザで閲覧
 
 http://localhost:3333/api/?hoge=abc
 
--  処理結果
+###  処理結果
 
 ```
  {value: "hoge: hoge: [abc] method: [GET] url: [/api/?hoge=abc]"}
 ```
 
-## httpErrorメソッドの使用例.
+### 受信
 
-- 実装
+受信結果はそのまま `params` に設定されます.
 
-```
- $ vi api/index.js
-```
+_
 
-```javascript
-httpError(500, "test Error");
-
-・・・・
-```
-
-- ブラウザで閲覧
-
-http://localhost:3333/api/index
-
--  処理結果
-
-```
-{error: 500, message: "test Error"}
-```
-
-
-## バイナリ用POST送信を行うには
-
-バイナリ用のPOSTデータをmsfulで利用するには `Content-Type` に `application/octet-stream` をセットして、POST送信を行う必要があります。
-
-- 使用例
-
-Ajaxで `Content-Type` に `application/octet-stream` を設定してPOST通信を行います。
-
-```javascript
-fetch('http://localhost:3333/api/binaryUpload', {
-  method: 'POST',
-  body: binaryData,
-  headers: {
-    'Content-Type': 'application/octet-stream'
-  }
-}).
-......
-```
-
-- 受信
-
-受信結果はそのまま `params` に設定されます
+_
 
 ## フィルタ機能
 
@@ -243,16 +476,23 @@ fetch('http://localhost:3333/api/binaryUpload', {
 
 フィルタの作成方法は、対象フォルダ配下に `@filter.js` と言うファイルを作成します。
 
-フィルタ機能として満たされた場合、つまり本来の呼び出し処理を行ってよい場合は `return true` を返却します。
+フィルタ機能として満たされた場合、つまり本来の呼び出し処理を行ってよい場合は `rtx.next()` を返却します。
 
-フィルタ機能として満たされない場合、本来の呼び出し処理を行いたくない場合は `return false` を返却するか、httpErrorメソッドやredirectメソッドなどを利用するなど。
+フィルタ機能として満たされない場合、本来の呼び出し処理を行いたくない場合は `etx.error` でエラー処理を行うか、`rtx.redirect` メソッドなどを利用するなど。
 
+_
+
+_
 
 # msfulのコマンド情報.
 
+_
+
+_
+
 ## projectコマンド
 
-- 新しいプロジェクトを作成する
+### 新しいプロジェクトを作成する
 
 以下のコマンドを実行します.
 
@@ -260,8 +500,8 @@ fetch('http://localhost:3333/api/binaryUpload', {
  $ mkdir example
  $ cd example
  $ msful project example
- msful(micro service RESTFul API Server) v0.0.40
- Copyright(c) 2018 maachang.
+ msful(micro service RESTFul API Server) v0.1.0
+ Copyright(c) 2019 maachang.
  
  new project!!
   [html]directory.
@@ -278,8 +518,8 @@ fetch('http://localhost:3333/api/binaryUpload', {
 
 ```
  $ msful project example
- msful(micro service RESTFul API Server) v0.0.40
- Copyright(c) 2018 maachang.
+ msful(micro service RESTFul API Server) v0.1.0
+ Copyright(c) 2019 maachang.
  
  new example project.
   [html]directory.
@@ -293,7 +533,7 @@ fetch('http://localhost:3333/api/binaryUpload', {
   $ cd example
 ```
 
-- 作成結果.
+### 作成結果.
 
 ```
  $ ls -la
@@ -306,9 +546,13 @@ drwxr-xr-x 1 root 197121 0 Apr 14 23:29 lib
 drwxr-xr-x 1 root 197121 0 Apr 14 23:29 package.json
 ```
 
+_
+
+_
+
 ## helpコマンド
 
-- msfulのコマンド説明が見れます
+### msfulのコマンド説明が見れます
 
 ```
  $ msful help
@@ -326,11 +570,15 @@ msful [cmd]
    -c [--cache] [true/false] Configure the content cache.
 ```
 
+_
+
+_
+
 ## console機能
 
 msfulのプロジェクト環境上で、対話モードまたはファイル指定でファイルを実行します。
 
-- 対話モードで実行
+### 対話モードで実行
 
 ```
 msful console
@@ -339,7 +587,7 @@ msful console
 何か、簡単な機能を試す場合に最適です。
 
 
-- 指定されたJSファイルを実行
+#### 指定されたJSファイルを実行
 
 ```
 msful console [js-filename]
@@ -347,13 +595,17 @@ msful console [js-filename]
 
 用途としては、バッチ実行などで利用するとよいかと思います。
 
+_
+
+_
+
 # configファイル機能
 
 `conf`フォルダの下にJSON形式のファイルを作成すると、プログラム内でそのJSON形式の定義内容を利用することが出来ます。
 
 たとえば、 `/conf/hogehoge.conf`というファイルを作成すると、実行プログラム上では `config.hogehoge` と言うJSON形式の変数で利用することが出来ます。
 
-- 利用例
+### 利用例
 
 `./conf/dbInfo.conf`
 ```javascript
@@ -364,52 +616,93 @@ msful console [js-filename]
 }
 ```
 
-- conf情報を利用したWebAPI実装
+### conf情報を利用したWebAPI実装
 
 `./api/dbInfo.js`
 ```javascript
-return {
+rtx.send({
   "dbInfo-name": config.dbInfo.name,
   "dbInfo-host": config.dbInfo.host,
   "dbInfo-port": config.dbInfo.port
-};
+});
 ```
 
 ブラウザを起動してURLアドレス入力欄に `http://localhost:3333/api/dbInfo` を入れます。
 
-- 処理結果.
+### 処理結果.
 
 ```
 {"dbInfo-name": "testDB", "dbInfo-host": "localhost", "dbInfo-port": "5432"}
 ```
 
+### 実行環境との連動.
+
+実行環境[実行引数 or 環境変数]で、実行環境の切り替えが行えます、実行環境に応じた、confデータの切り替えが行えるので、本番環境や、ステージング環境、開発環境など、環境に応じてデータの定義を変更できます。
+
+実行引数 :
+```
+> msful -e staging
+> or 
+> msful --env staging
+```
+
+環境変数.
+```
+> export MSFUL_ENV=staging
+```
+
+confファイルの読み込み.
+
+```
+[conf]
+  |
+  +-- value.json => {name:"hoge"}
+  |
+  +-- [staging]
+        |
+        +-- value.json => {name: "moge"}
+```
+実行環境[staging]なので、conf.value.name = moge として読み込まれる.
+
+_
+
+_
+
 # 基本モジュール.
 
 WebAPIと、マイクロサービス開発に必要なモジュールについて説明します.
+
+_
+
+_
 
 ## jwtモジュール.
 
 JWT `json-web-token` を使ってログインの認証などで利用します。
 
+_
+
+_
+
 ### jwt.create(key, payload)
 
 JWTを生成します.
 
-- key
+#### key
 
 トークンを作成するためのキーを設定します。
 
-- payload
+#### payload
 
 ペイロード文字列を設定します。
 
-- 使用例
+#### 使用例
 
 ```javascript
 jwt.create("hoge", "{a:100}");
 ```
 
-- 処理結果
+#### 処理結果
 
 ```
 "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.e2E6MTAwfQ.lKzDfCDW/AbAFq639ZoT0t2RrBmGGsBKo7WUck8ZTi0"
@@ -419,60 +712,68 @@ jwt.create("hoge", "{a:100}");
 
 jwt情報からペイロード情報を取得します。
 
-- jwt
+#### jwt
 
 JWT情報を設定します.
 
-- 使用例
+#### 使用例
 
 ```javascript
 jwt.payload(
     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.e2E6MTAwfQ.lKzDfCDW/AbAFq639ZoT0t2RrBmGGsBKo7WUck8ZTi0");
 ```
 
-- 処理結果
+#### 処理結果
 
 ```
 {a:100}
 ```
 
+_
+
+_
+
 ### jwt.validate(key, jwt)
 
 指定されたJWT情報が指定されたキーで生成された情報であり、ペイロード情報などが変更されていないことを確認します。
 
-- key
+### key
 
 トークンを作成するためのキーを設定します。
 
-- jwt
+#### jwt
 
 jwt情報を設定します。
 
-- 使用例(成功)
+#### 使用例(成功)
 
 ```javascript
 jwt.validate("hoge",
     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.e2E6MTAwfQ.lKzDfCDW/AbAFq639ZoT0t2RrBmGGsBKo7WUck8ZTi0");
 ```
 
-- 処理結果
+#### 処理結果
 
 ```
 true
 ```
 
-- 使用例(失敗)
+#### 使用例(失敗)
 
 ```javascript
 jwt.validate("moge",
     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.e2E6MTAwfQ.lKzDfCDW/AbAFq639ZoT0t2RrBmGGsBKo7WUck8ZTi0");
 ```
 
-- 処理結果
+#### 処理結果
 
 ```
 false
 ```
+
+_
+
+_
 
 # closeable
 
@@ -484,11 +785,11 @@ false
 
 closeableにクローズ処理を行う処理を登録します.
 
-- obj
+#### obj
 
 ターゲットはオブジェクト型であり、内部にcloseメソッドを含める必要があります。
 
-- 使用例
+#### 使用例
 
 ```javascript
 closeable.register({close:function(){ console.log("hoge"); }});
@@ -500,10 +801,18 @@ closeable.register({close:function(){ console.log("hoge"); }});
 hoge
 ```
 
+_
+
+_
+
 ## closeable.close()
 
 登録メソッドによって登録されたすべてのコンテンツを閉じます。
 ただし、このプロセスは通常は呼び出す必要はなく、apiの実行直後に自動的に呼び出されます。
+
+_
+
+_
 
 # validate
 
@@ -512,6 +821,10 @@ POSTおよびGETパラメータの検証処理を実行します。
 ここで言うパラメータとは `params` の内容を指します.
 
 また、default 設定で存在しない場合のデフォルト値を設定したり、rename 設定でパラメータ名を変更することが可能です.
+
+_
+
+_
 
 ## validation
 
@@ -576,7 +889,7 @@ validate(method,
 "min 5 | max 12 | url"
 ```
 
-- validate設定例
+#### validate設定例
 
 /api/exampleValidate.js
 ```javascript
@@ -591,7 +904,7 @@ validate("POST",
 return {value: JSON.stringify(params)};
 ```
 
-- Ajaxでアクセスするための実装内容.
+#### Ajaxでアクセスするための実装内容.
 
 ```javascript
 fetch('http://localhost:3333/api/exampleValidate', {
@@ -602,10 +915,9 @@ fetch('http://localhost:3333/api/exampleValidate', {
     'X-Test-Code': 'test'
   }
 }).
-......
 ```
 
-- Ajaxでの送信データ内容(正常).
+#### Ajaxでの送信データ内容(正常).
 
 ```javascript
 var sendParams = {
@@ -615,13 +927,13 @@ var sendParams = {
 }
 ```
 
-- 処理結果
+#### 処理結果
 
 ```
 {"name": "maachang", "age": 30, "lat": 0.0, "comment": "hogehoge", "X-Test-Code": "test"}
 ```
 
-- Ajaxでの送信データ内容（エラー）.
+#### Ajaxでの送信データ内容（エラー）.
 
 ```javascript
 var sendParams = {
@@ -630,11 +942,15 @@ var sendParams = {
 }
 ```
 
-- 処理結果
+#### 処理結果
 
 ```
 {status: 400, message: "Contents of 'name' are mandatory"}
 ```
+
+_
+
+_
 
 # entity
 
@@ -645,6 +961,10 @@ JSON形式のデータの書式設定を定義します。
 
 entityは、それらの面倒な問題を払拭するために利用します。
 
+_
+
+_
+
 ## entity.expose
 
 JSONの書式を定義します。
@@ -652,7 +972,7 @@ JSONの書式を定義します。
 データをJSON形式でフォーマットし、定義名を最初の引数として設定することを定義します。
 2番目以降の引数については、 `parameter name`、` parameter type`、 `processing content`を定義します。
 
-- 定義説明
+#### 定義説明
 
 ```
 entity.expose(name,
@@ -787,15 +1107,15 @@ return entity.make("user", res);
 
 `entity.expose` で作成した定義に対して、対象のJSONをチェック、変換します.
 
-- name
+#### name
 
 `entity.expose` で作成した定義名を設定します.
 
-- value
+#### value
 
 変換対象のJSON情報を設定します.
 
-- 使用例
+#### 使用例
 
 ```javascript
 entity.expose("user",
@@ -817,7 +1137,7 @@ var res = {
 return entity.make("user", res);
 ```
 
-- 処理結果
+#### 処理結果
 
 ```
 {
@@ -829,4 +1149,3 @@ return entity.make("user", res);
   }
 }
 ```
-

@@ -31,6 +31,7 @@
   var port = null;
   var timeout = null;
   var contentsCache = null;
+  var env = null;
   var cmd = null;
   var consoleFlag = false;
   // コマンドが存在するかチェック.
@@ -86,6 +87,15 @@
       } catch (e) {
         contentsCache = null;
       }
+      // 環境設定を取得.
+      try {
+        p = getCmdArgs("-e", "--env");
+        if(p) {
+          env = p;
+        } 
+      } catch (e) {
+        env = null;
+      }
     }
   }
   
@@ -130,6 +140,6 @@
   } else {
     
     // ワーカー起動.
-    require('./lib/index.js').createMsFUL(port, timeout, contentsCache);
+    require('./lib/index.js').createMsFUL(port, timeout, contentsCache, env);
   }
 })()
