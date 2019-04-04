@@ -6,7 +6,7 @@
   <a href="https://www.npmjs.com/package/msful"><img src="https://img.shields.io/npm/l/msful.svg" alt="License"></a>
 </p>
 
-日本語の説明はこちら：(https://github.com/maachang/msful/blob/master/README_JP.md)
+日本語の説明はこちら：( https://github.com/maachang/msful/blob/master/README_JP.md )
 
 msdul is a very easy and very simple web application server and aims to create ideas as soon as possible.
 
@@ -45,11 +45,11 @@ First of all, create a static HTML file. Static files such as HTML are created u
 
 ```html
 <html>
-  <head> </ head>
+  <head> </head>
   <body>
     hoge !!
-  </ body>
-</ html>
+  </body>
+</html>
 ```
 
 ## Create webapi file
@@ -57,7 +57,7 @@ First of all, create a static HTML file. Static files such as HTML are created u
 Next we will create a dynamic web API. Web API files are created under the api folder.
 
 ```
- $ vi api / index.js
+ $ vi api/index.js
 ```
 
 ```javascript
@@ -449,7 +449,7 @@ _
 ### Implementation
 
 ```
- $ vi api / index.js
+ $ vi api/index.js
 ```
 
 ```javascript
@@ -462,12 +462,12 @@ rtx.send ({value: value})
 
 ### Browse by browser
 
-http://localhost:3333/api/?hoge = abc
+http://localhost:3333/api/?hoge=abc
 
 ###  Processing result
 
 ```
- {value: "hoge: hoge: [abc] method: [GET] url: [/ api /? hoge = abc]"}
+ {value: "hoge: hoge: [abc] method: [GET] url: [/api/?hoge=abc]"}
 ```
 
 ### Receive
@@ -484,9 +484,9 @@ Start when the folder where you placed the folder is accessed.
 
 The main usage is assumed to be used for common check processing, for example, functions such as access authentication.
 
-To create a filter, create a file called `@ filter.js` under the target folder.
+To create a filter, create a file called `@filter.js` under the target folder.
 
-If it is satisfied as a filter function, that is, it is possible to perform the original call processing, it returns `rtx.next ()`.
+If it is satisfied as a filter function, that is, it is possible to perform the original call processing, it returns `rtx.next()`.
 
 If it is not satisfied as a filter function, if you do not want to perform the original call processing, perform error processing with `etx.error` or use the` rtx.redirect` method etc.
 
@@ -613,11 +613,11 @@ _
 
 If you create a file in JSON format under the `conf` folder, you can use the definition contents of JSON format in the program.
 
-For example, if you create the file `/ conf / hogehoge.conf`, you can use it in the executable program with JSON-style variables called` config.hogehoge`.
+For example, if you create the file `/conf/hogehoge.conf`, you can use it in the executable program with JSON-style variables called` config.hogehoge`.
 
 ### Usage example
 
-`. / conf / dbInfo.conf`
+`. /conf/dbInfo.conf`
 ```javascript
 {
     name: "testDB",
@@ -628,7 +628,7 @@ For example, if you create the file `/ conf / hogehoge.conf`, you can use it in 
 
 ### Web API implementation using conf information
 
-`. / api / dbInfo.js`
+`. /api/dbInfo.js`
 ```javascript
 rtx.send ({
   "dbInfo-name": config.dbInfo.name,
@@ -637,7 +637,7 @@ rtx.send ({
 });
 ```
 
-Start your browser and put `http: // localhost: 3333 / api / dbInfo` in the URL address input field.
+Start your browser and put `http://localhost:3333/api/dbInfo` in the URL address input field.
 
 ### Processing result.
 
@@ -917,11 +917,11 @@ return {value: JSON.stringify (params)};
 ##### Implementation content for accessing with Ajax.
 
 ```javascript
-fetch ('http: // localhost: 3333 / api / exampleValidate', {
+fetch ('http://localhost:3333/api/exampleValidate', {
   method: 'POST',
   body: JSON.stringify (sendParams),
   headers: {
-    'Content-Type': 'application / json; charset = utf-8;',
+    'Content-Type': 'application/json;charset=utf-8;',
     'X-Test-Code': 'test'
   }
 }).
