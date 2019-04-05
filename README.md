@@ -141,9 +141,9 @@ For example, if the folder configuration under conf is
      +-[test.js] => {a: 10}
 ~~~
 
-For this, if you do not set the execution environment to [staging], conf.test.a = 1 will be acquired.
+For this, if you do not set the execution environment to [staging], config.test.a = 1 will be acquired.
 
-If you set the execution environment to [staging], conf.test.a = 10.
+If you set the execution environment to [staging], config.test.a = 10.
 
 Thus, it is possible to switch conf definitions for the execution environment.
 
@@ -219,7 +219,7 @@ MSFUL_CONTENTS_CACHE
 MSFUL_ENV
   export MSFUL_ENV = staging
   Set the execution environment.
-  With this setting, the conditions that can be acquired by the [conf] instruction are switched to the folder under the conf file.
+  With this setting, the conditions that can be acquired by the [config] instruction are switched to the folder under the conf file.
 ```
 
 # Web API Specific Features
@@ -379,9 +379,9 @@ _
 ```
 <Example>
 return rtx. $ ()
-  .then (function (value) {
+  .then (function (rtx) {
     rtx.send ({
-      message: "Success"
+      message: "success"
     });
   })
   .catch (e) {
@@ -390,7 +390,7 @@ return rtx. $ ()
 
 promise will be returned.
 Finally, as mentioned above, returning the result of promise will reflect the processing result.
-Also, the information of [rtx] is set to the first argument of function (value) for the first then.
+Also, the information of [rtx(ResponseContext)] is set to the first argument of function (rtx) for the first then.
 Also, exceptions etc. are passed by catch (e).
 ```
 
@@ -630,6 +630,7 @@ For example, if you create the file `/conf/hogehoge.conf`, you can use it in the
 
 `. /api/dbInfo.js`
 ```javascript
+// Example.
 rtx.send ({
   "dbInfo-name": config.dbInfo.name,
   "dbInfo-host": config.dbInfo.host,
@@ -672,7 +673,32 @@ Read conf file.
         |
         +-value.json => {name: "moge"}
 ```
-Since it is the execution environment [staging], it is read as conf.value.name = moge.
+Since it is the execution environment [staging], it is read as config.value.name = moge.
+
+_
+
+_
+
+# About extension of mimeType.
+
+Extensions of mimeType can be supported by adding the following to [conf/mime.js].
+
+```javascript
+// Set extended mime type.
+//
+{
+  "File extension": "mimeType content"
+}
+```
+
+```javascript
+// Example.
+{
+  "7z": "application/x-7z-compressed"
+}
+```
+
+You want to use, set the mimeType contents linked to it with the file extension as the key.
 
 _
 

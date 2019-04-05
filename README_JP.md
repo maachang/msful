@@ -141,9 +141,9 @@ confで取得される定義が、指定実行環境名と同じ、対象フォ�
      +-[test.js] => {a:10}
 ~~~
 
-コレに対して、実行環境を[staging]にしない場合は,conf.test.a = 1 が取得されます. 
+コレに対して、実行環境を[staging]にしない場合は,config.test.a = 1 が取得されます. 
 
-実行環境を[staging]にした場合は、conf.test.a = 10 となります. 
+実行環境を[staging]にした場合は、config.test.a = 10 となります. 
 
 このように、実行環境に対する、conf定義の切り替えが可能となっています.
 
@@ -219,7 +219,7 @@ MSFUL_CONTENTS_CACHE
 MSFUL_ENV
   export MSFUL_ENV=staging
   実行環境を設定します.
-  この設定により、confファイル配下のフォルダに[conf]命令で取得可能な条件が切り替わります.
+  この設定により、confファイル配下のフォルダに[config]命令で取得可能な条件が切り替わります.
 ```
 
 # WebAPI固有の機能
@@ -372,7 +372,7 @@ _
 ```
 <例>
 return rtx.$()
-  .then(function(value) {
+  .then(function(rtx) {
     rtx.send({
       message:"成功"
     });
@@ -383,7 +383,7 @@ return rtx.$()
 
 promiseが返却されます.
 最終的に上記のように、promiseの結果をreturnすることで、処理結果が反映されます.
-また最初の then に対するfunction(value) の第一引数には [rtx] の情報がセットされます.
+また最初の then に対するfunction(rtc) の第一引数には [rtx(ResponseContext)] の情報がセットされます.
 また、例外などは、catch(e)で渡されます.
 ```
 
@@ -620,6 +620,7 @@ _
 
 `./api/dbInfo.js`
 ```javascript
+// 例.
 rtx.send({
   "dbInfo-name": config.dbInfo.name,
   "dbInfo-host": config.dbInfo.host,
@@ -662,7 +663,30 @@ confファイルの読み込み.
         |
         +-- value.json => {name: "moge"}
 ```
-実行環境[staging]なので、conf.value.name = moge として読み込まれる.
+実行環境[staging]なので、config.value.name = moge として読み込まれる.
+
+_
+
+# mimeTypeの拡張について。
+
+mimeTypeの拡張は、conf/mime.jsに対して、以下のように追加することで対応可能となります.
+
+```javascript
+// 拡張mimeTypeを設定します.
+//
+{
+  "ファイル拡張子": "mimeType内容"
+}
+```
+
+```javascript
+// 例.
+{
+  "7z": "application/x-7z-compressed"
+}
+```
+
+利用したい、ファイル拡張子をキーとして、それに紐づくmimeType内容を設定を設定します.
 
 _
 
