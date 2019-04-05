@@ -222,6 +222,11 @@ MSFUL_ENV
   export MSFUL_ENV=staging
   実行環境を設定します.
   この設定により、confファイル配下のフォルダに[envConf]命令で取得可能な条件が切り替わります.
+
+MSFUL_DEBUG
+  export MSFUL_DEBUG=true
+  デバッグモードを設定します。
+  [true]の場合は、例外が発生した時に必ずスタックトレースを出します.
 ```
 
 # WebAPI固有の機能

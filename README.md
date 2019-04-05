@@ -220,6 +220,11 @@ MSFUL_ENV
   export MSFUL_ENV = staging
   Set the execution environment.
   With this setting, the conditions that can be acquired by the [config] instruction are switched to the folder under the conf file.
+
+MSFUL_DEBUG
+   export MSFUL_DEBUG = true
+   Set the debug mode.
+   If [true], a stack trace will be issued whenever an exception occurs.
 ```
 
 # Web API Specific Features
