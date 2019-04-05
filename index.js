@@ -110,9 +110,9 @@
   
   // コンソール実行.
   if (consoleFlag) {
-    var cons = require("./lib/console");
+    var cons = require("./lib/console", env);
     if(process.argv.length > 3) {
-      cons.createConsole("" + process.argv[3]);
+      cons.createConsole("" + process.argv[3], env);
     } else {
       cons.createConsole();
     }

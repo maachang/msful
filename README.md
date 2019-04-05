@@ -141,9 +141,9 @@ For example, if the folder configuration under conf is
      +-[test.js] => {a: 10}
 ~~~
 
-For this, if you do not set the execution environment to [staging], config.test.a = 1 will be acquired.
+For this, if you do not set the execution environment to [staging], envConf.test.a = 1 will be acquired.
 
-If you set the execution environment to [staging], config.test.a = 10.
+If you set the execution environment to [staging], envConf.test.a = 10.
 
 Thus, it is possible to switch conf definitions for the execution environment.
 
@@ -684,7 +684,7 @@ Environment variable.
 > export MSFUL_ENV = staging
 ```
 
-Read conf file.
+Read configuration files for environment using [envConf] instead of [config].
 
 ```
 [conf]
@@ -695,7 +695,8 @@ Read conf file.
         |
         +-value.json => {name: "moge"}
 ```
-Since it is the execution environment [staging], it is read as config.value.name = moge.
+
+Since it is the execution environment [staging], it is read as envConf.value.name = moge.
 
 _
 

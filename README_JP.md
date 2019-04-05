@@ -127,6 +127,8 @@ or
 
 ## 実行環境を設定します.
 
+環境用のコンフィグ定義は[envConf]で取得します.
+
 confで取得される定義が、指定実行環境名と同じ、対象フォルダ名をカレントディレクトリとします. 
 
 たとえば、conf配下のフォルダ構成が以下だとして 
@@ -141,9 +143,9 @@ confで取得される定義が、指定実行環境名と同じ、対象フォ�
      +-[test.js] => {a:10}
 ~~~
 
-コレに対して、実行環境を[staging]にしない場合は,config.test.a = 1 が取得されます. 
+コレに対して、実行環境を[staging]にしない場合は,envConf.test.a = 1 が取得されます. 
 
-実行環境を[staging]にした場合は、config.test.a = 10 となります. 
+実行環境を[staging]にした場合は、envConf.test.a = 10 となります. 
 
 このように、実行環境に対する、conf定義の切り替えが可能となっています.
 
@@ -219,7 +221,7 @@ MSFUL_CONTENTS_CACHE
 MSFUL_ENV
   export MSFUL_ENV=staging
   実行環境を設定します.
-  この設定により、confファイル配下のフォルダに[config]命令で取得可能な条件が切り替わります.
+  この設定により、confファイル配下のフォルダに[envConf]命令で取得可能な条件が切り替わります.
 ```
 
 # WebAPI固有の機能
@@ -684,7 +686,9 @@ rtx.send({
 > export MSFUL_ENV=staging
 ```
 
-confファイルの読み込み.
+環境用のコンフィグファイルの読み込みとして[config] ではなく [envConf] で読み込みを行います.
+
+confファイルの読み込みについて、説明します.
 
 ```
 [conf]
@@ -695,7 +699,8 @@ confファイルの読み込み.
         |
         +-- value.json => {name: "moge"}
 ```
-実行環境[staging]なので、config.value.name = moge として読み込まれる.
+
+実行環境[staging]なので、envConf.value.name = moge として読み込まれる.
 
 _
 
