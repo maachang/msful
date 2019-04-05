@@ -6,7 +6,7 @@
   <a href="https://www.npmjs.com/package/msful"><img src="https://img.shields.io/npm/l/msful.svg" alt="License"></a>
 </p>
 
-日本語の説明はこちら：( https://github.com/maachang/msful/blob/master/README_JP.md )
+日本語の説明は [こちら](https://github.com/maachang/msful/blob/master/README_JP.md)
 
 msdul is a very easy and very simple web application server and aims to create ideas as soon as possible.
 
@@ -76,7 +76,7 @@ When it is executed, the following contents are displayed.
 When such a display is displayed, it has started normally.
 (The following is the number of CPUs for listen content
 
-```javascript
+```cmd
 ## listen: 3333 env: [development] timeout: 15 (sec) contentCache: true pid: 13400
 ```
 
@@ -120,7 +120,7 @@ or
  msful --port 8080
 ```
 
-```javascript
+```cmd
 ## listen: 8080 env: [development] timeout: 15 (sec) contentCache: true pid: 13400
 
 ```
@@ -157,7 +157,7 @@ or
  msful-env staging
 ```
 
-```javascript
+```cmd
 ## listen: 3333 env: [staging] timeout: 15 (sec) contentCache: true pid: 13400
 
 ```
@@ -176,7 +176,7 @@ or
  msful --cache false
 ```
 
-```javascript
+```cmd
 ## listen: 3333 env: [development] timeout: 15 (sec) contentCache: false pid: 13400
 
 ```
@@ -195,7 +195,7 @@ or
  msful --timeout 25000
 ```
 
-```javascript
+```cmd
 ## listen: 3333 env: [development] timeout: 25 (sec) contentCache: true pid: 13400
 ```
 
@@ -203,7 +203,7 @@ or
 
 Also, these settings can be done in the same way on environment variables.
 
-```command
+```cmd
 MSFUL_PORT
   export MSFUL_PORT = 4444
   You can change the bind port at msful startup.
@@ -254,10 +254,12 @@ _
   status: Sets the status to be returned.
 ```
 
-```
-<Example>
+```javascript
+// Example
 rtx.send ({hello: "world"}, 200);
- Send {hello: "world"}.
+
+> HTTP status 200, mimeType is `application/json; charset=utf-8;`
+  {hello: "world"} will be returned as body information.
 ```
 
 _
@@ -266,19 +268,26 @@ _
 
 ### rtx.binary = function (body, status, charset)
 ```
- Set the binary data to be returned.
+  Set the binary data to be returned.
 
-  body: Set the JSON to be returned.
+   body: Sets the binary data to be returned.
+          If set string, convert to binary according to charset.
 
-  status: Sets the status to be returned.
+   status: Sets the status to be returned.
 
-  charset: Specify the character code. If not specified, it is utf-8.
+   charset: Specify the character code. If not specified, it is utf-8.
+             This information makes sense when body = string.
 ```
 
-```
-<Example>
+```javascript
+// Example
 rtx.binary (new Buffer ([0xe3, 0x81, 0x82]), 200);
- Send 'oh' data
+
+> Send 'あ' UTF8 data in binary.
+
+rtx.binary ("あ", 200, "utf-8");
+
+> Send 'あ' UTF8 data in binary.
 ```
 
 _
@@ -295,10 +304,11 @@ _
            This usually does not need to be set.
 ```
 
-```
-<Example>
+```javascript
+// Example
 rtx.redirect ("https://www.yahoo.co.jp/");
- It is redirected to the specified URL.
+
+> It is redirected to the specified URL.
 ```
 
 _
@@ -316,11 +326,13 @@ _
   e: Set exception information.
 ```
 
-```
-<Example>
+```javascript
+// Example
 rtx.error (500, "an error occurred");
- http error 500 with {result: "error", error: 500, message: "an error occurred"}
- Will be returned.
+
+> http error 500, mimeType is `application/json; charset=utf-8;`
+   body information is {result: "error", error: 500, message: "an error occurred"}
+   Will be returned.
 ```
 
 _
@@ -334,11 +346,12 @@ _
   status: Sets the error status.
 ```
 
-```
-<Example>
+```javascript
+// Example
 rtx.status (status);
- Set return status with priority.
- In other words, this value is used when the status is not set.
+
+> Set return status with priority.
+  In other words, this value is used when the status is not set.
 ```
 
 _
@@ -350,10 +363,11 @@ _
  If you want to process rtx.send, rtx.binary, rtx.error, rtx.redirect etc., true is returned.
 ```
 
-```
-<Example>
+```javascript
+// Example
 rtx.isSendScript ();
- If it has already been sent, true will be returned.
+
+> If it has already been sent, true will be returned.
 ```
 
 _
@@ -365,10 +379,11 @@ _
  If you want to do rtx.error processing, true is returned.
 ```
 
-```
-<Example>
+```javascript
+// Example
 rtx.isErrorSendScript ();
- If an error has already been sent, true will be returned.
+
+> If an error has already been sent, true will be returned.
 ```
 
 _
@@ -376,8 +391,8 @@ _
 _
 
 ### About rtx. $.
-```
-<Example>
+```javascript
+// Example
 return rtx. $ ()
   .then (function (rtx) {
     rtx.send ({
@@ -388,10 +403,13 @@ return rtx. $ ()
     console.log (e);
   }
 
-promise will be returned.
-Finally, as mentioned above, returning the result of promise will reflect the processing result.
-Also, the information of [rtx(ResponseContext)] is set to the first argument of function (rtx) for the first then.
-Also, exceptions etc. are passed by catch (e).
+```
+```
+Description:
+ promise will be returned.
+ Finally, as mentioned above, returning the result of promise will reflect the processing result.
+ Also, the information of [rtx(ResponseContext)] is set to the first argument of function (rtx) for the first then.
+ Also, exceptions etc. are passed by catch (e).
 ```
 
 _
@@ -403,13 +421,13 @@ _
  Insert a script to execute with rtx.next ().
 ```
 
-```
-<Example>
+```javascript
+// Example
 rtx.push (function () {
   var a = 100;
 })
 
-The above process is executed when calling rtx.next ().
+> The above process is executed when calling rtx.next ().
 ```
 
 _
@@ -421,9 +439,11 @@ _
  Get an executable number with rtx.next ().
 ```
 
-```
-<Example>
+```javascript
+// Example
 rtx.size ()
+
+> Get an executable number with rtx.next ().
 ```
 
 _
@@ -436,9 +456,11 @@ _
  In most cases, if there is @ filter.js, the original process is pushed, @ filter.js is executed, and rtx.next () is called internally.
 ```
 
-```
-<Example>
+```javascript
+// Example
 rtx.next ()
+
+> Executes the process set in rtx.push.
 ```
 _
 
@@ -920,8 +942,8 @@ Condition setting to check and change the state for `paramName`.
 
 This definition can be set consecutively with `|`.
 
-```
-<Example>
+```javascript
+// Example
 "min 5 | max 12 | url"
 ```
 
@@ -981,7 +1003,7 @@ var sendParams = {
 #### Processing result
 
 ```
-{status: 400, message: "Contents of 'name' are mandatory"}
+{result: "error", status: 400, message: "Contents of 'name' are mandatory"}
 ```
 
 _
@@ -1048,7 +1070,7 @@ The `object` and` list` types are specified when the contents of params are the 
 The `$ name` type is used as follows:
 
 ```javascript
-<Example>
+// Example
 entity.expose ("user",
   "name", "string", "",
   "age", "number", "",
@@ -1080,7 +1102,7 @@ return entity.make ("users", res);
  The `{` and `}` types are used as follows:
 
 ```javascript
-<Example>
+// Example
 entity.expose ("user",
   "name", "string", "",
   "age", "number", "",
@@ -1134,8 +1156,8 @@ Condition setting to check and change the state for `paramName`.
 
 This definition can be set consecutively with `|`
 
-```
-<Example>
+```javascript
+// Example
 "min 5 | max 12 | url"
 ```
 

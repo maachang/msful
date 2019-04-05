@@ -76,7 +76,7 @@ msfulをサーバ実行します。
 このような表示がされた場合、正常に起動しています。
 （以下listen内容はCPU数出ます)
 
-```javascript
+```cmd
 ## listen: 3333 env:[development] timeout:15(sec) contentCache:true pid:13400
 ```
 
@@ -120,7 +120,7 @@ or
  msful --port 8080
 ```
 
-```javascript
+```cmd
 ## listen: 8080 env:[development] timeout:15(sec) contentCache:true pid:13400
 
 ```
@@ -157,7 +157,7 @@ or
  msful --env staging
 ```
 
-```javascript
+```cmd
 ## listen: 3333 env:[staging] timeout:15(sec) contentCache:true pid:13400
 
 ```
@@ -176,7 +176,7 @@ or
  msful --cache false
 ```
 
-```javascript
+```cmd
 ## listen: 3333 env:[development] timeout:15(sec) contentCache:false pid:13400
 
 ```
@@ -195,7 +195,7 @@ or
  msful --timeout 25000
 ```
 
-```javascript
+```cmd
 ## listen: 3333 env:[development] timeout:25(sec) contentCache:true pid:13400
 ```
 
@@ -203,7 +203,7 @@ or
 
 また、これらの設定は環境変数上でも同様に行えます.
 
-```command
+```cmd
 MSFUL_PORT
   export MSFUL_PORT=4444
   msful起動時のバインドポートが変更できます.
@@ -253,10 +253,13 @@ _
 
   status : 返却するステータスを設定します. 
 ```
-<例>
-```
+
+```javascript
+// 例
 rtx.send({hello: "world"}, 200);
- {hello: "world"} を送信する.
+
+> HTTPステータス200で、mimeTypeが `application/json; charset=utf-8;` で 
+  body情報として、{hello: "world"} が返却されます.
 ```
 
 _
@@ -267,16 +270,24 @@ _
 ```
  返却するバイナリデータを設定します.
 
-  body : 返却するJSONを設定します. 
+  body : 返却するバイナリデータを設定します.
+         文字列を設定した場合、charsetに応じてバイナリに変換します.
 
   status : 返却するステータスを設定します. 
 
   charset : 文字コードを指定します。指定しない場合は、utf-8になります。
+            この情報は、body=stringの場合に意味を成します.
 ```
-<例>
-```
+
+```javascript
+// 例
 rtx.binary(new Buffer([0xe3, 0x81, 0x82]), 200);
- 'あ' のデータを送信する
+
+> 'あ' のUTF8のデータをバイナリで送信する.
+
+rtx.binary("あ", 200, "utf-8");
+
+> 'あ' のUTF8のデータをバイナリで送信する.
 ```
 
 _
@@ -292,10 +303,12 @@ _
   status : 返却するステータスを設定します. 
            これは通常設定する必要はありません.
 ```
-<例>
-```
+
+```javascript
+// 例
 rtx.redirect("https://www.yahoo.co.jp/");
- 指定URLにリダイレクトされる.
+
+> 指定URLにリダイレクトされる.
 ```
 
 _
@@ -312,11 +325,14 @@ _
 
   e : 例外情報を設定します.
 ```
-<例>
-```
+
+```javascript
+// 例
 rtx.error(500, "エラーが発生しました");
- httpエラー500 で {result: "error", error: 500, message: "エラーが発生しました"} 
- が返却されます.
+
+> httpエラー500 で 、mimeTypeが `application/json; charset=utf-8;` で
+  body情報が {result: "error", error: 500, message: "エラーが発生しました"} 
+  が返却されます.
 ```
 
 _
@@ -329,11 +345,13 @@ _
 
   status : エラーステータスを設定します.
 ```
-<例>
-```
+
+```javascript
+// 例
 rtx.status(status);
- 返却ステータスを優先的に設定します.
- つまり、ステータスが未設定の場合はこの値が利用されます。
+
+> 返却ステータスを優先的に設定します.
+  つまり、ステータスが未設定の場合はこの値が利用されます。
 ```
 
 _
@@ -344,10 +362,12 @@ _
 ```
  rtx.send, rtx.binary, rtx.error, rtx.redirect などの処理を行ったい場合、trueが返却されます.
 ```
-<例>
-```
+
+```javascript
+// 例
 rtx.isSendScript();
- すでに送信済みの場合は、trueが返却されます.
+
+> すでに送信済みの場合は、trueが返却されます.
 ```
 
 _
@@ -358,10 +378,12 @@ _
 ```
  rtx.error 処理を行ったい場合、trueが返却されます.
 ```
-<例>
-```
+
+```javascript
+// 例
 rtx.isErrorSendScript();
- すでにエラーが送信済みの場合は、trueが返却されます.
+
+> すでにエラーが送信済みの場合は、trueが返却されます.
 ```
 
 _
@@ -369,8 +391,8 @@ _
 _
 
 ### rtx.$ について。
-```
-<例>
+```javascript
+// 例
 return rtx.$()
   .then(function(rtx) {
     rtx.send({
@@ -380,11 +402,14 @@ return rtx.$()
   .catch(e) {
     console.log(e);
   }
+```
 
-promiseが返却されます.
-最終的に上記のように、promiseの結果をreturnすることで、処理結果が反映されます.
-また最初の then に対するfunction(rtc) の第一引数には [rtx(ResponseContext)] の情報がセットされます.
-また、例外などは、catch(e)で渡されます.
+```
+説明:
+ promiseが返却されます.
+ 最終的に上記のように、promiseの結果をreturnすることで、処理結果が反映されます.
+ また最初の then に対するfunction(rtc) の第一引数には [rtx(ResponseContext)] の情報がセットされます.
+ また、例外などは、catch(e)で渡されます.
 ```
 
 _
@@ -395,13 +420,14 @@ _
 ```
  rtx.next()で実行する、スクリプトを挿入します.
 ```
-<例>
-```
+
+```javascript
+// 例
 rtx.push(function() {
   var a = 100;
 })
 
-上記処理はrtx.next()の呼び出しを行った時に処理が実行されます.
+> 上記処理はrtx.next()の呼び出しを行った時に処理が実行されます.
 ```
 
 _
@@ -412,9 +438,12 @@ _
 ```
  rtx.next()で実行可能な数を取得します.
 ```
-<例>
-```
+
+```javascript
+// 例
 rtx.size()
+
+> rtx.next()で実行可能な数を取得します.
 ```
 
 _
@@ -426,9 +455,12 @@ _
  rtx.pushでセットされたスクリプトを実行します.
  大体の場合、@filter.js がある場合、元の処理がpushされて、@filter.jsが実行され、内部的にrtx.next()が呼び出されます.
 ```
-<例>
-```
+
+```javascript
+// 例
 rtx.next()
+ 
+> rtx.pushで設定された処理を実行します.
 ```
 _
 
@@ -969,7 +1001,7 @@ var sendParams = {
 #### 処理結果
 
 ```
-{status: 400, message: "Contents of 'name' are mandatory"}
+{result: "error", status: 400, message: "Contents of 'name' are mandatory"}
 ```
 
 _
