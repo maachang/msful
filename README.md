@@ -293,6 +293,11 @@ rtx.binary (new Buffer ([0xe3, 0x81, 0x82]), 200);
 rtx.binary ("あ", 200, "utf-8");
 
 > Send 'あ' UTF8 data in binary.
+
+headers['Content-Type'] = "image/gif";
+rtx.binary(new Buffer([0x00, 0x01, 0x02 .... ]), 200);;
+
+> A sample of binary transmission with mimeType set.
 ```
 
 _
@@ -433,7 +438,7 @@ rtx.push (function () {
 })
 
 // Example.
-rtx.push ("./ hoge / moge");
+rtx.push ("./hoge/moge");
 
 > The above process is executed when calling rtx.next ().
 

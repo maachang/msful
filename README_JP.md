@@ -295,8 +295,13 @@ rtx.binary(new Buffer([0xe3, 0x81, 0x82]), 200);
 rtx.binary("あ", 200, "utf-8");
 
 > 'あ' のUTF8のデータをバイナリで送信する.
-```
 
+headers['Content-Type'] = "image/gif";
+rtx.binary(new Buffer([0x00, 0x01, 0x02 .... ]), 200);
+
+＞ mimeTypeを設定した、バイナリ送信のサンプル.
+
+```
 _
 
 _
