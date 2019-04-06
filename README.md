@@ -432,7 +432,14 @@ rtx.push (function () {
   var a = 100;
 })
 
+// Example.
+rtx.push ("./ hoge / moge");
+
 > The above process is executed when calling rtx.next ().
+
+Also, if you set the first argument as a string, the specified script will not be loaded.
+
+This process call is mainly used when you want to interrupt another process, such as filter process.
 ```
 
 _

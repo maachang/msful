@@ -375,6 +375,18 @@ _
 rtx.isSendScript();
 
 > すでに送信済みの場合は、trueが返却されます.
+
+// 送信前.
+console.log("[送信前]rtx.isSendScript():" + rtx.isSendScript())
+
+rtx.send({hello: "world"}, 200);
+
+// 送信後.
+console.log("[送信後]rtx.isSendScript():" + rtx.isSendScript())
+
+// 処理結果.
+＞ [送信前]rtx.isSendScript(): false
+＞ [送信後]rtx.isSendScript(): true
 ```
 
 _
@@ -391,6 +403,18 @@ _
 rtx.isErrorSendScript();
 
 > すでにエラーが送信済みの場合は、trueが返却されます.
+
+// 送信前.
+console.log("[error送信前]rtx.isErrorSendScript():" + rtx.isSendScript())
+
+rtx.error(500, "error");
+
+// 送信後.
+console.log("[error送信後]rtx.isErrorSendScript():" + rtx.isSendScript())
+
+// 処理結果.
+＞ [送信前]rtx.isErrorSendScript(): false
+＞ [送信後]rtx.isErrorSendScript(): true
 ```
 
 _
@@ -434,7 +458,15 @@ rtx.push(function() {
   var a = 100;
 })
 
+// 例.
+rtx.push("./hoge/moge");
+
 > 上記処理はrtx.next()の呼び出しを行った時に処理が実行されます.
+
+また、第一引数を文字列で設定した場合は、指定されたスクリプトが読み込稀ます.
+
+この処理の呼び出しは filter 処理などで、別の処理を割り込ませたい時に主に利用します.
+
 ```
 
 _
