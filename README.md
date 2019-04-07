@@ -14,6 +14,30 @@ msful is RESTful and does not need to execute existing URL mapping, but uses dir
 
 A simple, thin framework, msful, so if you have experience developing with nodejs, or anyone who can handle web-based Javascript programs, you can develop quickly without requiring a lot of learning costs.
 
+# Benefits of using msful
+
+I used to use only java-based web application server spring-boot. He also built web applications with Scala language Vert.x.
+
+Recently, the web application environment was also developed using express of node.
+
+But, development is troublesome.
+
+why? You might think that, but after modifying the program, you have to restart the node.
+
+What kind of node is used in the script language? With regard to the program modification of this area, the node side recognizes and substitutes it. I thought.
+
+However, the modified program will not be recognized unless the node is actually restarted.
+
+This is what reduces development efficiency at the time of development.
+
+And they felt the same when they used java's spring-boot and scala's Vert.x.
+
+As a PHP language and a web server, it is not particularly good personally, but if it is updated, it will be reloaded automatically because PHP will not have a restart for the server, "development efficiency" You can say that is good.
+
+It was so heavy, I thought that it would be better if I made various thought and research results, and made it.
+
+With this, at least, by eliminating the restart of the node server, I think that the development cost of the Web application will be lower than express, and the development speed will increase.
+
 I hope that msful developers can provide a better development environment for you.
 
 # How to introduce msful
@@ -40,7 +64,7 @@ $ cd myProject
 First of all, create a static HTML file. Static files such as HTML are created under html folder.
 
 ```
- $ vi html / index.html
+ $ vi html/index.html
 ```
 
 ```html
