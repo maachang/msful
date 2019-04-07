@@ -30,7 +30,11 @@ And they felt the same when they used java's spring-boot and scala's Vert.x.
 
 Both spring-boot and Vert.x are the same as exporess, and it was necessary to restart the server after each operation check for the api program correction.
 
-It is always the same as I think using spring-boot and Vert.x, but the cause of poor development efficiency is that the api program update part is not reflected unless it is restarted.
+What I think using spring-boot and Vert.x is the cause of poor development efficiency because the api program update part is not reflected unless the server is restarted.
+
+In the case of java, this can not be done for reasons of language specification, but conversely, since node-express is a script language in js, automatic capture of updated part of api program should be able to be carried out in practice, but this is actually Not performed.
+
+As a result, it can be said that the development efficiency of the node-express development environment has deteriorated "in the same way as java".
 
 It is not particularly good personally as a PHP language or Web server, but if the script of the target content is updated, PHP automatically reloads it, as there is no restart for the server. You can say that "development efficiency" is good.
 
