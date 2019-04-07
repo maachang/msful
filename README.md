@@ -32,7 +32,11 @@ Both spring-boot and Vert.x are the same as exporess, and it was necessary to re
 
 What I think using spring-boot and Vert.x is the cause of poor development efficiency because the api program update part is not reflected unless the server is restarted.
 
-In the case of java, this can not be done for reasons of language specification, but conversely, since node-express is a script language in js, automatic capture of updated part of api program should be able to be carried out in practice, but this is actually Not performed.
+In the case of java, this is not possible due to language reasons.
+
+However, in the node script, the updated part of the api program can be reflected on the node.
+
+However, with node-express, by design, the node server restart is required to reflect the updated part of the api program on the node.
 
 As a result, it can be said that the development efficiency of the node-express development environment has deteriorated "in the same way as java".
 
@@ -40,7 +44,7 @@ It is not particularly good personally as a PHP language or Web server, but if t
 
 After thinking about various things and examining various things "It is good if it is good to make a Web application server with high development efficiency." I thought so, and made msful.
 
-msful, like PHP-based web servers, is automatically included for updates to target Api programs, so I think you can do more comfortable development than node-express.
+msful, like PHP-based web servers, is automatically incorporated into updates to target Api programs, so I think it will be more comfortable to develop than node-express.
 
 I hope that msful developers can provide a better development environment for you.
 
