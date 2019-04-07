@@ -18,25 +18,25 @@ A simple, thin framework, msful, so if you have experience developing with nodej
 
 In the past, I mainly used spring-boot, a web application server that runs on java, and built a web application with Vert.x in Scala language.
 
-Recently, the web application environment was also developed using express of node.
+Recently, Web application environment was also developed using node's node-express.
 
-But I thought one time. The express web application server running on node is very inefficient in development.
+But I thought one time. The node-express Web application server running on node is very inefficient in development.
 
-That is, once express has modified the api program, it has to restart the node.
+That is, once node-express fixes the api program, it has to restart the node.
 
-This "express" is reducing the development efficiency at "development time".
+The node-express's "during development" is reducing the development efficiency.
 
 And they felt the same when they used java's spring-boot and scala's Vert.x.
 
 Both spring-boot and Vert.x are the same as exporess, and it is necessary to modify the api program, and it was necessary to restart the server after each operation check.
 
-I think that a lot of inefficiencies of java's web development are the cause of not being reflected to restart for api program update part.
+It is always the same as I think using spring-boot and Vert.x, but the cause of poor development efficiency is that the api program update part is not reflected unless it is restarted.
 
 It is not particularly good personally as a PHP language or Web server, but if the script of the target content is updated, PHP automatically reloads it, as there is no restart for the server. You can say that "development efficiency" is good.
 
-I thought about various things and surveyed "I should make a Web application server with high development efficiency" I thought so and made msful.
+After thinking about various things and examining various things "It is good if it is good to make a Web application server with high development efficiency." I thought so, and made msful.
 
-With this, at least there is no restart of the node server, and confirmation of the api program update part can be taken immediately, so I think that the development cost of the Web application will be lower than express, and the development speed will increase.
+With this, at least there is no restart of the node server, and confirmation of the api program update part can be taken immediately, so I think that the development cost of the Web application will be lower than that of node-express and the development speed will also increase.
 
 I hope that msful developers can provide a better development environment for you.
 
