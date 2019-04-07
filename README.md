@@ -16,7 +16,7 @@ A simple, thin framework, msful, so if you have experience developing with nodej
 
 # Benefits of using msful
 
-In the past, I mainly used spring-boot, a web application server that runs on java, and built a web application with Vert.x in Scala language.
+Before, I used spring-boot, a web application server that runs in java, and built a web application with Vert.x in Scala language.
 
 Recently, Web application environment was also developed using node's node-express.
 
@@ -28,7 +28,7 @@ The node-express's "during development" is reducing the development efficiency.
 
 And they felt the same when they used java's spring-boot and scala's Vert.x.
 
-Both spring-boot and Vert.x are the same as exporess, and it is necessary to modify the api program, and it was necessary to restart the server after each operation check.
+Both spring-boot and Vert.x are the same as exporess, and it was necessary to restart the server after each operation check for the api program correction.
 
 It is always the same as I think using spring-boot and Vert.x, but the cause of poor development efficiency is that the api program update part is not reflected unless it is restarted.
 
@@ -36,7 +36,7 @@ It is not particularly good personally as a PHP language or Web server, but if t
 
 After thinking about various things and examining various things "It is good if it is good to make a Web application server with high development efficiency." I thought so, and made msful.
 
-With this, at least there is no restart of the node server, and confirmation of the api program update part can be taken immediately, so I think that the development cost of the Web application will be lower than that of node-express and the development speed will also increase.
+msful, like PHP-based web servers, is automatically included for updates to target Api programs, so I think you can do more comfortable development than node-express.
 
 I hope that msful developers can provide a better development environment for you.
 
