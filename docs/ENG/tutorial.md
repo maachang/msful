@@ -120,7 +120,7 @@ rtx.error(500, "error");
 
 If data is not sent finally by asynchronous execution, processing will be waited until the HTTP timeout, so care must be taken to ensure that it is sent.
 
-Please refer to [rtx](about #rtx function) for how to use rtx.
+Please refer to [rtx](https://github.com/maachang/msful/blob/master/docs/ENG/rtx.md) for how to use rtx.
 
 In addition, usage such as [request] and [response] can be used as the node standard module.
 

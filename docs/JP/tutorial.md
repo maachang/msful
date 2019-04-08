@@ -120,7 +120,7 @@ rtx.error(500, "エラー");
 
 非同期実行で最終的にデータ送信が行われないと、HTTPタイムアウトまで処理が待たれることになるので、確実にsendされるように注意が必要となります。
 
-rtxの使い方などは[rtx](#rtx機能について)を参照してください。
+rtxの使い方などは [rtx](https://github.com/maachang/msful/blob/master/docs/JP/rtx.md) を参照してください。
 
 また、[request] や [response] などの使い方はnode標準モジュールの通り利用できます。
 
