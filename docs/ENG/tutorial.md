@@ -72,11 +72,11 @@ _
 
 The api implementation can do the following:
 
-### Use promise by rtx. $.
+### Use promise by rtx.$.
 
 ```javascript
 //Example
-return rtx. $().
+return rtx.$().
   then(function(value) {
 //In case of normal system.
     rtx.send({

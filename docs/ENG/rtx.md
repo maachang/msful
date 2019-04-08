@@ -203,10 +203,10 @@ _
 
 _
 
-## About rtx. $.
+## About rtx.$.
 ```javascript
 //Example
-return rtx. $()
+return rtx.$()
   .then(function(rtx) {
     rtx.send({
       message: "Success"
