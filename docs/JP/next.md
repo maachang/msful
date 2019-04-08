@@ -95,7 +95,7 @@ rtx.send({
 
 ### 処理結果.
 
-```
+```javascript
 {"dbInfo-name": "testDB", "dbInfo-host": "localhost", "dbInfo-port": "5432"}
 ```
 

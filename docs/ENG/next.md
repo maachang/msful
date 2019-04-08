@@ -22,15 +22,15 @@ _
 
 ```javascript
 value = "hoge: [" + params.hoge + "]"
-value + = "method: [" + request.method + "]"
-value + = "url: [" + request.url + "]"
+value += "method: [" + request.method + "]"
+value += "url: [" + request.url + "]"
 
 rtx.send({value: value})
 ```
 
 ### Browse by browser
 
-http:// localhost: 3333/api/?hoge = abc
+http://localhost:3333/api/?hoge = abc
 
 ###  Processing result
 
@@ -95,7 +95,7 @@ Start your browser and put `http://localhost:3333/api/dbInfo` in the URL address
 
 ### Processing result.
 
-```
+```javascript
 {"dbInfo-name": "testDB", "dbInfo-host": "localhost", "dbInfo-port": "5432"}
 ```
 
