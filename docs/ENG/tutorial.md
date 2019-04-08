@@ -134,7 +134,7 @@ msful specific functions jwt, closable, validate, entity Please check the follow
 
 [jwt](https://github.com/maachang/msful/blob/master/docs/ENG/base_mod.md#jwt)
 
-[closable](https://github.com/maachang/msful/blob/master/docs/ENG/base_mod.md#closable)
+[closeable](https://github.com/maachang/msful/blob/master/docs/ENG/base_mod.md#closeable)
 
 [validate](https://github.com/maachang/msful/blob/master/docs/ENG/base_mod.md#validate)
 
