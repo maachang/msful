@@ -202,7 +202,7 @@ if(users.isSignature(request, "user")) {
 
 Here, for user creation, update, and deletion, common processing that enables only trusted communication with write authority is performed by filter processing.
 
-When user creation, update, deletion is executed, first @ filter.js is executed, and if it is normal, [rtx.next()] will make the actual user creation, update, deletion process work. .
+When user creation, update, deletion is executed, first [@filter.js] is executed, and if it is normal, [rtx.next()] will make the actual user creation, update, deletion process work. .
 
 _
 
