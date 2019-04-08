@@ -8,7 +8,7 @@
 
 日本語の説明は [こちら](https://github.com/maachang/msful/blob/master/docs/JP/tutorial.md)
 
-Return to the readme.md documentation [readme](https://github.com/maachang/msful/blob/master/README_JP.md)
+Return to the readme.md documentation [readme](https://github.com/maachang/msful/blob/master/README.md)
 
 _
 
@@ -208,4 +208,4 @@ _
 
 _
 
-Return to the readme.md documentation [readme](https://github.com/maachang/msful/blob/master/README_JP.md)
+Return to the readme.md documentation [readme](https://github.com/maachang/msful/blob/master/README.md)
