@@ -23,12 +23,12 @@ Execute the following command.
  $ mkdir example
  $ cd example
  $ msful project example
- msful (micro service RESTFul API Server) v0.1.0
- Copyright (c) 2019 maachang.
+ msful(micro service RESTFul API Server) v0.1.0
+ Copyright(c) 2019 maachang.
  
  new project !!
   [html] directory.
-    It stores static files (HTML, JS, CSS, Images) here.
+    It stores static files(HTML, JS, CSS, Images) here.
   [api] directory
     Here, we store RESTFul API programs implemented by JS.
   [lib] directory
@@ -41,12 +41,12 @@ Or this command.
 
 ```
  $ msful project example
- msful (micro service RESTFul API Server) v0.1.0
- Copyright (c) 2019 maachang.
+ msful(micro service RESTFul API Server) v0.1.0
+ Copyright(c) 2019 maachang.
  
  new example project.
   [html] directory.
-    It stores static files (HTML, JS, CSS, Images) here.
+    It stores static files(HTML, JS, CSS, Images) here.
   [api] directory Here, we store RESTFul API programs implemented by JS.
   [lib] directory.
     This is a folder for storing JS libraries.

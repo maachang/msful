@@ -25,7 +25,7 @@ value = "hoge: [" + params.hoge + "]"
 value + = "method: [" + request.method + "]"
 value + = "url: [" + request.url + "]"
 
-rtx.send ({value: value})
+rtx.send({value: value})
 ```
 
 ### Browse by browser
@@ -84,7 +84,7 @@ For example, if you create the file `/ conf/hogehoge.conf`, you can use it in th
 `./api/dbInfo.js`
 ```javascript
 // Example.
-rtx.send ({
+rtx.send({
   "dbInfo-name": config.dbInfo.name,
   "dbInfo-host": config.dbInfo.host,
   "dbInfo-port": config.dbInfo.port

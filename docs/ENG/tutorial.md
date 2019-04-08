@@ -76,15 +76,15 @@ The api implementation can do the following:
 
 ```javascript
 //Example
-return rtx. $ ().
-  then (function (value) {
+return rtx. $().
+  then(function(value) {
 //In case of normal system.
-    rtx.send ({
+    rtx.send({
       message: "Success"
     });
 
 //in case of error
-    throw new HttpError (500, "Error");
+    throw new HttpError(500, "Error");
   })
 ```
 
@@ -94,15 +94,15 @@ When making a promise, use an error handler such as `throw new HttpError` when a
 
 ```javascript
 //Example
-(async function () {
+(async function() {
 //In case of normal system.
-  rtx.send ({
+  rtx.send({
     message: "Success"
   });
 
 //in case of error.
-  rtx.error (500, "error");
-}) ();
+  rtx.error(500, "error");
+})();
 ```
 
 ### Return on synchronous execution.
@@ -110,17 +110,17 @@ When making a promise, use an error handler such as `throw new HttpError` when a
 ```javascript
 //Example
 //In case of normal system.
-rtx.send ({
+rtx.send({
   message: "Success"
 });
 
 //in case of error.
-rtx.error (500, "error");
+rtx.error(500, "error");
 ```
 
 If data is not sent finally by asynchronous execution, processing will be waited until the HTTP timeout, so care must be taken to ensure that it is sent.
 
-Please refer to [rtx] (about #rtx function) for how to use rtx.
+Please refer to [rtx](about #rtx function) for how to use rtx.
 
 In addition, usage such as [request] and [response] can be used as the node standard module.
 
@@ -158,7 +158,7 @@ If you want to use this, you can use [require] as follows.
 
 ```javascript
 
-var users = require ("lib/users");
+var users = require("lib/users");
 ```
 
 _
@@ -191,18 +191,18 @@ Take a sample as an example.
 
 ```javascript
 //@ filter.js
-var users = require ("lib/users");
+var users = require("lib/users");
 
-if (users.isSignature (request, "user")) {
-  return rtx.next ();
+if(users.isSignature(request, "user")) {
+  return rtx.next();
 } else {
-  throw new HttpError (500, "No write permission");
+  throw new HttpError(500, "No write permission");
 }
 ```
 
 Here, for user creation, update, and deletion, common processing that enables only trusted communication with write authority is performed by filter processing.
 
-When user creation, update, deletion is executed, first @ filter.js is executed, and if it is normal, [rtx.next ()] will make the actual user creation, update, deletion process work. .
+When user creation, update, deletion is executed, first @ filter.js is executed, and if it is normal, [rtx.next()] will make the actual user creation, update, deletion process work. .
 
 _
 

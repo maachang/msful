@@ -27,7 +27,7 @@ or
 ```
 
 ```cmd
-## listen: 8080 env: [development] timeout: 15 (sec) contentCache: true pid: 13400
+## listen: 8080 env: [development] timeout: 15(sec) contentCache: true pid: 13400
 
 ```
 
@@ -68,7 +68,7 @@ or
 ```
 
 ```cmd
-## listen: 3333 env: [staging] timeout: 15 (sec) contentCache: true pid: 13400
+## listen: 3333 env: [staging] timeout: 15(sec) contentCache: true pid: 13400
 
 ```
 
@@ -87,7 +87,7 @@ or
 ```
 
 ```cmd
-## listen: 3333 env: [development] timeout: 15 (sec) contentCache: false pid: 13400
+## listen: 3333 env: [development] timeout: 15(sec) contentCache: false pid: 13400
 
 ```
 
@@ -106,7 +106,7 @@ or
 ```
 
 ```cmd
-## listen: 3333 env: [development] timeout: 25 (sec) contentCache: true pid: 13400
+## listen: 3333 env: [development] timeout: 25(sec) contentCache: true pid: 13400
 ```
 
 ## Can also be set by environment variable
@@ -124,7 +124,7 @@ MSFUL_TIMEOUT
 
 MSFUL_CONTENTS_CACHE
   export MSFUL_CONTENTS_CACHE = false
-  Set caching (true) and not (false) for static content.
+  Set caching(true) and not(false) for static content.
 
 MSFUL_ENV
   export MSFUL_ENV = staging

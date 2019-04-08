@@ -28,7 +28,7 @@ _
 
 _
 
-### jwt.create (key, payload)
+### jwt.create(key, payload)
 
 Generate JWT.
 
@@ -43,7 +43,7 @@ Sets the payload string.
 #### Example of use
 
 ```javascript
-jwt.create ("hoge", "{a: 100}");
+jwt.create("hoge", "{a: 100}");
 ```
 
 #### Processing result
@@ -52,7 +52,7 @@ jwt.create ("hoge", "{a: 100}");
 "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.e2E6MTAwfQ.lKzDfCDW / AbAFq639ZoT0t2RrBmGGsBKo7WUck8ZTi0"
 ```
 
-### jwt.payload (jwt)
+### jwt.payload(jwt)
 
 Get payload information from jwt information.
 
@@ -63,7 +63,7 @@ Set JWT information.
 #### Example of use
 
 ```javascript
-jwt.payload (
+jwt.payload(
     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.e2E6MTAwfQ.lKzDfCDW / AbAFq639ZoT0t2RrBmGGsBKo7WUck8ZTi0");
 ```
 
@@ -77,7 +77,7 @@ _
 
 _
 
-### jwt.validate (key, jwt)
+### jwt.validate(key, jwt)
 
 Confirm that the specified JWT information is the information generated with the specified key and that the payload information etc. has not been changed.
 
@@ -89,10 +89,10 @@ Set the key to create a token.
 
 Set jwt information.
 
-#### Usage example (success)
+#### Usage example(success)
 
 ```javascript
-jwt.validate ("hoge",
+jwt.validate("hoge",
     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.e2E6MTAwfQ.lKzDfCDW / AbAFq639ZoT0t2RrBmGGsBKo7WUck8ZTi0");
 ```
 
@@ -102,10 +102,10 @@ jwt.validate ("hoge",
 true
 ```
 
-#### Usage example (failure)
+#### Usage example(failure)
 
 ```javascript
-jwt.validate ("moge",
+jwt.validate("moge",
     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.e2E6MTAwfQ.lKzDfCDW / AbAFq639ZoT0t2RrBmGGsBKo7WUck8ZTi0");
 ```
 
@@ -125,7 +125,7 @@ It is used when you want to perform processing that you want to execute closing 
 
 ※ However, you can not use from the console.
 
-## closeable.register (obj)
+## closeable.register(obj)
 
 Register the process to perform close process in closeable.
 
@@ -136,7 +136,7 @@ The target is an object type, and you need to include the close method inside.
 #### Example of use
 
 ```javascript
-closeable.register ({close: function () {console.log ("hoge");}});
+closeable.register({close: function() {console.log("hoge");}});
 ```
 
 After executing the above-mentioned API, the following message will be displayed on the terminal running msful.
@@ -149,7 +149,7 @@ _
 
 _
 
-## closeable.close ()
+## closeable.close()
 
 Close all content registered by the registration method.
 However, this process does not usually need to be called, and will be called automatically immediately after the execution of api.
@@ -175,7 +175,7 @@ _
 -Argument description
 
 ```
-validate (method,
+validate(method,
     paramName, dataType, executeAndCheck,
     paramName, dataType, executeAndCheck,
     paramName, dataType, executeAndCheck
@@ -214,8 +214,8 @@ Condition setting to check and change the state for `paramName`.
 |:-----------|:--------|:--------------------|
 | none | "none" | Do nothing |
 | required | "required" | Error if the data is empty |
-| min num | "min 5" | Error if less than 5 (String.length <5 or Number <5) |
-| max num | "max 5" | Error if greater than 5 (String.length> 5 or Number> 5) |
+| min num | "min 5" | Error if less than 5(String.length <5 or Number <5) |
+| max num | "max 5" | Error if greater than 5(String.length> 5 or Number> 5) |
 | range min max | "range 5 12" | Error if 5 or more and 12 or less |
 | regex | "regex 'hoge'" | Error if the word `hoge` does not exist |
 | url | "url" | Error if not in URL format |
@@ -237,7 +237,7 @@ This definition can be set consecutively with `|`.
 
 /api/exampleValidate.js
 ```javascript
-validate ("POST",
+validate("POST",
     "name", "string", "req",
     "age", "number", "default 18",
     "lat", "float", "default 0.0",
@@ -245,15 +245,15 @@ validate ("POST",
     "X-Test-Code", "string", "req"
 );
 
-return {value: JSON.stringify (params)};
+return {value: JSON.stringify(params)};
 ```
 
 ##### Implementation content for accessing with Ajax.
 
 ```javascript
-fetch ('http://localhost:3333/api/exampleValidate', {
+fetch('http://localhost:3333/api/exampleValidate', {
   method: 'POST',
-  body: JSON.stringify (sendParams),
+  body: JSON.stringify(sendParams),
   headers: {
     'Content-Type': 'application/json;charset=utf-8;',
     'X-Test-Code': 'test'
@@ -261,7 +261,7 @@ fetch ('http://localhost:3333/api/exampleValidate', {
 }).
 ```
 
-##### Send data contents in Ajax (normal).
+##### Send data contents in Ajax(normal).
 
 ```javascript
 var sendParams = {
@@ -282,7 +282,7 @@ var sendParams = {
   "X-Test-Code": "test"}
 ```
 
-##### Send data contents in Ajax (error).
+##### Send data contents in Ajax(error).
 
 ```javascript
 var sendParams = {
@@ -324,7 +324,7 @@ For the second and subsequent arguments, define `parameter name`,` parameter typ
 #### Definition Description
 
 ```
-entity.expose (name,
+entity.expose(name,
     paramName, dataType, executeAndCheck,
     paramName, dataType, executeAndCheck,
     paramName, dataType, executeAndCheck
@@ -362,11 +362,11 @@ The `$ name` type is used as follows:
 
 ```javascript
 // Example
-entity.expose ("user",
+entity.expose("user",
   "name", "string", "",
   "age", "number", "",
 );
-entity.expose ("users",
+entity.expose("users",
   "list", "$ user", ""
 );
 
@@ -377,7 +377,7 @@ var res = {
   ]
 };
 
-return entity.make ("users", res);
+return entity.make("users", res);
 ```
 
 ```javascript
@@ -394,7 +394,7 @@ return entity.make ("users", res);
 
 ```javascript
 // Example
-entity.expose ("user",
+entity.expose("user",
   "name", "string", "",
   "age", "number", "",
   "details": "{", "",
@@ -410,7 +410,7 @@ entity.expose ("user",
   comment: "mogemoge"
 }
 
-return entity.make ("user", res);
+return entity.make("user", res);
 ```
 
 ```javascript
@@ -433,8 +433,8 @@ Condition setting to check and change the state for `paramName`.
 |:-----------|:--------|:--------------------|
 | none | "none" | Do nothing |
 | required | "required" | Error if the data is empty |
-| min num | "min 5" | Error if less than 5 (String.length <5 or Number <5) |
-| max num | "max 5" | Error if greater than 5 (String.length> 5 or Number> 5) |
+| min num | "min 5" | Error if less than 5(String.length <5 or Number <5) |
+| max num | "max 5" | Error if greater than 5(String.length> 5 or Number> 5) |
 | range min max | "range 5 12" | Error if 5 or more and 12 or less |
 | regex | "regex 'hoge'" | Error if the word `hoge` does not exist |
 | url | "url" | Error if not in URL format |
@@ -467,7 +467,7 @@ Set the JSON information of conversion target.
 #### Example of use
 
 ```javascript
-entity.expose ("user",
+entity.expose("user",
   "name", "string", "",
   "age", "number", "",
   "details": "{", "",
@@ -483,7 +483,7 @@ var res = {
   comment: "mogemoge"
 }
 
-return entity.make ("user", res);
+return entity.make("user", res);
 ```
 
 #### Processing result

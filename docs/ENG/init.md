@@ -57,7 +57,7 @@ Next we will create a dynamic web API. Web API files are created under the api f
 ```
 
 ```javascript
-rtx.send ({hello: "world"});
+rtx.send({hello: "world"});
 ```
 
 -msful start
@@ -73,7 +73,7 @@ When such a display is displayed, it has started normally.
 (The following is the number of CPUs for listen content
 
 ```cmd
-## listen: 3333 env: [development] timeout: 15 (sec) contentCache: true pid: 13400
+## listen: 3333 env: [development] timeout: 15(sec) contentCache: true pid: 13400
 ```
 
 _
