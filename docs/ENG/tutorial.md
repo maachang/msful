@@ -62,7 +62,7 @@ If you do, those conf definitions are
 
 These can be obtained from the [envConf] object by defining
 
-Please refer to [Configuration explanation](https://github.com/maachang/msful/blob/master/docs/JP/next.md#config] file function) for a description of this area.
+Please refer to [Configuration explanation](https://github.com/maachang/msful/blob/master/docs/JP/next.md#config) file function for a description of this area.
 
 _
 
