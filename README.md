@@ -28,11 +28,11 @@ But I thought one time. The node-express Web application server running on node 
 
 That is, once node-express fixes the api program, it has to restart the node.
 
-The node-express's "during development" is reducing the development efficiency.
+The node-express "during development" is reducing the development efficiency.
 
 And they felt the same when they used java's spring-boot and scala's Vert.x.
 
-Both spring-boot and Vert.x are the same as exporess, and it was necessary to restart the server after each operation check for the api program correction.
+Both spring-boot and Vert.x are the same as node-express, and it was necessary to restart the server after each operation check for the api program correction.
 
 What I think using spring-boot and Vert.x is the cause of poor development efficiency because the api program update part is not reflected unless the server is restarted.
 

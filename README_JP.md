@@ -32,7 +32,7 @@ node-express のこれが「開発時」において、開発効率を低下さ�
 
 そして、それらはjavaの spring-boot や scalaの Vert.x これを使ってきた時も同じことを感じたわけです。
 
-spring-boot も Vert.x も、exporess と同じで、apiプログラムの修正に対して、動作確認の度にサーバを再起動させる必要がありました。
+spring-boot も Vert.x も、node-express と同じで、apiプログラムの修正に対して、動作確認の度にサーバを再起動させる必要がありました。
 
 spring-boot や Vert.x などを使っていて思うことは、apiプログラム更新部分に対して、サーバ再起動しないと反映されないことが、開発効率の悪さの原因だとね。
 

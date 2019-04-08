@@ -3,7 +3,7 @@
   "bin": {
     "msful": "index.js"
   },
-  "version": "0.1.16",
+  "version": "0.1.17",
   "description": "Web API server for micro service.",
   "main": "index.js",
   "scripts": {
