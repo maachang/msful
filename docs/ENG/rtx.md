@@ -67,11 +67,11 @@ _
 //Example
 rtx.binary(new Buffer([0xe3, 0x81, 0x82]), 200);
 
-> Send 'A' UTF8 data in binary.
+> Send 'あ' UTF8 data in binary.
 
-rtx.binary("Oh", 200, "utf-8");
+rtx.binary("あ", 200, "utf-8");
 
-> Send 'A' UTF8 data in binary.
+> Send 'あ' UTF8 data in binary.
 
 headers ['Content-Type'] = "image/gif";
 rtx.binary(new Buffer([0x00, 0x01, 0x02 ....]), 200);
