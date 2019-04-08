@@ -376,7 +376,7 @@ return entity.make("users", res);
 ```
 
 **＜結果＞**
-```
+```javascript
 {
   "list": [
     {"name": "maachang", "age": 18},
@@ -398,7 +398,7 @@ entity.expose("user",
   "details": "}",       ""
 );
 
-{
+var res = {
   name: "maachang",
   age:18,
   nickName: "hoge",
@@ -483,7 +483,7 @@ return entity.make("user", res);
 
 #### 処理結果
 
-```
+```javascript
 {
   name: "maachang",
   age:18,
