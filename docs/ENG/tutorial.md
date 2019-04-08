@@ -40,7 +40,7 @@ For example, if you define "Development", "Staging", "Production", etc. in "Envi
 
 ```
 Development: development
-For staging: staging
+staging: staging
 Production: production
 ```
 
