@@ -30,12 +30,12 @@ rtx.send({value: value})
 
 ### Browse by browser
 
-http://localhost:3333/api/?hoge = abc
+http://localhost:3333/api/?hoge=abc
 
 ###  Processing result
 
 ```
- {value: "hoge: hoge: [abc] method: [GET] url: [/api/? hoge = abc]"}
+ {value: "hoge: hoge: [abc] method: [GET] url: [/api/?hoge=abc]"}
 ```
 
 ### Receive
