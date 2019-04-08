@@ -41,11 +41,11 @@ First of all, create a static HTML file. Static files such as HTML are created u
 
 ```html
 <html>
-  <head> </ head>
+  <head> </head>
   <body>
     hoge !!
-  </ body>
-</ html>
+  </body>
+</html>
 ```
 
 ## Create webapi file
