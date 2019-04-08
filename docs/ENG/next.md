@@ -62,7 +62,7 @@ _
 
 _
 
-# config file function
+# config
 
 If you create a file in JSON format under the `conf` folder, you can use the definition contents of JSON format in the program.
 
