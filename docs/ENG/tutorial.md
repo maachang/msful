@@ -62,7 +62,7 @@ If you do, those conf definitions are
 
 These can be obtained from the [envConf] object by defining
 
-Please refer to [Configuration explanation](https://github.com/maachang/msful/blob/master/docs/JP/next.md#config) file function for a description of this area.
+Please refer to [Configuration explanation](https://github.com/maachang/msful/blob/master/docs/ENG/next.md#config) file function for a description of this area.
 
 _
 
@@ -132,13 +132,13 @@ _
 
 msful specific functions jwt, closable, validate, entity Please check the following contents.
 
-[jwt](https://github.com/maachang/msful/blob/master/docs/JP/base_mod.md#jwt)
+[jwt](https://github.com/maachang/msful/blob/master/docs/ENG/base_mod.md#jwt)
 
-[closable](https://github.com/maachang/msful/blob/master/docs/JP/base_mod.md#closable)
+[closable](https://github.com/maachang/msful/blob/master/docs/ENG/base_mod.md#closable)
 
-[validate](https://github.com/maachang/msful/blob/master/docs/JP/base_mod.md#validate)
+[validate](https://github.com/maachang/msful/blob/master/docs/ENG/base_mod.md#validate)
 
-[entity](https://github.com/maachang/msful/blob/master/docs/JP/base_mod.md#entity)
+[entity](https://github.com/maachang/msful/blob/master/docs/ENG/base_mod.md#entity)
 
 _
 
