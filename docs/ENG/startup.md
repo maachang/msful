@@ -31,6 +31,10 @@ or
 
 ```
 
+_
+
+_
+
 ## Set the execution environment.
 
 Set the msful execution environment.
@@ -72,6 +76,10 @@ or
 
 ```
 
+_
+
+_
+
 ## Set to enable or disable caching of static content.
 
 This option has the problem that, for example, static content files such as HTML and js files are cached during system development, so the updated contents are not reflected, etc. I will.
@@ -91,6 +99,10 @@ or
 
 ```
 
+_
+
+_
+
 ## Set communication timeout value.
 
 This option sets the timeout for returning the response. Also, this unit is set in "milliseconds"
@@ -108,6 +120,34 @@ or
 ```cmd
 ## listen: 3333 env: [development] timeout: 25(sec) contentCache: true pid: 13400
 ```
+
+_
+
+_
+
+## Set the number of boot clusters.
+
+This option sets the number of clusters of HTTP execution part to start with msful.
+
+However, since it usually matches the number of CPUs, it is used when the setting is necessary.
+
+```
+  msful -l 1
+```
+
+or
+
+```
+  msful --cluster 1
+```
+
+```cmd
+## listen: 3333 env: [development] timeout: 25 (sec) contentCache: true pid: 13400
+```
+
+_
+
+_
 
 ## Can also be set by environment variable
 
@@ -135,6 +175,11 @@ MSFUL_DEBUG
   export MSFUL_DEBUG = true
   Set the debug mode.
   If [true], a stack trace will be issued whenever an exception occurs.
+
+MSFUL_CLUSTER
+   export MSFUL_CLUSTER = 1
+   Set the cluster start condition.
+   This setting allows you to change the number of cluster launches for the msful HTTP execution part.
 ```
 _
 

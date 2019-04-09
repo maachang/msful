@@ -1,4 +1,4 @@
-#! /usr/bin/env node
+#!/usr/bin/env node
 
 /*!
  * msful(micro service RESTFul API Server).
@@ -9,6 +9,9 @@
 
 (function() {
   'use strict';
+
+  // 基本定義情報を取得..
+  var constants = require('./lib/constants.js');
   
   // コマンド引数取得.
   var getCmdArgs = function() {
@@ -28,6 +31,11 @@
     }
     return null;
   }
+
+  // 環境変数を取得.
+  var getEnv = function(name) {
+    return process.env[name];
+  }
   
   var port = null;
   var timeout = null;
@@ -35,11 +43,17 @@
   var env = null;
   var cmd = null;
   var consoleFlag = false;
+  var maxClusterSize = require('os').cpus().length;
+
   // コマンドが存在するかチェック.
   if (process.argv.length > 2) {
     cmd = "" + process.argv[2];
   }
+
+  // コマンド設定が行われている場合.
   if (cmd != null) {
+
+    // プロジェクト.
     if (cmd == "project") {
       // 新規プロジェクトを作成.
       if(process.argv.length > 3) {
@@ -48,60 +62,87 @@
         require('./lib/project.js').createMsFulProject();
       }
       return;
+    
+    // ヘルプ.
     } else if (cmd == "help" || cmd == "-h" || cmd == "--help") {
       // ヘルプ情報を表示.
       require('./lib/help.js').helpMsFul();
       return;
+    
+    // コンソール実行.
     } else if (cmd == "console" || cmd == "con") {
       // コンソール実行.
       consoleFlag = true;
-    } else {
-      // ポート取得.
-      var p = null
-      try {
-        p = parseInt(getCmdArgs("-p", "--port"));
-        if (!(p > 0 && p < 65535)) {
-          p = null;
-        }
-      } catch (e) {
-        p = null
+    }
+  }
+
+  // ポート取得.
+  var p = null
+  try {
+    p = parseInt(getCmdArgs("-p", "--port"));
+    if (!(p > 0 && p < 65535)) {
+      p = null;
+    }
+  } catch (e) {
+    p = null
+  }
+  port = p
+
+  // タイムアウト取得.
+  p = null
+  try {
+    p = parseInt(getCmdArgs("-t", "--timeout"));
+    if (p <= 0) {
+      p = null;
+    }
+  } catch (e) {
+    p = null
+  }
+  timeout = p
+
+  // コンテンツキャッシュ情報を取得.
+  p = null
+  try {
+    p = getCmdArgs("-c", "--cache");
+    if(p == "true" || p == "t") {
+      contentsCache = true;
+    } else if(p == "false" || p == "f") {
+      contentsCache = false;
+    }
+  } catch (e) {
+    contentsCache = null;
+  }
+
+  // 環境設定を取得.
+  p = null
+  try {
+    p = getCmdArgs("-e", "--env");
+    if(p) {
+      env = p;
+    } 
+  } catch (e) {
+    env = null;
+  }
+
+  // クラスタ数を設定.
+  p = null
+  try {
+    p = parseInt(getCmdArgs("-l", "--cluster"));
+  } catch (e) {
+    p = null;
+  }
+  if (p > 0) {
+    maxClusterSize = p;
+  } else {
+    try {
+      if ((p = parseInt(getEnv(constants.ENV_CLUSTER))) > 0) {
+        maxClusterSize = p;
       }
-      port = p
-      // タイムアウト取得.
-      try {
-        p = parseInt(getCmdArgs("-t", "--timeout"));
-        if (p <= 0) {
-          p = null;
-        }
-      } catch (e) {
-        p = null
-      }
-      timeout = p
-      // コンテンツキャッシュ情報を取得.
-      try {
-        p = getCmdArgs("-c", "--cache");
-        if(p == "true" || p == "t") {
-          contentsCache = true;
-        } else if(p == "false" || p == "f") {
-          contentsCache = false;
-        }
-      } catch (e) {
-        contentsCache = null;
-      }
-      // 環境設定を取得.
-      try {
-        p = getCmdArgs("-e", "--env");
-        if(p) {
-          env = p;
-        } 
-      } catch (e) {
-        env = null;
-      }
+    } catch(e) {
     }
   }
   
   // 必要なフォルダ構成をチェック.
-  var constants = require('./lib/constants.js');
   var fs = require("fs");
   fs.statSync(constants.HTML_DIR);
   fs.statSync(constants.API_DIR);
@@ -122,7 +163,6 @@
 
   // クラスタ起動.
   var cluster = require('cluster');
-  var MAX_SERVER = require('os').cpus().length;
   if (cluster.isMaster) {
     
     // 起動時に表示する内容.
@@ -131,7 +171,7 @@
     constants = null;
     
     // マスター起動.
-    for (var i = 0; i < MAX_SERVER; ++i) {
+    for (var i = 0; i < maxClusterSize; ++i) {
       cluster.fork();
     }
     cluster.on('exit', function (worker, code, signal) {
