@@ -90,7 +90,10 @@ msful [cmd]
    console: At the console, run JS on line.
    console [file]: Run the specified file on the console.
    -p [--port] number Set the server bind port number.
+   -e [--env] Set the execution environment conditions of msful.
    -c [--cache] [true/false] Configure the content cache.
+   -t [--timeout] Set HTTP response timeout value.
+   -l [--cluster] Set the number of clusters of HTTP execution part of msful.
 ```
 
 _
