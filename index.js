@@ -33,7 +33,6 @@
   var maxClusterSize = require('os').cpus().length;
 
   // 起動パラメータをargsCmdにセット.
-  //var argv_params = argsCmd.setArgv(process.argv);
   var argv_params = argsCmd.getArgv();
 
   // ポート取得.
