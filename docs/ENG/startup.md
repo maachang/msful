@@ -27,6 +27,10 @@ or
 ```
 
 ```cmd
+msful(micro service RESTFul API Server) v0.1.20
+Copyright(c) 2019 maachang.
+ id: 594d5954-3c06-1639-141b-cf2b1e70c67e
+
 ## listen: 8080 env: [development] timeout: 15(sec) contentCache: true pid: 13400
 
 ```
@@ -72,6 +76,10 @@ or
 ```
 
 ```cmd
+msful(micro service RESTFul API Server) v0.1.20
+Copyright(c) 2019 maachang.
+ id: 594d5954-3c06-1639-141b-cf2b1e70c67e
+
 ## listen: 3333 env: [staging] timeout: 15(sec) contentCache: true pid: 13400
 
 ```
@@ -95,6 +103,10 @@ or
 ```
 
 ```cmd
+msful(micro service RESTFul API Server) v0.1.20
+Copyright(c) 2019 maachang.
+ id: 594d5954-3c06-1639-141b-cf2b1e70c67e
+
 ## listen: 3333 env: [development] timeout: 15(sec) contentCache: false pid: 13400
 
 ```
@@ -118,6 +130,10 @@ or
 ```
 
 ```cmd
+msful(micro service RESTFul API Server) v0.1.20
+Copyright(c) 2019 maachang.
+ id: 594d5954-3c06-1639-141b-cf2b1e70c67e
+
 ## listen: 3333 env: [development] timeout: 25(sec) contentCache: true pid: 13400
 ```
 
@@ -142,6 +158,10 @@ or
 ```
 
 ```cmd
+msful(micro service RESTFul API Server) v0.1.20
+Copyright(c) 2019 maachang.
+ id: 594d5954-3c06-1639-141b-cf2b1e70c67e
+
 ## listen: 3333 env: [development] timeout: 25 (sec) contentCache: true pid: 13400
 ```
 

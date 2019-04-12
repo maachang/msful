@@ -160,4 +160,24 @@ _
 
 _
 
+# Get server ID.
+
+With msful, a unique server ID (uuid) is generated for project creation.
+
+In the following, the server ID is output to the console.
+
+```javascript
+// Example.
+console.log ("# msfulId:" + msfulId);
+```
+
+```javascript
+// Result.
+# msfulId: 68716cfd-3cdf-89ae-770a-38390b962625
+```
+
+_
+
+_
+
 Return to the readme.md documentation [readme](https://github.com/maachang/msful/blob/master/README.md)

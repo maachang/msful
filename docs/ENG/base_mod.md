@@ -119,6 +119,79 @@ _
 
 _
 
+# uniqueId
+
+Generate a unique ID.
+
+## uniqueId.init = function(seet)
+
+Initialize the random number.
+
+Even if not set separately, it is initialized with nanoTime once.
+
+#### seet
+
+Set the initial random number to seet.
+
+If not set, set the runtime nanoTime.
+
+#### Example of use
+
+```javascript
+uniqueId.init();
+```
+
+In the above content, nanoTime is assigned as the initial value of the random number that generates the unique ID.
+
+_
+
+_
+
+## uniqueId.getUUID = function()
+
+Get unique ID in uuid format.
+
+#### Example of use
+
+```javascript
+uniqueId.getUUID();
+```
+
+Unique uuid will be returned.
+
+```
+0318ad30-2a2f-e5ac-17a6-1b 291a04b377
+```
+
+_
+
+_
+
+## uniqueId.getId = function(size)
+
+Get the unique numerical ID by specifying the number of digits.
+
+#### size
+
+Specify the unique number ID of the number of digits.
+It is possible to create even 100 digits separately.
+
+#### Example of use
+
+```javascript
+uniqueId.getId(50);
+```
+
+Unique numeric ID will be returned in 50 characters.
+
+```
+148745272521424046517782297418255484461429441
+```
+
+_
+
+_
+
 # closeable
 
 It is used when you want to perform processing that you want to execute closing processing surely after processing is completed.

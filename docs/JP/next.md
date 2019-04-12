@@ -160,4 +160,24 @@ _
 
 _
 
+# サーバIDの取得.
+
+msfulでは、プロジェクト生成時に対して、固有のサーバID(uuid)が生成されます。
+
+以下ではそのサーバIDをコンソールに出力します.
+
+```javascript
+// 例.
+console.log("# msfulId: " + msfulId);
+```
+
+```javascript
+// 結果.
+# msfulId: 68716cfd-3cdf-89ae-770a-38390b962625
+```
+
+_
+
+_
+
 readme.mdのドキュメントに戻る [readme](https://github.com/maachang/msful/blob/master/README_JP.md)

@@ -141,6 +141,11 @@
       var msfulId = serverId.createId();
       console.log("new id: " + msfulId);
       return;
+    
+    // バージョン情報を出力.
+    } else if (cmd == "version") {
+      constants.viewTitle(console.log, false);
+      return;
 
     // コンソール実行.
     } else if (cmd == "console") {
@@ -149,8 +154,8 @@
     }
   }
 
-  // argsCmdのヘルプ情報をクリア.
-  argsCmd.clear();
+  // argsCmdのヘルプ情報を破棄.
+  argsCmd.destroy();
   
   // 必要なフォルダ構成をチェック.
   var fs = require("fs");
