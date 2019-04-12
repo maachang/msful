@@ -134,6 +134,8 @@ msfulの固有機能 jwt や closable や validate や entity これらは以下
 
 [jwt](https://github.com/maachang/msful/blob/master/docs/JP/base_mod.md#jwt)
 
+[uniqueId](https://github.com/maachang/msful/blob/master/docs/JP/base_mod.md#uniqueId)
+
 [closeable](https://github.com/maachang/msful/blob/master/docs/JP/base_mod.md#closeable)
 
 [validate](https://github.com/maachang/msful/blob/master/docs/JP/base_mod.md#validate)
