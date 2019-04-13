@@ -3,7 +3,7 @@
   "bin": {
     "msful": "index.js"
   },
-  "version": "0.1.22",
+  "version": "0.1.23",
   "description": "Web API server for micro service.",
   "main": "index.js",
   "scripts": {
@@ -27,6 +27,8 @@
     "url": "https://github.com/maachang/msful/issues"
   },
   "homepage": "https://github.com/maachang/msful#readme",
-  "dependencies": {},
+  "dependencies": {
+    "big-integer": "^1.6.43"
+  },
   "devDependencies": {}
 }
