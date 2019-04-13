@@ -192,6 +192,44 @@ _
 
 _
 
+## uniqueId.code64 = function(value), uniqueId.decode64 = function(value)
+
+uniqueId.getIdで生成した数値の情報を短縮化します。
+
+#### value
+
+code64の場合は、uniqueId.getIdで生成した数値の情報を入れます。
+
+decode64の場合は、uniqueId.code64で生成した短縮情報を設定します。
+
+
+#### 使用例
+
+```javascript
+var a = uniqueId.getId(50);
+var b = uniqueId.code64(a);
+var c = uniqueId.decode64(b);
+
+console.log("uniqueId.getId(50):  " + a);
+console.log("uniqueId.code64(a):  " + b);
+console.log("uniqueId.decode64(b):" + c);
+
+```
+
+code64の場合は、uniqueId.getIdで生成した数値の情報を短縮文字変換します。
+
+decode64の場合は、uniqueId.code64で生成した短縮情報を元のuniqueId.getId情報に戻します。
+
+```
+uniqueId.getId(50):  13622729598424657310232258591765575149207946539313
+uniqueId.code64(a):  WedSYjfELNw+ntr8YsYVrzMuVivc
+uniqueId.decode64(b):13622729598424657310232258591765575149207946539313
+```
+
+_
+
+_
+
 # closable
 
 処理終了後に、確実にクローズ処理を実行したい処理を行う場合に利用します。
