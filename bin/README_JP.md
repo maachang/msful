@@ -1,4 +1,4 @@
-English documents [here](https://github.com/maachang/msful/blob/master/bin/README.md
+English documents [here](https://github.com/maachang/msful/blob/master/bin/README.md)
 
 _
 
@@ -6,7 +6,7 @@ _
 
 # msful 開発者向けの設定.
 
-この情報は、msfulを開発する人向け用のものです。
+この情報は、msfulを開発する人向けのものです。
 
 なので、必要の無い方にはあまり意味がないかも知れないです。
 
