@@ -20,6 +20,20 @@ _
 
 _
 
+[jwt](#jwt)
+
+[uniqueId](#uniqueId)
+
+[closeable](#closeable)
+
+[validate](#validate)
+
+[entity](#entity)
+
+_
+
+_
+
 ## jwt
 
 Use JWT `json-web-token` for login authentication etc.

@@ -20,6 +20,20 @@ _
 
 _
 
+[jwt](#jwt)
+
+[uniqueId](#uniqueId)
+
+[closeable](#closeable)
+
+[validate](#validate)
+
+[entity](#entity)
+
+_
+
+_
+
 ## jwt
 
 JWT `json-web-token` を使ってログインの認証などで利用します。

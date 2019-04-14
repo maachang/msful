@@ -16,7 +16,7 @@ _
 
 ## Installation
 
-※ It is assumed that nodepm is installed and npm can be used.
+※ It is assumed that nodejs is installed and npm can be used.
 
 ```
 $ npm install -g msful
