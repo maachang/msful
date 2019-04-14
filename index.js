@@ -19,11 +19,6 @@
   // サーバID生成情報を取得.
   var serverId = require("./lib/modules/subs/serverId");
 
-  // 環境変数を取得.
-  var getEnv = function(name) {
-    return process.env[name];
-  }
-  
   var port = null;
   var timeout = null;
   var contentsCache = null;
@@ -103,7 +98,7 @@
     argsCmd.remove("-l", "--cluster");
   } else {
     try {
-      if ((p = parseInt(getEnv(constants.ENV_CLUSTER))) > 0) {
+      if ((p = parseInt(process.env[constants.ENV_CLUSTER])) > 0) {
         maxClusterSize = p;
       }
     } catch(e) {
