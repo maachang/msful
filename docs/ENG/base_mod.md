@@ -20,6 +20,8 @@ _
 
 _
 
+# Module information
+
 [jwt](#jwt)
 
 [uniqueId](#uniqueId)

@@ -20,6 +20,8 @@ _
 
 _
 
+# モジュール情報
+
 [jwt](#jwt)
 
 [uniqueId](#uniqueId)
@@ -244,13 +246,13 @@ _
 
 _
 
-# closable
+# closeable
 
 処理終了後に、確実にクローズ処理を実行したい処理を行う場合に利用します。
 
 ※ただし、コンソールからは使用できません。
 
-## closable.register = function(obj)
+## closeable.register = function(obj)
 
 closeableにクローズ処理を行う処理を登録します.
 
@@ -261,7 +263,7 @@ closeableにクローズ処理を行う処理を登録します.
 #### 使用例
 
 ```javascript
-closable.register({close:function(){ console.log("hoge"); }});
+closeable.register({close:function(){ console.log("hoge"); }});
 ```
 
 上記の内容のAPIを実行すると、msfulを起動しているターミナルに次のようなメッセージが表示されます。
@@ -274,7 +276,7 @@ _
 
 _
 
-## closable.close = function()
+## closeable.close = function()
 
 登録メソッドによって登録されたすべてのコンテンツを閉じます。
 ただし、このプロセスは通常は呼び出す必要はなく、apiの実行直後に自動的に呼び出されます。
