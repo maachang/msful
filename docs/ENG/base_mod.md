@@ -183,6 +183,26 @@ _
 
 _
 
+## uniqueId.getArray = function()
+
+Get unique ID by 128bit number of array (int, int, int, int).
+
+#### Example of use
+
+```javascript
+uniqueId.getArray();
+```
+
+Unique array (int, int, int, int) will be returned.
+
+```
+721105261,1742798176,1450197671,1446872435
+```
+
+_
+
+_
+
 ## uniqueId.getId = function(size)
 
 Get the unique numerical ID by specifying the number of digits.
@@ -202,6 +222,54 @@ Unique numeric ID will be returned in 50 characters.
 
 ```
 148745272521424046517782297418255484461429441
+```
+
+_
+
+_
+
+## uniqueId.arrayToUUID = function(n)
+
+Convert array (int, int, int, int) to uuid.
+
+#### n
+
+Set the condition of array (int, int, int, int).
+
+#### Example of use
+
+```javascript
+uniqueId.arrayToUUID([1,2,3,4]);
+```
+
+Converted to UUID.
+
+```
+00000001-0000-0002-0000-000300000004
+```
+
+_
+
+_
+
+## uniqueId.UUIDToArray = function(n)
+
+Convert UUID to array (int, int, int, int).
+
+#### n
+
+Specify UUID.
+
+#### Example of use
+
+```javascript
+uniqueId.UUIDToArray("00000001-0000-0002-0000-000300000004");
+```
+
+array (int, int, int, int) is returned.
+
+```
+1,2,3,4
 ```
 
 _

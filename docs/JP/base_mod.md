@@ -183,6 +183,26 @@ _
 
 _
 
+## uniqueId.getArray = function()
+
+ユニークなIDをarray(int, int, int, int) の128bit数値で取得します.
+
+#### 使用例
+
+```javascript
+uniqueId.getArray();
+```
+
+ユニークなarray(int, int, int, int)が返却されます.
+
+```
+721105261, 1742798176, 1450197671, 1446872435
+```
+
+_
+
+_
+
 ## uniqueId.getId = function(size)
 
 ユニークな数値のIDを桁数を指定して取得します.
@@ -202,6 +222,54 @@ uniqueId.getId(50);
 
 ```
 14874527252142404651747822974182554844614290061441
+```
+
+_
+
+_
+
+## uniqueId.arrayToUUID = function(n)
+
+array(int, int, int, int)をuuidに変換.
+
+#### n
+
+array(int, int, int, int)の条件を設定します.
+
+#### 使用例
+
+```javascript
+uniqueId.arrayToUUID([1,2,3,4]);
+```
+
+UUIDに変換されます.
+
+```
+00000001-0000-0002-0000-000300000004
+```
+
+_
+
+_
+
+## uniqueId.UUIDToArray = function(n)
+
+UUIDをarray(int, int, int, int)に変換.
+
+#### n
+
+UUIDを指定します.
+
+#### 使用例
+
+```javascript
+uniqueId.UUIDToArray("00000001-0000-0002-0000-000300000004");
+```
+
+array(int, int, int, int)が返却されます.
+
+```
+1,2,3,4
 ```
 
 _
