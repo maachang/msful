@@ -115,7 +115,7 @@ module.exports = function (cache, backup, modules, config, envConf) {
       var fs = require('fs');
       var path = require('path');
       var vm = require('vm');
-      var core = require('./modules/core');
+      var core = require('./core');
       ret = load(name, fs, path, vm, core);
 
       // キャッシュチェック.

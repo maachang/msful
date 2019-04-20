@@ -7,7 +7,7 @@ module.exports.createMsFulProject = function (projectName) {
   'use strict';
   var out = function(n) {process.stdout.write(n);}
   var constants = require("./constants");
-  var serverId = require("./modules/subs/serverId");
+  var serverId = require("../lib/subs/serverId");
   var fs = require('fs');
   
   var htmlDir = constants.HTML_DIR.substring(2);
@@ -46,7 +46,7 @@ module.exports.createMsFulProject = function (projectName) {
   
   // package.jsonを新規プロジェクト用に生成してコピー.
   var value = fs.readFileSync(__dirname + "/../project/package.json");
-  var strs = require("./modules/strs");
+  var strs = require("../lib/strs");
   value = strs.changeString(value, "{{projectName}}", projectName);
   value = strs.changeString(value, "{{user}}", process.env['username'] || process.env['USER'] || "");
   fs.writeFileSync(baseDir + "package.json", value);

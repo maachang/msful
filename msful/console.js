@@ -7,7 +7,7 @@ module.exports.createConsole = function (fileName, args_env, msfulId) {
   var out = function(n) {process.stdout.write(n);}
   var SIMBOL = "";
   var constants = require("./constants");
-  var core = require("./modules/core");
+  var core = require("./core");
   
   var cacheRequire = {cache:{}, time:Date.now()};
   var backupRequire = {cache:{}, time:Date.now()};

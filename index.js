@@ -11,13 +11,13 @@
   'use strict';
 
   // 基本定義情報を取得..
-  var constants = require('./lib/constants');
+  var constants = require('./msful/constants');
 
   // コマンド引数処理.
-  var argsCmd = require('./lib/modules/subs/args');
+  var argsCmd = require('./lib/subs/args');
 
   // サーバID生成情報を取得.
-  var serverId = require("./lib/modules/subs/serverId");
+  var serverId = require("./lib/subs/serverId");
 
   var port = null;
   var timeout = null;
@@ -117,16 +117,16 @@
     if (cmd == "project") {
       // 新規プロジェクトを作成.
       if(argv_params.length > 3) {
-        require('./lib/project.js').createMsFulProject("" + argv_params[3]);
+        require('./msful/project.js').createMsFulProject("" + argv_params[3]);
       } else {
-        require('./lib/project.js').createMsFulProject();
+        require('./msful/project.js').createMsFulProject();
       }
       return;
     
     // ヘルプ.
     } else if (cmd == "help") {
       // ヘルプ情報を表示.
-      require('./lib/help.js').helpMsFul(argsCmd);
+      require('./msful/help.js').helpMsFul(argsCmd);
       return;
     
     // サーバIDを再生成.
@@ -164,7 +164,7 @@
 
   // コンソール実行.
   if (consoleFlag) {
-    var cons = require("./lib/console");
+    var cons = require("./msful/console");
     if(argv_params.length > 3) {
       cons.createConsole("" + argv_params[3], env, msfulId);
     } else {
@@ -194,6 +194,6 @@
   } else {
     
     // ワーカー起動.
-    require('./lib/index.js').createMsFUL(port, timeout, contentsCache, env, msfulId);
+    require('./msful/index.js').createMsFUL(port, timeout, contentsCache, env, msfulId);
   }
 })()

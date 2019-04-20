@@ -5,7 +5,7 @@ module.exports = (function (_g) {
   'use strict';
   
   var fs = require('fs');
-  var constants = require("../constants");
+  var constants = require("./constants");
   var o = {};
 
   // モジュール情報.
@@ -269,35 +269,35 @@ module.exports = (function (_g) {
   // モジュールの読み込み.
   o.loadModules = function(consoleFlag) {
     consoleFlag = consoleFlag == true;
-    modules["jwt"] = Object.freeze(require("./jwt"));
-    modules["strs"] = Object.freeze(require("./strs"));
-    modules["nums"] = Object.freeze(require("./nums"));
-    modules["fcomp"] = Object.freeze(require("./fcomp"));
-    modules["fcipher"] = Object.freeze(require("./fcipher"));
-    modules["uniqueId"] = Object.freeze(require("./uniqueId"));
+    modules["jwt"] = Object.freeze(require("../lib/jwt"));
+    modules["strs"] = Object.freeze(require("../lib/strs"));
+    modules["nums"] = Object.freeze(require("../lib/nums"));
+    modules["fcomp"] = Object.freeze(require("../lib/fcomp"));
+    modules["fcipher"] = Object.freeze(require("../lib/fcipher"));
+    modules["uniqueId"] = Object.freeze(require("../lib/uniqueId"));
     
     // インスタンス生成側.
     if(!consoleFlag) {
-      modules["closeable"] = Object.freeze(require("./closeable"));
-      modules["validate"] = require("./validate").check;
+      modules["closeable"] = Object.freeze(require("../lib/closeable"));
+      modules["validate"] = require("../lib/validate").check;
     }
-    modules["entity"] = Object.freeze(require("./entity"));
+    modules["entity"] = Object.freeze(require("../lib/entity"));
   }
   
   // モジュール生成.
   o.createModules = function(req, res, pms, consoleFlag) {
     if(!consoleFlag) {
-      require("./closeable").create();
-      require("./entity").create();
+      require("../lib/closeable").create();
+      require("../lib/entity").create();
     }
-    require("./validate").create(req, pms);
+    require("../lib/validate").create(req, pms);
   }
   
   // モジュールのクリア.
   o.clearModules = function() {
-    require("./closeable").clear();
-    require("./validate").clear();
-    require("./entity").clear();
+    require("../lib/closeable").clear();
+    require("../lib/validate").clear();
+    require("../lib/entity").clear();
   }
 
   // モジュールリセット.

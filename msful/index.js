@@ -11,9 +11,9 @@ module.exports.createMsFUL = function (port, timeout, contentsCacheMode, args_en
   var http = require('http');
   var path = require('path');
   var constants = require("./constants");
-  var core = require("./modules/core");
-  var u = require("./modules/u");
-  var caches = require("./modules/subs/caches")
+  var core = require("./core");
+  var u = require("../lib/u");
+  var caches = require("../lib/subs/caches");
   var SERVER_NAME = "" + constants.NAME + "(" + constants.VERSION + ")";
 
   // Forbidden-URL.
