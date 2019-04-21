@@ -4,7 +4,7 @@
 module.exports = (function (_g) {
   'use strict';
   
-  var fs = require('fs');
+  var file = require("../lib/file")
   var constants = require("./constants");
   var o = {};
 
@@ -146,7 +146,7 @@ module.exports = (function (_g) {
     // コンフィグ内容は、JSONで定義される.
     
     var n,name,p,v,sub;
-    var list = fs.readdirSync(dir);
+    var list = file.list(dir);
     var len = list.length;
     for(var i = 0; i < len; i ++) {
       try {
@@ -157,16 +157,16 @@ module.exports = (function (_g) {
         }
         n = dir + "/" + name;
         // ファイルの場合.
-        if(fs.statSync(n).isFile()) {
+        if(file.isFile(n)) {
           v = new Function(
-            "return (function(_g){\nreturn (" + _cutComment(fs.readFileSync(n)) + ")\n})(global);")();
+            "return (function(_g){\nreturn (" + _cutComment(file.readByString(n)) + ")\n})(global);")();
           p = name.indexOf(".");
           if(p != -1) {
             name = name.substring(0,p);
           }
           out[name] = Object.freeze(v);
         // フォルダの場合.
-        } else if(fs.statSync(n).isDirectory()) {
+        } else if(file.isDir(n)) {
           sub = {};
           out[name] = sub;
           _readConfig(sub, n)
@@ -269,6 +269,7 @@ module.exports = (function (_g) {
   // モジュールの読み込み.
   o.loadModules = function(consoleFlag) {
     consoleFlag = consoleFlag == true;
+    modules["file"] = Object.freeze(file);
     modules["jwt"] = Object.freeze(require("../lib/jwt"));
     modules["strs"] = Object.freeze(require("../lib/strs"));
     modules["nums"] = Object.freeze(require("../lib/nums"));
