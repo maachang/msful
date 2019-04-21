@@ -16,6 +16,10 @@ module.exports.createMsFUL = function (port, timeout, contentsCacheMode, args_en
   var caches = require("../lib/subs/caches");
   var SERVER_NAME = "" + constants.NAME + "(" + constants.VERSION + ")";
 
+  // エラーハンドリング.s
+  var error = require("./error");
+  var HttpError = error.HttpError;
+
   // Forbidden-URL.
   var FORBIDDEN_URL = "/@";
 
@@ -190,7 +194,9 @@ module.exports.createMsFUL = function (port, timeout, contentsCacheMode, args_en
   }
 
   // cros対応ヘッダを設定.
-  var _setCrosHeader = function(headers, bodyLength) {
+  var _setCrosHeader = function(headers, bodyLength, notCache, closeFlag) {
+    notCache = notCache == false ? false : true;
+    closeFlag = closeFlag == false ? false : true;
     var crosHeaders = "content-type";
     for(var k in headers) {
       k = k.toLowerCase();
@@ -199,11 +205,15 @@ module.exports.createMsFUL = function (port, timeout, contentsCacheMode, args_en
       }
     }
     headers['Server'] = SERVER_NAME;
-    headers['Pragma'] = 'no-cache';
+    if(notCache) {
+      headers['Pragma'] = 'no-cache';
+    }
     headers['Access-Control-Allow-Origin'] = '*';
     headers['Access-Control-Allow-Headers'] = crosHeaders + ', *';
     headers['Access-Control-Allow-Methods'] = 'GET, POST, DELETE, PUT, HEAD, PATCH, OPTIONS';
-    headers['Connection'] = 'close';
+    if(closeFlag) {
+      headers['Connection'] = 'close';
+    }
     headers['Date'] = toRfc822(new Date());
     headers['Content-Length'] = bodyLength;
   }
@@ -243,17 +253,6 @@ module.exports.createMsFUL = function (port, timeout, contentsCacheMode, args_en
     
     // 返却処理.
     return _send(m, status, body);
-  }
-
-
-  // HTTP-ERROR.
-  class HttpError extends Error {
-    constructor (status, message) {
-      super(message);
-      this.name = this.constructor.name;
-      Error.captureStackTrace(this, this.constructor);
-      this.status = status || 500;
-    }
   }
   
   // 実行エラー.
@@ -1024,11 +1023,11 @@ module.exports.createMsFUL = function (port, timeout, contentsCacheMode, args_en
             
             // キャッシュの場合.
             status = 304;
-            headers['Date'] = toRfc822(new Date());
-            headers['Content-Length'] = bodyLength;
             
             // 返却処理.
             try {
+              // クロスヘッダ対応. 
+              _setCrosHeader(headers, bodyLength, false, false);
               res.writeHead(status, headers);
               res.end(body);
             } catch(e) {
@@ -1037,12 +1036,11 @@ module.exports.createMsFUL = function (port, timeout, contentsCacheMode, args_en
             return;
           }
         }
-        // ファイル情報は非同期で読む.
-        headers['Content-Length'] = stat.size;
-        headers['Date'] = toRfc822(new Date());
         
         // 返却処理.
         try {
+          // ファイル情報は非同期で読む(クロスヘッダ対応).
+          _setCrosHeader(headers, stat.size, false, false);
           res.writeHead(status, headers);
           var readableStream = fs.createReadStream(name);
           readableStream.on('data', function (data) {
@@ -1062,9 +1060,8 @@ module.exports.createMsFUL = function (port, timeout, contentsCacheMode, args_en
 
   // 静的ファイル用エラー返却処理.
   var errorFileResult = function(status, err, res) {
-    var headers = { 'Server': SERVER_NAME };
+    var headers = {};
     var body = "";
-    var bodyLength = 0;
     if (status >= 500) {
       if(err != null) {
         console.error(err + " status:" + status, err);
@@ -1075,14 +1072,15 @@ module.exports.createMsFUL = function (port, timeout, contentsCacheMode, args_en
     // 静的ファイルでも、JSONエラーを返却させる.
     headers['Content-Type'] = "text/javascript; charset=utf-8;";
     headers['Pragma'] = 'no-cache';
-    headers['Connection'] = 'close';
-    body = "{\"result\": \"error\", \"status\": + status}";
-    bodyLength = utf8Length(body);
-    
-    // 返却処理.
-    headers['Date'] = toRfc822(new Date());
-    headers['Content-Length'] = bodyLength;
+    body = "{\"result\": \"error\", \"status\": " + status;
+    if(err) {
+      body += ", \"message\": \"" + err["message"] + "\"}";
+    } else {
+      body += "}";
+    }
     try {
+      // クロスヘッダ対応.
+      _setCrosHeader(headers, utf8Length(body));
       res.writeHead(status, headers);
       res.end(body);
     } catch(e) {
@@ -1141,6 +1139,7 @@ module.exports.createMsFUL = function (port, timeout, contentsCacheMode, args_en
       case "flv": return "video/x-flv";
       case "ogg": return "application/ogg";
       case "mpg4": return "video/mp4";
+      case "ico": return "image/x-icon";
     }
 
     // config.mimeが存在するかチェック.
