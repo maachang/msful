@@ -300,6 +300,9 @@ module.exports = (function (_g) {
       modules["validate"] = require("../lib/validate").check;
     }
     modules["entity"] = Object.freeze(require("../lib/entity"));
+
+    // argsCmd.getParams だけを抽出する.
+    modules["argsCmd"] = Object.freeze({"getParams": require("../lib/subs/args").getParams});
   }
   
   // モジュール生成.

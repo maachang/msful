@@ -22,9 +22,8 @@
   // 数値情報.
   var nums = require("./lib/nums");
 
-  // システム開始nanoTimeを取得.
-  var systemNanoTime = nums.getNanoTime();
-  
+  // ファイル情報.
+  var file = require("./lib/file");
 
   // コマンド引数.
   var port = null;
@@ -179,16 +178,33 @@
   if (consoleFlag) {
     var cons = require("./msful/console");
     if(argv_params.length > 3) {
-      cons.createConsole("" + argv_params[3], env, msfulId, systemNanoTime);
+      cons.createConsole("" + argv_params[3], env, msfulId, nums.getNanoTime());
     } else {
-      cons.createConsole(null, env, msfulId, systemNanoTime);
+      cons.createConsole(null, env, msfulId, nums.getNanoTime());
     }
     return;
+  }
+
+  // systemNanoTimeを保持するファイル名.
+  var _SYSTEM_NANO_TIME_FILE = "./.systemNanoTime";
+
+  // systemNanoTimeを生成.
+  var _createSystemNanoTime = function() {
+    var nano = nums.getNanoTime();
+    file.writeByString(_SYSTEM_NANO_TIME_FILE, ""+ nano);
+  }
+
+  // systemNanoTimeを取得.
+  var _getSystemNanoTime = function() {
+    return parseInt(file.readByString(_SYSTEM_NANO_TIME_FILE));
   }
 
   // クラスタ起動.
   var cluster = require('cluster');
   if (cluster.isMaster) {
+
+    // nanoTimeを生成.
+    _createSystemNanoTime();
     
     // 起動時に表示する内容.
     constants.viewTitle(function(n){console.log(n);}, false);
@@ -207,6 +223,6 @@
   } else {
     
     // ワーカー起動.
-    require('./msful/index.js').createMsFUL(port, timeout, contentsCache, env, msfulId, systemNanoTime);
+    require('./msful/index.js').createMsFUL(port, timeout, contentsCache, env, msfulId, _getSystemNanoTime());
   }
 })()
