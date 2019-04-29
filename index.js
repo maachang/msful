@@ -19,6 +19,14 @@
   // サーバID生成情報を取得.
   var serverId = require("./lib/subs/serverId");
 
+  // 数値情報.
+  var nums = require("./lib/nums");
+
+  // システム開始nanoTimeを取得.
+  var systemNanoTime = nums.getNanoTime();
+  
+
+  // コマンド引数.
   var port = null;
   var timeout = null;
   var contentsCache = null;
@@ -141,6 +149,11 @@
       constants.viewTitle(console.log, false);
       return;
 
+    // バージョン番号だけを表示.
+    } else if (cmd == "--version") {
+      console.log(constants.VERSION);
+      return;
+      
     // コンソール実行.
     } else if (cmd == "console") {
       // コンソール実行.
@@ -166,9 +179,9 @@
   if (consoleFlag) {
     var cons = require("./msful/console");
     if(argv_params.length > 3) {
-      cons.createConsole("" + argv_params[3], env, msfulId);
+      cons.createConsole("" + argv_params[3], env, msfulId, systemNanoTime);
     } else {
-      cons.createConsole(null, env, msfulId);
+      cons.createConsole(null, env, msfulId, systemNanoTime);
     }
     return;
   }
@@ -194,6 +207,6 @@
   } else {
     
     // ワーカー起動.
-    require('./msful/index.js').createMsFUL(port, timeout, contentsCache, env, msfulId);
+    require('./msful/index.js').createMsFUL(port, timeout, contentsCache, env, msfulId, systemNanoTime);
   }
 })()

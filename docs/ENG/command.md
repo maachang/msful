@@ -73,7 +73,7 @@ drwxr-xr-x 1 root 197121 0 Apr 5 18:38 api
 drwxr-xr-x 1 root 197121 0 Apr 14 23:14 conf
 drwxr-xr-x 1 root 197121 0 Apr 3 01:17 html
 drwxr-xr-x 1 root 197121 0 Apr 14 23:29 lib
-drwxr-xr-x 1 root 197121 0 Apr 14 23:29 .msful_Id
+drwxr-xr-x 1 root 197121 0 Apr 14 23:29 .server_id
 drwxr-xr-x 1 root 197121 0 Apr 14 23:29 package.json
 ```
 

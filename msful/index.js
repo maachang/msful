@@ -2,7 +2,7 @@
 //
 //
 
-module.exports.createMsFUL = function (port, timeout, contentsCacheMode, args_env, msfulId) {
+module.exports.createMsFUL = function (port, timeout, contentsCacheMode, args_env, msfulId, systemNanoTime) {
   'use strict';
   var _u = undefined
   var _CACHE = true; // コンテンツキャッシュあり.
@@ -18,7 +18,6 @@ module.exports.createMsFUL = function (port, timeout, contentsCacheMode, args_en
 
   // エラーハンドリング.s
   var error = require("./error");
-  var HttpError = error.HttpError;
 
   // Forbidden-URL.
   var FORBIDDEN_URL = "/@";
@@ -750,7 +749,7 @@ module.exports.createMsFUL = function (port, timeout, contentsCacheMode, args_en
     memory.echo = _echo;
 
     // HttpErrorハンドラ.
-    memory.HttpError = HttpError;
+    memory.HttpError = error.HttpError;
 
     // ResponseContext処理.
     memory.rtx = new ResponseContext(memory);
@@ -1250,7 +1249,7 @@ module.exports.createMsFUL = function (port, timeout, contentsCacheMode, args_en
   _setContentsCacahe(contentsCacheMode);
 
   // コア条件を設定.
-  core.setting(constants.CONF_DIR, args_env, msfulId);
+  core.setting(constants.CONF_DIR, args_env, msfulId, systemNanoTime);
   
   // サーバー生成.
   var server = createHttp(exec);

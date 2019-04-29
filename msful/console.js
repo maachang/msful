@@ -1,7 +1,7 @@
 // console msful.
 //
 
-module.exports.createConsole = function (fileName, args_env, msfulId) {
+module.exports.createConsole = function (fileName, args_env, msfulId, systemNanoTime) {
   'use strict';
   var _u = undefined;
   var out = function(n) {process.stdout.write(n);}
@@ -13,10 +13,10 @@ module.exports.createConsole = function (fileName, args_env, msfulId) {
   var backupRequire = {cache:{}, time:Date.now()};
   
   // モジュール群とコンフィグ群を取得.
-  var init = function(env, id) {
+  var init = function(env, id, nanoTime) {
 
     // コア条件を設定.
-    core.setting(constants.CONF_DIR, env, id);
+    core.setting(constants.CONF_DIR, env, id, nanoTime);
 
     // デフォルトのモジュールを読み込む.
     core.resetModules();
@@ -44,47 +44,57 @@ module.exports.createConsole = function (fileName, args_env, msfulId) {
   
   // 指定ファイルを実行.
   var executeFile = function(fileName) {
-    
-    // ファイル読み込み.
-    var fs = require('fs');
-    var src = fs.readFileSync(fileName, 'utf-8');
-    fs = null;
-    
-    // vm.
-    var vm = require('vm');
-    
-    // 実行スクリプトを合成.
-    var srcScript = "(function(_g){\n" +
-      "'use strict';\n" +
-      src + "\n" +
-      "})(global);";
-    src = null;
-    
-    // コンテキスト内容セット.
-    var memory = {}
-    var context = vm.createContext(memory);
-    setModules(memory);
-    
-    // 拡張require.
-    memory.require =  Object.freeze(
-      require("./require")(
-        cacheRequire,
-        backupRequire,
-        core.getModules(),
-        core.getConfig(),
-        core.getConfigEnv()
-      )
-    );
-    
-    // 初期化が必要な処理を実行.
-    core.createModules(null, null, null, true);
-    
+
+    // cmd終了時に安全に終了結果を送る.
+    var exitCode = 0;
+    process.on('exit', function() {
+      process.exit(exitCode);
+    });
+
     try {
+
+      // ファイル読み込み.
+      var fs = require('fs');
+      var src = fs.readFileSync(fileName, 'utf-8');
+      fs = null;
+      
+      // vm.
+      var vm = require('vm');
+      
+      // 実行スクリプトを合成.
+      var srcScript = "(function(_g){\n" +
+        "'use strict';\n" +
+        src + "\n" +
+        "})(global);";
+      src = null;
+      
+      // コンテキスト内容セット.
+      var memory = {}
+      var context = vm.createContext(memory);
+      setModules(memory);
+      
+      // 拡張require.
+      memory.require =  Object.freeze(
+        require("./require")(
+          cacheRequire,
+          backupRequire,
+          core.getModules(),
+          core.getConfig(),
+          core.getConfigEnv()
+        )
+      );
+      
+      // 初期化が必要な処理を実行.
+      core.createModules(null, null, null, true);
       
       // 実行処理.
       var script = new vm.Script(srcScript);
       srcScript = null;
-      return script.runInContext(context);
+      script.runInContext(context);
+      return;
+    } catch(e) {
+      exitCode = 1;
+      return;
     } finally {
       core.clearModules();
     }
@@ -161,7 +171,7 @@ module.exports.createConsole = function (fileName, args_env, msfulId) {
   }
   
   // 初期処理.
-  init(args_env, msfulId);
+  init(args_env, msfulId, systemNanoTime);
   
   // ファイルが指定されていない場合は、対話モード.
   if(fileName == null || fileName == _u) {

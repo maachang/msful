@@ -23,6 +23,9 @@ module.exports = (function (_g) {
   // サーバID.
   var msfulId = null;
 
+  // システム起動時のナノタイム.
+  var systemNanoTime = null;
+
   // javascript正規表現かチェック.
   // str : チェック対象の文字列を設定します.
   // p : チェック開始位置を設定します.
@@ -178,7 +181,7 @@ module.exports = (function (_g) {
   }
 
   // コンフィグ、デバッグモード、実行環境、サーバIDの設定を行います.
-  o.setting = function(dir, env, msfulId) {
+  o.setting = function(dir, env, msfulId, nanoTime) {
 
     // コンフィグ情報を読み込む.
     o.setConfig(dir);
@@ -191,6 +194,9 @@ module.exports = (function (_g) {
   
     // サーバIDの設定.
     o.setMsfulId(msfulId);
+
+    // システムナノタイムを設定.
+    o.setSystemNanoTime(nanoTime);
   }
 
   // コンフィグ内容をクリア.
@@ -256,6 +262,16 @@ module.exports = (function (_g) {
     return msfulId;
   }
 
+  // システムナノタイムを設定.
+  o.setSystemNanoTime = function(t) {
+    systemNanoTime = t;
+  }
+
+  // システム名のタイムを取得.
+  o.getSystemNanoTime = function() {
+    return systemNanoTime;
+  }
+
   // 起動モード用パラメータを取得.
   o.getConfigEnv = function() {
     var conf = config
@@ -270,6 +286,7 @@ module.exports = (function (_g) {
   o.loadModules = function(consoleFlag) {
     consoleFlag = consoleFlag == true;
     modules["file"] = Object.freeze(file);
+    modules["psync"] = Object.freeze(require("../lib/psync")(systemNanoTime));
     modules["jwt"] = Object.freeze(require("../lib/jwt"));
     modules["strs"] = Object.freeze(require("../lib/strs"));
     modules["nums"] = Object.freeze(require("../lib/nums"));
@@ -319,6 +336,7 @@ module.exports = (function (_g) {
     out["msfulEnv"] = Object.freeze(o.getEnvironment());
     out["msfulId"] = Object.freeze(o.getMsfulId());
     out["msfulDebug"] = Object.freeze(o.getDebugMode());
+    out["systemNanoTime"] = Object.freeze(o.getSystemNanoTime());
   }
 
   // global list.
