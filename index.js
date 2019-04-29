@@ -174,17 +174,6 @@
   // サーバIDを生成.
   var msfulId = serverId.getId();
 
-  // コンソール実行.
-  if (consoleFlag) {
-    var cons = require("./msful/console");
-    if(argv_params.length > 3) {
-      cons.createConsole("" + argv_params[3], env, msfulId, nums.getNanoTime());
-    } else {
-      cons.createConsole(null, env, msfulId, nums.getNanoTime());
-    }
-    return;
-  }
-
   // systemNanoTimeを保持するファイル名.
   var _SYSTEM_NANO_TIME_FILE = "./.systemNanoTime";
 
@@ -192,6 +181,7 @@
   var _createSystemNanoTime = function() {
     var nano = nums.getNanoTime();
     file.writeByString(_SYSTEM_NANO_TIME_FILE, ""+ nano);
+    return nano;
   }
 
   // systemNanoTimeを取得.
@@ -199,12 +189,31 @@
     return parseInt(file.readByString(_SYSTEM_NANO_TIME_FILE));
   }
 
+  // コンソール実行.
+  if (consoleFlag) {
+    var cons = require("./msful/console");
+    if(argv_params.length > 3) {
+
+      // サーバの最後に起動した起動時間を取得.
+      var nanoTime = file.isFile(_SYSTEM_NANO_TIME_FILE) ?
+        _getSystemNanoTime() : nums.getNanoTime();
+
+      cons.createConsole("" + argv_params[3], env, msfulId, nanoTime);
+    } else {
+      cons.createConsole(null, env, msfulId, nums.getNanoTime());
+    }
+    return;
+  }
+
   // クラスタ起動.
   var cluster = require('cluster');
   if (cluster.isMaster) {
 
+    // psyncを初期化.
+    require("./lib/psync")(nanoTime).init();
+
     // nanoTimeを生成.
-    _createSystemNanoTime();
+    var nanoTime = _createSystemNanoTime();
     
     // 起動時に表示する内容.
     constants.viewTitle(function(n){console.log(n);}, false);
