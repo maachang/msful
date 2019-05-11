@@ -1,9 +1,11 @@
 // 軽量暗号化・符号化.
 //
+if(!window["global"]) {
+  window["global"] = window;
+}
 
-module.exports = (function(_g) {
+(function(_g) {
 "use strict";
-var nums = require("./nums");
 
 // undefined定義.
 var _u = undefined ;
@@ -98,18 +100,93 @@ var CBase64 = (function() {
   return o;
 })();
 
-var o = {};
+// 指定文字の数を取得.
+var _targetCharCount = function(off,src,value) {
+  var ret = 0;
+  var p;
+  while ((p = src.indexOf(value,off)) != -1) {
+    ret ++;
+    off = p + value.length;
+  }
+  return ret;
+}
+
+// 数値チェック.
+// num : チェック対象の情報を設定します.
+// 戻り値 : [true]の場合、文字列情報です.
+var _isNumeric = (function() {
+  var _IS_NUMERIC_REG = /[^0-9.0-9]/g;
+  return function(num){
+    var n = "" + num;
+    if (num == null || num == _u) {
+      return false;
+    } else if(typeof(num) == "number") {
+      return true;
+    } else if(n.indexOf("-") == 0) {
+      n = n.substring(1);
+    }
+    return !(n.length == 0 || n.match(_IS_NUMERIC_REG)) && !(_targetCharCount(0,n,".")>1);
+  }
+})();
+
+// xor128演算乱数装置.
+var _Xor128 = function(seet) {
+  var r = {v:{a:123456789,b:362436069,c:521288629,d:88675123}};
+  
+  // シートセット.
+  r.setSeet = function(s) {
+    if (_isNumeric(s)) {
+      var n = this.v;
+      s = s|0;
+      n.a=s=1812433253*(s^(s>>30))+1;
+      n.b=s=1812433253*(s^(s>>30))+2;
+      n.c=s=1812433253*(s^(s>>30))+3;
+      n.d=s=1812433253*(s^(s>>30))+4;
+    }
+  }
+  
+  // 乱数取得.
+  r.next = function() {
+    var n = this.v;
+    var t=n.a;
+    var r=t;
+    t = ( t << 11 );
+    t = ( t ^ r );
+    r = t;
+    r = ( r >> 8 );
+    t = ( t ^ r );
+    r = n.b;
+    n.a = r;
+    r = n.c;
+    n.b = r;
+    r = n.d;
+    n.c = r;
+    t = ( t ^ r );
+    r = ( r >> 19 );
+    r = ( r ^ t );
+    n.d = r;
+    return r;
+  }
+  r.nextInt = function() {
+    return this.next();
+  }
+  r.setSeet(seet) ;
+  return r;
+}
+
+// 基本セット.
+var fcipher = {};
 var _head = null;
-var rand = nums.Xor128(nums.getNanoTime());
-o.CBase64 = CBase64;
+var rand = _Xor128(new Date().getTime());
+fcipher.CBase64 = CBase64;
 
 // ヘッダデータをセット.
-o.head = function(h) {
+fcipher.head = function(h) {
   _head = h;
 }
 
 // 指定文字列を保証するキーを生成.
-o.key = function(word, src) {
+fcipher.key = function(word, src) {
   if(src == _u || src == null) {
     src = "-l_l-u_f-s_m-";
   }
@@ -126,12 +203,12 @@ o.key = function(word, src) {
 }
 
 // エンコード.
-o.enc = function(value, pKey, head) {
-    return o.benc(strToArray( ""+value ), pKey, head) ;
+fcipher.enc = function(value, pKey, head) {
+    return fcipher.benc(strToArray( ""+value ), pKey, head) ;
 }
 
 // バイナリエンコード.
-o.benc = function(bin, pKey, head) {
+fcipher.benc = function(bin, pKey, head) {
   head = head == null || head == _u ? ((_head == null) ? "" : _head) : head;
   // 第一引数がバイナリ.
   var pubKey = _randKey() ;
@@ -150,12 +227,12 @@ o.benc = function(bin, pKey, head) {
 }
 
 // デコード.
-o.dec = function(value, pKey, head) {
-  return aryToString(o.bdec(value, pKey, head)) ;
+fcipher.dec = function(value, pKey, head) {
+  return aryToString(fcipher.bdec(value, pKey, head)) ;
 }
 
 // バイナリデコード.
-o.bdec = function(value, pKey, head) {
+fcipher.bdec = function(value, pKey, head) {
   head = head == null || head == _u ? ((_head == null) ? "" : _head) : head;
   var bin = CBase64.decode(value.substring(""+head.length));
   if( bin.length <= 34 ) {
@@ -180,7 +257,7 @@ o.bdec = function(value, pKey, head) {
   return body;
 }
 
-// ランダムキーを生成.
+// ランダムキー生成.
 var _randKey = function() {
   var bin = new Uint8Array(32) ;
   for( var i = 0 ; i < 32 ; i ++ ) {
@@ -414,5 +491,5 @@ var arraycopy = function(s, sp, d, dp, len) {
   }
 }
 
-return o;
+_g.fcipher = fcipher;
 })(global);

@@ -13,6 +13,9 @@
   // 基本定義情報を取得..
   var constants = require('./msful/constants');
 
+  // プロセスタイトルをセット.
+  process.title = "node-" + constants.NAME;
+
   // コマンド引数処理.
   var argsCmd = require('./lib/subs/args');
 
