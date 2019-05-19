@@ -832,13 +832,13 @@ module.exports.createMsFUL = function (port, timeout, contentsCacheMode, args_en
       fs.stat(apiFile, function(err, stat) {
         var filterTime, apiTime;
         try {
+
+          // エラー処理.
+          if (err) throw err;
           
           // 初期化.
           var memory = createMemory(req, res, data);
           var status = 200;
-
-          // エラー処理.
-          if (err) throw err;
           
           // APIファイル時間を取得.
           apiTime = stat.mtime.getTime();
