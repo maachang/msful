@@ -30,6 +30,93 @@ module.exports = (function () {
     }
     return ret;
   }
+
+  // httpサーバ開始処理.
+  var _request = function(req, res, call) {
+    // postデータのダウンロード.
+    if(req.method.toLowerCase() == "post") {
+      var charset = null;
+      var body = null;
+      var contentType = req.headers["content-type"];
+      // 文字コードが設定されている場合.
+      if(contentType) {
+        // jsonの場合は、charset=utf-8
+        if(contentType == "application/json") {
+          charset = "utf-8";
+        // post formデータの場合は charset=utf8
+        } else if(contentType == "application/x-www-form-urlencoded") {
+          charset = "utf-8";
+        // それ以外の場合は charset の指定文字コードを取得.
+        } else {
+          charset = _getCharset(contentType);
+        }
+      }
+      // コンテンツ長が設定されている場合.
+      if(req.headers["content-length"]) {
+        var off = 0;
+        body = Buffer.allocUnsafe(req.headers["content-length"]|0);
+        req.on('data', function(bin) {
+          bin.copy(body, off);
+          off += bin.length;
+        });
+        req.on('end', function() {
+          var abuf = body;
+          body = null;
+          off = null;
+          // 文字コードが設定されている場合は文字列変換.
+          if(charset) {
+            abuf = (new TextDecoder(charset)).decode(abuf);
+          }
+          call(req, res, abuf);
+        });
+      // コンテンツ長が設定されていない場合.
+      } else {
+        var body = [];
+        var binLen = 0;
+        req.on('data', function(bin) {
+          body.push(bin);
+          binLen += bin.length;
+        });
+        req.on('end', function() {
+          var n = null;
+          var off = 0;
+          var abuf = Buffer.allocUnsafe(binLen);
+          binLen = null;
+          var len = body.length;
+          for(var i = 0; i < len; i ++) {
+            n = body[i]; body[i] = null;
+            n.copy(abuf, off);
+            off += n.length;
+          }
+          body = null;
+          // 文字コードが設定されている場合は文字列変換.
+          if(charset) {
+            abuf = (new TextDecoder(charset)).decode(abuf);
+          }
+          call(req, res, abuf);
+        });
+      }
+    } else {
+      call(req, res, "");
+    }
+  }
+  
+  // content-typeからcharsetの情報を抽出.
+  var _getCharset = function(type) {
+    var p = type.indexOf("charset");
+    if(p == -1) {
+      return null;
+    }
+    var pp = type.indexOf("=", p + 7);
+    if(pp == -1) {
+      return null;
+    }
+    var end = type.indexOf(";", pp + 1);
+    if(end == -1) {
+      end = type.length;
+    }
+    return type.substring(pp + 1, end);
+  }
   
   // cros対応ヘッダを設定.
   var _setCrosHeader = function(headers, bodyLength, notCache, closeFlag) {
@@ -52,6 +139,7 @@ module.exports = (function () {
     if(closeFlag) {
       headers['Connection'] = 'close';
     }
+    headers['Expire'] = "-1";
     headers['Date'] = _toRfc822(new Date());
     headers['Content-Length'] = bodyLength;
   }
@@ -60,9 +148,21 @@ module.exports = (function () {
   var _errorFileResult = function(status, err, res, notCache, closeFlag) {
     var headers = {};
     var body = "";
-    if (status >= 500) {
+    var message = null;
+
+    // fs.statでファイルが見つからないエラーの場合.
+    if (err && err.code && err.code == 'ENOENT') {
+      status = 404;
+      message = "not found";
+    } else if(err) {
+      if(err.message) {
+        message = err.message;
+      } else {
+        message = "" + err;
+      }
+    } else if (status >= 500) {
       if(err != null) {
-        console.error(err + " status:" + status, err);
+        console.error("status:" + status, err);
       } else {
         console.error("error: " + status);
       }
@@ -70,12 +170,12 @@ module.exports = (function () {
     // 静的ファイルでも、JSONエラーを返却させる.
     headers['Content-Type'] = "text/javascript; charset=utf-8;";
     body = "{\"result\": \"error\", \"status\": " + status;
-    if(err) {
-      body += ", \"message\": \"" + err["message"] + "\"}";
+    if(message) {
+      body += ", \"message\": \"" + message + "\"}";
     } else {
       body += "}";
     }
-
+    // 送信処理.
     try {
       _setCrosHeader(headers, _utf8Length(body), notCache, closeFlag);
       res.writeHead(status, headers);

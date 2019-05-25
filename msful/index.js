@@ -65,31 +65,99 @@ module.exports.createMsFUL = function (port, timeout, contentsCacheMode, args_en
   // httpサーバ生成.
   var createHttp = function (call) {
     return http.createServer(function (req, res) {
-      var m = req.method.toLowerCase();
-      if(m == "post") {
-        var data = "";
-        req.on("data", function (chunk) {
-          data += chunk;
-        });
-        req.on("end", function () {
-          call(req, res, data);
-        });
+      // postデータのダウンロード.
+      if(req.method.toLowerCase() == "post") {
+        var charset = null;
+        var body = null;
+        var contentType = req.headers["content-type"];
+        // 文字コードが設定されている場合.
+        if(contentType) {
+          // jsonの場合は、charset=utf-8
+          if(contentType == "application/json") {
+            charset = "utf-8";
+          // post formデータの場合は charset=utf8
+          } else if(contentType == "application/x-www-form-urlencoded") {
+            charset = "utf-8";
+          // それ以外の場合は charset の指定文字コードを取得.
+          } else {
+            charset = _getCharset(contentType);
+          }
+        }
+        // コンテンツ長が設定されている場合.
+        if(req.headers["content-length"]) {
+          var off = 0;
+          body = Buffer.allocUnsafe(req.headers["content-length"]|0);
+          req.on('data', function(bin) {
+            bin.copy(body, off);
+            off += bin.length;
+          });
+          req.on('end', function() {
+            var abuf = body;
+            body = null;
+            off = null;
+            // 文字コードが設定されている場合は文字列変換.
+            if(charset) {
+              abuf = (new TextDecoder(charset)).decode(abuf);
+            }
+            call(req, res, abuf);
+          });
+        // コンテンツ長が設定されていない場合.
+        } else {
+          var body = [];
+          var binLen = 0;
+          req.on('data', function(bin) {
+            body.push(bin);
+            binLen += bin.length;
+          });
+          req.on('end', function() {
+            var n = null;
+            var off = 0;
+            var abuf = Buffer.allocUnsafe(binLen);
+            binLen = null;
+            var len = body.length;
+            for(var i = 0; i < len; i ++) {
+              n = body[i]; body[i] = null;
+              n.copy(abuf, off);
+              off += n.length;
+            }
+            body = null;
+            // 文字コードが設定されている場合は文字列変換.
+            if(charset) {
+              abuf = (new TextDecoder(charset)).decode(abuf);
+            }
+            call(req, res, abuf);
+          });
+        }
       } else {
         call(req, res, "");
       }
     })
   }
 
+  // content-typeからcharsetの情報を抽出.
+  var _getCharset = function(type) {
+    var p = type.indexOf("charset");
+    if(p == -1) {
+      return null;
+    }
+    var pp = type.indexOf("=", p + 7);
+    if(pp == -1) {
+      return null;
+    }
+    var end = type.indexOf(";", pp + 1);
+    if(end == -1) {
+      end = type.length;
+    }
+    return type.substring(pp + 1, end);
+  }
+
   // パラメータ取得.
   var _getPms = function (request, data) {
-    var ret = {};
-    var m = request.method.toLowerCase();
-    if (m == "post") {
-      ret = _$post(request, data);
+    if (request.method.toLowerCase() == "post") {
+      return _$post(request, data);
     } else {
-      ret = _$get(request.url);
+      return _$get(request.url);
     }
-    return ret;
   }
   
   // GETパラメータを処理.
@@ -102,17 +170,18 @@ module.exports.createMsFUL = function (port, timeout, contentsCacheMode, args_en
   }
 
   // POSTパラメータ処理.
-  var _$post = function (request, data) {
-    var c = request.headers["content-type"];
-    // octet-streamの場合は、バイナリデータ(Buffer)を受信・返却する.
-    if (c == "application/octet-stream") {
-      return new Buffer(data);
-    } else if (c.indexOf("/json") != -1) {
+  var _$post = function (req, data) {
+    // バッファデータの場合.
+    if(data instanceof Buffer) {
+      return data;
+    // json系の場合.
+    } else if (req.headers["content-type"] == "application/json") {
       // /jsonが含まれる場合はjson変換.
       return JSON.parse(data);
+    } else {
+      // それ以外は、Queryパラメータ変換.
+      return _analysisParams(data);
     }
-    // それ以外は、Queryパラメータ変換.
-    return _analysisParams(data);
   }
 
   // パラメータ解析.
@@ -213,6 +282,7 @@ module.exports.createMsFUL = function (port, timeout, contentsCacheMode, args_en
     if(closeFlag) {
       headers['Connection'] = 'close';
     }
+    headers['Expire'] = "-1";
     headers['Date'] = toRfc822(new Date());
     headers['Content-Length'] = bodyLength;
   }
@@ -659,7 +729,7 @@ module.exports.createMsFUL = function (port, timeout, contentsCacheMode, args_en
   }
 
   // コンソール出力.
-  var _echo = function(n) {
+  var _print = function(n) {
     process.stdout.write(n + "\n");
   }
 
@@ -746,7 +816,7 @@ module.exports.createMsFUL = function (port, timeout, contentsCacheMode, args_en
     memory._serverError = _serverError(memory);
 
     // コンソール出力.
-    memory.echo = _echo;
+    memory.print = _print;
 
     // HttpErrorハンドラ.
     memory.HttpError = error.HttpError;

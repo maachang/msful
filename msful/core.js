@@ -293,6 +293,7 @@ module.exports = (function (_g) {
     modules["fcomp"] = Object.freeze(require("../lib/fcomp"));
     modules["fcipher"] = Object.freeze(require("../lib/fcipher"));
     modules["uniqueId"] = Object.freeze(require("../lib/uniqueId"));
+    modules["httpClient"] = Object.freeze(require("../lib/http_client")); 
     
     // インスタンス生成側.
     if(!consoleFlag) {
