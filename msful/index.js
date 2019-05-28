@@ -73,7 +73,7 @@ module.exports.createMsFUL = function (port, timeout, contentsCacheMode, args_en
         if(contentType) {
           // jsonの場合は、charset=utf-8
           // post formデータの場合は charset=utf8
-          if(contentType.indexOf("application/json") == 0 ||
+          if(contentType == "application/json" ||
             contentType == "application/x-www-form-urlencoded") {
             charset = "utf-8";
           // それ以外の場合は charset の指定文字コードを取得.
