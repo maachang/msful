@@ -45,9 +45,12 @@ module.exports.createConsole = function (fileName, args_env, msfulId, systemNano
   
   // ロゴ表示.
   var viewLogo = function(id) {
+    if(!id) {
+      id = msfulId;
+    }
     constants.viewTitle(out);
     out(SIMBOL);
-    out(" id: " + msfulId + "\n\n");
+    out(" id: " + id + "\n\n");
   }
   
   // 指定ファイルを実行.
