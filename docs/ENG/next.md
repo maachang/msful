@@ -168,12 +168,12 @@ In the following, the server ID is output to the console.
 
 ```javascript
 // Example.
-console.log ("# msfulId:" + msfulId);
+console.log ("# serverId:" + serverId);
 ```
 
 ```javascript
 // Result.
-# msfulId: 68716cfd-3cdf-89ae-770a-38390b962625
+# serverId: 68716cfd-3cdf-89ae-770a-38390b962625
 ```
 
 _

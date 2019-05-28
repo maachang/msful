@@ -168,12 +168,12 @@ msfulでは、プロジェクト生成時に対して、固有のサーバID(uui
 
 ```javascript
 // 例.
-console.log("# msfulId: " + msfulId);
+console.log("# serverId: " + serverId);
 ```
 
 ```javascript
 // 結果.
-# msfulId: 68716cfd-3cdf-89ae-770a-38390b962625
+# serverId: 68716cfd-3cdf-89ae-770a-38390b962625
 ```
 
 _
