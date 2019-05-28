@@ -5,7 +5,6 @@
 module.exports.createMsFUL = function (port, timeout, contentsCacheMode, args_env, msfulId, systemNanoTime) {
   'use strict';
   var _u = undefined
-  var _CACHE = true; // コンテンツキャッシュあり.
   var fs = require('fs');
   var vm = require('vm');
   var http = require('http');
@@ -16,7 +15,7 @@ module.exports.createMsFUL = function (port, timeout, contentsCacheMode, args_en
   var caches = require("../lib/subs/caches");
   var SERVER_NAME = "" + constants.NAME + "(" + constants.VERSION + ")";
 
-  // エラーハンドリング.s
+  // エラーハンドリング.
   var error = require("./error");
 
   // Forbidden-URL.
@@ -73,10 +72,9 @@ module.exports.createMsFUL = function (port, timeout, contentsCacheMode, args_en
         // 文字コードが設定されている場合.
         if(contentType) {
           // jsonの場合は、charset=utf-8
-          if(contentType == "application/json") {
-            charset = "utf-8";
           // post formデータの場合は charset=utf8
-          } else if(contentType == "application/x-www-form-urlencoded") {
+          if(contentType.indexOf("application/json") == 0 ||
+            contentType == "application/x-www-form-urlencoded") {
             charset = "utf-8";
           // それ以外の場合は charset の指定文字コードを取得.
           } else {
@@ -175,7 +173,7 @@ module.exports.createMsFUL = function (port, timeout, contentsCacheMode, args_en
     if(data instanceof Buffer) {
       return data;
     // json系の場合.
-    } else if (req.headers["content-type"] == "application/json") {
+    } else if (req.headers["content-type"].indexOf("application/json") == 0) {
       // /jsonが含まれる場合はjson変換.
       return JSON.parse(data);
     } else {
@@ -330,11 +328,11 @@ module.exports.createMsFUL = function (port, timeout, contentsCacheMode, args_en
       return false;
     }
     var message = "";
-    if (e != _u) {
+    if (e) {
       // httpErrorハンドリング.
-      if (e["status"] != _u) {
+      if (e["status"]) {
         status = e["status"]|0;
-        if(e["message"] != _u) {
+        if(e["message"]) {
           message = "" + e["message"];
         } else {
           message = "error " + status;
@@ -349,7 +347,7 @@ module.exports.createMsFUL = function (port, timeout, contentsCacheMode, args_en
         status = 500;
         message = "internal server error";
       }
-      if(core.getDebugMode() || status >= 500) {
+      if(core.getSysParams().getDebugMode() || status >= 500) {
         console.error("http_error: status: " + status + " message: " + message);
         if(trace != _u) {
           console.trace(trace);
@@ -838,8 +836,8 @@ module.exports.createMsFUL = function (port, timeout, contentsCacheMode, args_en
         cacheRequire,
         backupRequire,
         core.getModules(),
-        core.getConfig(),
-        core.getConfigEnv()
+        core.getSysParams().getConfig(),
+        core.getSysParams().getConfigEnv()
       )
     );
 
@@ -1088,7 +1086,7 @@ module.exports.createMsFUL = function (port, timeout, contentsCacheMode, args_en
         }
         // リクエストヘッダを見て、If-Modified-Sinceと、ファイル日付を比較.
         if (req.headers["if-modified-since"] != _u) {
-          if (_CACHE && isCache(mtime, req.headers["if-modified-since"])) {
+          if (sysParams.isContentCache() && isCache(mtime, req.headers["if-modified-since"])) {
             
             // キャッシュの場合.
             status = 304;
@@ -1212,8 +1210,8 @@ module.exports.createMsFUL = function (port, timeout, contentsCacheMode, args_en
     }
 
     // config.mimeが存在するかチェック.
-    if (typeof(core.getConfigEnv()["mime"]) == "object") {
-      var ret = core.getConfigEnv()["mime"][n];
+    if (typeof(core.getSysParams().getConfigEnv()["mime"]) == "object") {
+      var ret = core.getSysParams().getConfigEnv()["mime"][n];
       if(ret) {
         return ""+ret;
       }
@@ -1257,84 +1255,36 @@ module.exports.createMsFUL = function (port, timeout, contentsCacheMode, args_en
     console.trace(reason);
   });
 
+  // システムパラメータを設定.
+  var sysParams = require("./sysparams");
+  sysParams = sysParams.create(
+    constants.CONF_DIR,
+    port, timeout, args_env, msfulId,
+    contentsCacheMode, null, null, null, 
+    systemNanoTime, null
+  )
+
+  // システムパラメータを設定.
+  core.setSysParams(sysParams);
+
   // デフォルトのモジュールを読み込む.
   core.resetModules();
   core.loadModules();
-
-  // バインドするポート番号を設定.
-  var _setPort = function(no) {
-    try {
-      port = parseInt(no);
-      if (port > 0 && port < 65535) {
-        bindPort = port;
-      }
-    } catch (e) {
-    }
-  }
-
-  // タイムアウトを設定.
-  var _setTimeout = function(time) {
-    try {
-      time = parseInt(time);
-      if (time > 0) {
-        httpTimeout = time;
-      }
-    } catch (e) {
-    }
-  }
-
-  // コンテンツキャッシュを設定.
-  var _setContentsCacahe = function(cache) {
-    // コンテンツキャッシュモードがOFF設定の場合.
-    try {
-      if(cache == false || cache == "false") {
-        _CACHE = false;
-      }
-    } catch(e) {
-    }
-  }
-
-  // ポートが正しく割り当てられている場合はセット.
-  var bindPort = constants.PORT;
-
-  // 環境変数でポート指定されている場合.
-  _setPort(process.env[constants.ENV_BIND_PORT]);
-
-  // 引数で設定されている場合.
-  _setPort(port);
-
-  // タイムアウトが正しく設定されている場合はセット.
-  var httpTimeout = constants.TIMEOUT;
-
-  // 環境変数でタイムアウト指定されている場合.
-  _setTimeout(process.env[constants.ENV_TIMEOUT]);
-
-  // 引数で設定されている場合.
-  _setTimeout(timeout);
-
-  // 環境変数でコンテンツキャッシュが設定されている場合.
-  _setContentsCacahe(process.env[constants.ENV_CONTENT_CACHE]);
-
-  // 引数で設定されている場合.
-  _setContentsCacahe(contentsCacheMode);
-
-  // コア条件を設定.
-  core.setting(constants.CONF_DIR, args_env, msfulId, systemNanoTime);
   
   // サーバー生成.
   var server = createHttp(exec);
   
   // タイムアウトセット.
-  server.setTimeout(httpTimeout);
+  server.setTimeout(sysParams.getTimeout());
 
   // 指定ポートで待つ.
-  server.listen(bindPort);
+  server.listen(sysParams.getPort());
 
   // 起動結果をログ出力.
-  console.info("## listen: " + bindPort +
-    " env:[" + core.getEnvironment() +
-    "] timeout:" + (httpTimeout/1000) +
-    "(sec) contentCache:" + _CACHE +
+  console.info("## listen: " + sysParams.getPort() +
+    " env:[" + sysParams.getEnvironment() +
+    "] timeout:" + (sysParams.getTimeout() / 1000) +
+    "(sec) contentCache:" + sysParams.isContentCache() +
     " pid:" + process.pid);
   
   server = null;

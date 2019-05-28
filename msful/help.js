@@ -16,7 +16,7 @@ module.exports.helpMsFul = function (argsCmd) {
   out("   console [file]: Run the specified file on the console.\n");
   out("   version: Print version information. \n");
   out("   msfulId: Regenerate server ID. \n");
-  out("   [--version] version number only. \n");
+  out("   [-version] version number only. \n");
   out(argsCmd.getHelp());
   out("\n");
 }

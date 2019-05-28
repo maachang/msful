@@ -29,89 +29,42 @@
   var file = require("./lib/file");
 
   // コマンド引数.
+  var p = null;
   var port = null;
   var timeout = null;
   var contentsCache = null;
   var env = null;
   var cmd = null;
   var consoleFlag = false;
-  var maxClusterSize = require('os').cpus().length;
+  var maxClusterSize = null;
+  var file = require("./lib/file");
 
   // 起動パラメータをargsCmdにセット.
   var argv_params = argsCmd.getArgv();
 
-  // ポート取得.
-  var p = null
-  try {
-    p = parseInt(argsCmd.get("number Set the server bind port number.", "-p", "--port"));
-    if (!(p > 0 && p < 65535)) {
-      p = null;
-    } else {
-      argsCmd.remove("-p", "--port");
-    }
-  } catch (e) {
-    p = null
-  }
-  port = p
-
-  // タイムアウト取得.
-  p = null
-  try {
-    p = parseInt(argsCmd.get("Set HTTP response timeout value.", "-t", "--timeout"));
-    if (p <= 0) {
-      p = null;
-    } else {
-      argsCmd.remove("-t", "--timeout");
-    }
-  } catch (e) {
-    p = null
-  }
-  timeout = p
-
-  // コンテンツキャッシュ情報を取得.
-  p = null
-  try {
-    p = argsCmd.get("[true/false] Configure the content cache.", "-c", "--cache");
-    if(p == "true" || p == "t") {
-      contentsCache = true;
-      argsCmd.remove("-c", "--cache");
-    } else if(p == "false" || p == "f") {
-      contentsCache = false;
-      argsCmd.remove("-c", "--cache");
-    }
-  } catch (e) {
-    contentsCache = null;
+  // プロジェクトが存在するかチェック.
+  if(!file.isDir(constants.HTML_DIR) ||
+    !file.isDir(constants.API_DIR) ||
+    !file.isDir(constants.CONF_DIR) ||
+    !file.isDir(constants.LIB_DIR)) {
+    console.log("not msful project directory.");
+    process.exit(1);
   }
 
-  // 環境設定を取得.
-  p = null
-  try {
-    p = argsCmd.get("Set the execution environment conditions of msful.", "-e", "--env");
-    if(p) {
-      env = p;
-      argsCmd.remove("-e", "--env");
-    } 
-  } catch (e) {
-    console.log(e)
-    env = null;
-  }
-
-  // クラスタ数を設定.
-  p = null
-  try {
-    p = parseInt(argsCmd.get("Set the number of clusters of HTTP execution part of msful.", "-l", "--cluster"));
-  } catch (e) {
-    p = null;
-  }
-  if (p > 0) {
-    maxClusterSize = p;
-    argsCmd.remove("-l", "--cluster");
-  } else {
+  // パラメータ取得.
+  port = argsCmd.registrationParams("number", "number Set the server bind port number.", ["-p", "--port"]);
+  timeout = argsCmd.registrationParams("number", "Set HTTP response timeout value.", ["-t", "--timeout"]);
+  contentsCache = argsCmd.registrationParams("boolean", "[true/false] Configure the content cache.",["-c", "--cache"]);
+  env = argsCmd.registrationParams("string", "Set the execution environment conditions of msful.", ["-e", "--env"]);
+  maxClusterSize = argsCmd.registrationParams("number", "Set the number of clusters of HTTP execution part of msful.", ["-l", "--cluster"]);
+  if(!maxClusterSize) {
     try {
       if ((p = parseInt(process.env[constants.ENV_CLUSTER])) > 0) {
         maxClusterSize = p;
       }
-    } catch(e) {
+    } catch(e) {}
+    if(!maxClusterSize) {
+      maxClusterSize = require('os').cpus().length;
     }
   }
 
@@ -134,7 +87,7 @@
       return;
     
     // ヘルプ.
-    } else if (cmd == "help") {
+    } else if (cmd == "help" || cmd == "-h") {
       // ヘルプ情報を表示.
       require('./msful/help.js').helpMsFul(argsCmd);
       return;
@@ -147,12 +100,12 @@
       return;
     
     // バージョン情報を出力.
-    } else if (cmd == "version") {
+    } else if (cmd == "version" || cmd == "-v") {
       constants.viewTitle(console.log, false);
       return;
 
     // バージョン番号だけを表示.
-    } else if (cmd == "--version") {
+    } else if (cmd == "-version" || cmd == "--v") {
       console.log(constants.VERSION);
       return;
       
@@ -165,14 +118,6 @@
 
   // argsCmdのヘルプ情報を破棄.
   argsCmd.destroy();
-  
-  // 必要なフォルダ構成をチェック.
-  var fs = require("fs");
-  fs.statSync(constants.HTML_DIR);
-  fs.statSync(constants.API_DIR);
-  fs.statSync(constants.CONF_DIR);
-  fs.statSync(constants.LIB_DIR);
-  fs = null;
 
   // サーバIDを生成.
   var msfulId = serverId.getId();

@@ -16,6 +16,119 @@ module.exports = function (baseDir) {
   }
   var _CONFIG_DIR = baseDir;
 
+  // javascript正規表現かチェック.
+  // str : チェック対象の文字列を設定します.
+  // p : チェック開始位置を設定します.
+  // len : チェックする長さを設定します.
+  // 戻り値 : -1の場合は、正規表現ではありません.
+  var _checkRegExp = function( str,p,len ) {
+    if( p+1 >= len ) {
+      return -1 ;
+    }
+    var c = str.charAt( p+1 ) ;
+    if( c == '/' || c == '*' ) {
+      return -1 ;
+    }
+    for( var i = p+1,b = -1 ; i < len ; i ++ ) {
+      c = str.charAt( i ) ;
+      if( c == ' ' || c == '\t' || c == '\r' || c == '\n' ) {
+        return -1 ;
+      }
+      else if( c == '/' && b == '\\' ) {
+        b = -1 ;
+        continue ;
+      }
+      else if( b == '/' ) {
+        if( c == 'i' || c == 'g' || c == 'm' ) {
+          return i ;
+        }
+        else {
+          return i-1 ;
+        }
+      }
+      b = c ;
+    }
+    return -1 ;
+  }
+
+  // コメント情報の削除.
+  var _cutComment = function(script) {
+    if(script == null || script.length <= 0) {
+      return "";
+    }
+    script = "" + script;
+    var buf = "";
+    var len = script.length;
+    var cote = -1;
+    var commentType = -1;
+    var bef = -1;
+    var c,c2,p ;
+    var yen = "\\".charAt( 0 );
+    for( var i = 0 ; i < len ; i ++ ) {
+      if( i != 0 ) {
+        bef = script.charAt( i-1 );
+      }
+      c = script.charAt(i);
+      // コメント内の処理.
+      if( commentType != -1 ) {
+        switch( commentType ) {
+          case 1 : // １行コメント.
+            if( c == '\n' ) {
+              buf = buf + c;
+              commentType = -1 ;
+            }
+            break;
+          case 2 : // 複数行コメント.
+            if( c == '\n' ) {
+              buf = buf + c;
+            }
+            else if( len > i + 1 && c == '*' && script.charAt( i+1 ) == '/' ) {
+              i ++;
+              commentType = -1;
+            }
+            break;
+          }
+          continue;
+      }
+      // シングル／ダブルコーテーション内の処理.
+      if( cote != -1 ) {
+        if( c == cote && bef != yen ) {
+          cote = -1;
+        }
+        buf = buf + c;
+        continue;
+      }
+      // それ以外の処理.
+      if( c == '/' ) {
+        // Javascriptの正規表現の場合は処理しない.
+        if( ( p = _checkRegExp( script,i,len ) ) != -1 ) {
+          buf = buf + script.substring( i,p+1 );
+          i = p;
+          continue;
+        }
+        if( len <= i + 1 ) {
+          buf = buf + c;
+          continue;
+        }
+        c2 = script.charAt( i+1 );
+        if( c2 == '*' ) {
+          commentType = 2;
+          continue;
+        }
+        else if( c2 == '/' ) {
+          commentType = 1;
+          continue;
+        }
+      }
+      // コーテーション開始.
+      else if( ( c == '\'' || c == '\"' ) && bef != yen ) {
+        cote = c & 0x0000ffff;
+      }
+      buf = buf + c;
+    }
+    return buf;
+  }
+
   // コンフィグファイルを読み込み.
   var _readConfig = function(out, dir) {
   

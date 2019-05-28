@@ -32,18 +32,34 @@ module.exports = Object.freeze((function () {
   
   // ライブラリフォルダ.
   o.LIB_DIR = "./lib";
-  
-  // デフォルトバインドポート.
-  o.PORT = 3333;
 
-  // デフォルトタイムアウト.
-  o.TIMEOUT = 15000;
-  
   // フィルターファイル名.
   o.FILTER_FILE = "@filter.js";
+  
+  // デフォルト: バインドポート.
+  o.PORT = 3333;
 
-  // 未設定の実行環境.
+  // デフォルト: タイムアウト.
+  o.TIMEOUT = 15000;
+
+  // デフォルト: コンテンツキャッシュ.
+  o.CONTENT_CACHE = true;
+
+  // デフォルト: コンテンツクローズモード.
+  o.CONTENT_CLOSE = false;
+
+  // デフォルト: WebAPIキャッシュ.
+  o.NOT_CACHE = true;
+
+  // デフォルト: WebAPIクローズモード.
+  o.CLOSE_MODE = true;
+
+  // デフォルト: デバッグモード.
+  o.DEBUG_MODE = false;
+
+  // デフォルト: 未設定の実行環境.
   o.DEFAULT_ENV = "development";
+  
 
   // 環境変数: ポート番号指定.
   o.ENV_BIND_PORT = "MSFUL_PORT";
@@ -54,6 +70,9 @@ module.exports = Object.freeze((function () {
   // 環境変数: コンテンツキャッシュ設定.
   o.ENV_CONTENT_CACHE = "MSFUL_CONTENTS_CACHE";
 
+  // 環境変数: コンテンツクローズモード.
+  o.ENV_CONTENT_CLOSE = "MSFUL_CONTENTS_CLOSE";
+
   // 環境変数: 実行環境設定.
   o.ENV_ENV = "MSFUL_ENV";
 
@@ -62,6 +81,12 @@ module.exports = Object.freeze((function () {
 
   // 環境変数: デバッグモード.
   o.ENV_DEBUG = "MSFUL_DEBUG";
+
+  // 環境変数: WebAPIキャッシュモード.
+  o.ENV_NOT_CACHE = "MSFUL_NOT_CACHE";
+
+  // 環境変数: 通信クローズモード.
+  o.ENV_CLOSE_FLAG = "MSFUL_CLOSE_FLAG";
   
   // タイトル表示.
   o.viewTitle = function(out,enter) {

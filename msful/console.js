@@ -8,15 +8,23 @@ module.exports.createConsole = function (fileName, args_env, msfulId, systemNano
   var SIMBOL = "";
   var constants = require("./constants");
   var core = require("./core");
+  var caches = require("../lib/subs/caches");
+
+  // requireCache時間系.
+  var CHECK_TIME = 15000;  // 15秒.
+  var REMOVE_TIME = 60000; // 60秒.
   
-  var cacheRequire = {cache:{}, time:Date.now()};
-  var backupRequire = {cache:{}, time:Date.now()};
+  var cacheRequire = caches.create(CHECK_TIME, REMOVE_TIME);
+  var backupRequire = caches.create(CHECK_TIME, REMOVE_TIME);
   
   // モジュール群とコンフィグ群を取得.
   var init = function(env, id, nanoTime) {
 
-    // コア条件を設定.
-    core.setting(constants.CONF_DIR, env, id, nanoTime);
+    var sysParams = require("./sysparams");
+    sysParams = sysParams.create(
+      constants.CONF_DIR,null, null, env, id, null, null, null, null, nanoTime, null
+    )
+    core.setSysParams(sysParams);
 
     // デフォルトのモジュールを読み込む.
     core.resetModules();
@@ -79,8 +87,8 @@ module.exports.createConsole = function (fileName, args_env, msfulId, systemNano
           cacheRequire,
           backupRequire,
           core.getModules(),
-          core.getConfig(),
-          core.getConfigEnv()
+          core.getSysParams().getConfig(),
+          core.getSysParams().getConfigEnv()
         )
       );
       
@@ -144,8 +152,8 @@ module.exports.createConsole = function (fileName, args_env, msfulId, systemNano
               cacheRequire,
               backupRequire,
               core.getModules(),
-              core.getConfig(),
-              core.getConfigEnv()
+              core.getSysParams().getConfig(),
+              core.getSysParams().getConfigEnv()
             )
           );
           
