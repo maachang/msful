@@ -176,6 +176,9 @@ module.exports = function (baseDir) {
     }
   }
 
+  // コンフィグデータロード時間.
+  var _loadTime = -1;
+
   // コンフィグ情報を読み込む.
   return {
     // コンフィグ情報を取得.
@@ -184,6 +187,7 @@ module.exports = function (baseDir) {
         var conf = {};
         _readConfig(conf, _CONFIG_DIR);
         conf = Object.freeze(conf);
+        _loadTime = Date.now();
         _CONFIG = conf;
       }
       return _CONFIG;
@@ -191,10 +195,15 @@ module.exports = function (baseDir) {
     // コンフィグ情報をリロード.
     reload: function() {
       var conf = {};
-      _readConfig(conf, _CONFIG_DIR)
+      _readConfig(conf, _CONFIG_DIR);
       conf = Object.freeze(conf);
+      _loadTime = Date.now();
       _CONFIG = conf;
       return conf;
+    },
+    // ロード時間.
+    getLoadTime: function() {
+      return _loadTime;
     }
   };
 }

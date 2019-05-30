@@ -175,5 +175,16 @@ module.exports.create = function(confDir, port, timeout, env, serverId,
     return conf;
   }
 
+  // コンフィグデータを再読込.
+  o.reloadConfig = function() {
+    conf.reload();
+    return conf.getConfig();
+  }
+
+  // コンフィグデータ最終読み込み時間.
+  o.loadConfigTime = function() {
+    return conf.getLoadTime();
+  }
+
   return o;
 }

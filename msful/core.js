@@ -77,6 +77,8 @@ module.exports = (function (_g) {
   o.setMsfulGlobals = function(out) {
     out["config"] = Object.freeze(sysParams.getConfig());
     out["envConf"] = Object.freeze(sysParams.getConfigEnv());
+    out["reloadConf"] = Object.freeze(sysParams.reloadConfig);
+    out["loadConfTime"] = Object.freeze(sysParams.loadConfigTime);
 
     out["msfulEnv"] = Object.freeze(sysParams.getEnvironment());
     out["msfulDebug"] = Object.freeze(sysParams.getDebugMode());
