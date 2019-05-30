@@ -139,7 +139,7 @@
 
   // コンソール実行.
   if (consoleFlag) {
-    var cons = require("./msful/console");
+    var cons = require("./msful/exec/console");
     if(argv_params.length > 3) {
 
       // サーバの最後に起動した起動時間を取得.
@@ -173,10 +173,29 @@
     for (var i = 0; i < maxClusterSize; ++i) {
       cluster.fork();
     }
-    cluster.on('exit', function (worker, code, signal) {
+
+    // プロセスが落ちた時の処理.
+    var _exitNode = function() {
+      process.exit();
+    };
+
+    // node処理終了.
+    process.on('exit', function() {
+      // プロセスが落ちる前に処理したい内容があれば、ここにセット.
+
+    });
+
+    // 割り込み系と、killコマンド終了.
+    process.on('SIGINT', _exitNode);
+    process.on('SIGBREAK', _exitNode);
+    process.on('SIGTERM', _exitNode);
+
+    // クラスタプロセスが落ちた場合、再起動.
+    cluster.on('exit', function () {
       console.debug("## cluster exit to reStart.")
       cluster.fork();
     });
+
   } else {
     
     // ワーカー起動.

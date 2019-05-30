@@ -1,22 +1,30 @@
 // msful用 拡張require.
 //
 
-module.exports = function (cache, backup, modules, config, envConf) {
+module.exports = function (cache, backup, core) {
   'use strict';
 
+  var fs = require('fs');
+  var path = require('path');
+  var vm = require('vm');
+
+  // エラーハンドリング.
+  var error = require("./error");
+
   // モジュールセット.
-  var setModules = function(out, core) {
-    core.setDefaults(out);
+  var setModules = function(out) {
+    var modules =  core.getModules();
+    core.setDefaultModules(out);
     for(var k in modules) {
       out[k] = modules[k];
     }
-    out["config"] = Object.freeze(config);
-    out["envConf"] = Object.freeze(envConf);
+    out["config"] = Object.freeze(core.getSysParams().getConfig());
+    out["envConf"] = Object.freeze(core.getSysParams().getConfigEnv());
     out["require"] = Object.freeze(thisRequire);
   }
   
   // 拡張require.
-  var load = function(name, fs, path, vm, core) {
+  var load = function(name) {
     name = path.resolve(name);
     var ret = cache.getCache(name);
     var backupCall = backup.getCache(name);
@@ -52,10 +60,9 @@ module.exports = function (cache, backup, modules, config, envConf) {
       
       var memory = {};
       var context = vm.createContext(memory);
-      setModules(memory, core);
-      memory.httpError = function(status, message) {
-        throw {status: status, message: message};
-      };
+      setModules(memory);
+      memory.httpError = error.httpError;
+      
       memory["#require#cache"] = true;
       memory.requireCache = function(v) {
         memory["#require#cache"] = v;
@@ -112,11 +119,7 @@ module.exports = function (cache, backup, modules, config, envConf) {
     } else {
 
       // 拡張requireを呼び出す.
-      var fs = require('fs');
-      var path = require('path');
-      var vm = require('vm');
-      var core = require('./core');
-      ret = load(name, fs, path, vm, core);
+      ret = load(name);
 
       // キャッシュチェック.
       cache.cacheControll();

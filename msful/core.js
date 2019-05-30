@@ -4,8 +4,7 @@
 module.exports = (function (_g) {
   'use strict';
   
-  var file = require("../lib/file")
-  var constants = require("./constants");
+  var file = require("../lib/file");
   var o = {};
 
   // モジュール情報.
@@ -103,7 +102,7 @@ module.exports = (function (_g) {
   ];
 
   // 基本モジュール群をセット
-  o.setDefaults = function(out) {
+  o.setDefaultModules = function(out) {
     // グローバルセット.
     var len = _glist.length;
     for(var i = 0; i < len; i ++) {

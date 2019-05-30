@@ -1,10 +1,24 @@
-// http系処理/
+// http系処理.
 //
 
 module.exports = (function () {
   'use strict';
 
+  var path = require("path");
   var constants = require("./constants");
+
+  // サーバ名.
+  var SERVER_NAME = "" + constants.NAME + "(" + constants.VERSION + ")";
+
+  // パスチェック.
+  // ../ などの指定で、本来想定されているパス以外のアクセスを行おうとした
+  // 場合は、エラー403にする.
+  var _checkPath = function(head, base, url) {
+    if(path.resolve(head + url).indexOf(base) != 0) {
+      return false;
+    }
+    return true;
+  }
 
   // 日付情報をRFC-822に変換.
   var _toRfc822 = function (n) {
@@ -129,7 +143,7 @@ module.exports = (function () {
         crosHeaders += ", " + k;
       }
     }
-    headers['Server'] = constants.SERVER_NAME;
+    headers['Server'] = SERVER_NAME;
     if(notCache) {
       headers['Pragma'] = 'no-cache';
     }
@@ -316,6 +330,16 @@ module.exports = (function () {
   }
 
   var o = {};
+
+  // パス不正チェック.
+  o.checkPath = function(head, base, url) {
+    return _checkPath(head, base, url)
+  }
+
+  // server.request.
+  o.request = function(req, res, call) {
+    _request(req, res, call);
+  }
 
   // レスポンス送信.
   o.send = function(res, headers, body, status, notCache, closeFlag) {

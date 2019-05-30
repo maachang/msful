@@ -7,7 +7,7 @@ module.exports = Object.freeze((function () {
   var o = {};
   
   // バージョン.
-  o.VERSION = "0.1.31";
+  o.VERSION = "0.1.32";
   
   // アプリ名.
   o.NAME = "msful";
@@ -23,6 +23,12 @@ module.exports = Object.freeze((function () {
   
   // APIフォルダ.
   o.API_DIR = "./api";
+
+  // URL APIパス.
+  o.URL_API_PATH = "/api/";
+
+  // URL HTMLパス
+  o.URL_HTML_PATH = "/html/";
   
   // APIパス.
   o.API_PATH = ".";
@@ -35,6 +41,9 @@ module.exports = Object.freeze((function () {
 
   // フィルターファイル名.
   o.FILTER_FILE = "@filter.js";
+
+  // 禁止パス.
+  o.FORBIDDEN_URL = "/@";
   
   // デフォルト: バインドポート.
   o.PORT = 3333;

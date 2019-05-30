@@ -6,9 +6,9 @@ module.exports.createConsole = function (fileName, args_env, msfulId, systemNano
   var _u = undefined;
   var out = function(n) {process.stdout.write(n);}
   var SIMBOL = "";
-  var constants = require("./constants");
-  var core = require("./core");
-  var caches = require("../lib/subs/caches");
+  var constants = require("../constants");
+  var core = require("../core");
+  var caches = require("../../lib/subs/caches");
 
   // requireCache時間系.
   var CHECK_TIME = 15000;  // 15秒.
@@ -20,7 +20,7 @@ module.exports.createConsole = function (fileName, args_env, msfulId, systemNano
   // モジュール群とコンフィグ群を取得.
   var init = function(env, id, nanoTime) {
 
-    var sysParams = require("./sysparams");
+    var sysParams = require("../sysparams");
     sysParams = sysParams.create(
       constants.CONF_DIR,null, null, env, id, null, null, null, null, nanoTime, null
     )
@@ -33,7 +33,7 @@ module.exports.createConsole = function (fileName, args_env, msfulId, systemNano
   
   // モジュールをセット.
   var setModules = function(out) {
-    core.setDefaults(out);
+    core.setDefaultModules(out);
     var modules = core.getModules();
     for(var k in modules) {
       out[k] = modules[k];
@@ -86,12 +86,10 @@ module.exports.createConsole = function (fileName, args_env, msfulId, systemNano
       
       // 拡張require.
       memory.require =  Object.freeze(
-        require("./require")(
+        require("../require")(
           cacheRequire,
           backupRequire,
-          core.getModules(),
-          core.getSysParams().getConfig(),
-          core.getSysParams().getConfigEnv()
+          core
         )
       );
       
@@ -151,12 +149,10 @@ module.exports.createConsole = function (fileName, args_env, msfulId, systemNano
           
           // 拡張require.
           memory.require = Object.freeze(
-            require("./require")(
+            require("../require")(
               cacheRequire,
               backupRequire,
-              core.getModules(),
-              core.getSysParams().getConfig(),
-              core.getSysParams().getConfigEnv()
+              core
             )
           );
           
