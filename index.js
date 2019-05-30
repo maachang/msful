@@ -57,6 +57,8 @@
   contentsCache = argsCmd.registrationParams("boolean", "[true/false] Configure the content cache.",["-c", "--cache"]);
   env = argsCmd.registrationParams("string", "Set the execution environment conditions of msful.", ["-e", "--env"]);
   maxClusterSize = argsCmd.registrationParams("number", "Set the number of clusters of HTTP execution part of msful.", ["-l", "--cluster"]);
+
+  // クラスタサイズが設定されていない場合は、CPU数に合わせる.
   if(!maxClusterSize) {
     try {
       if ((p = parseInt(process.env[constants.ENV_CLUSTER])) > 0) {
@@ -80,16 +82,16 @@
     if (cmd == "project") {
       // 新規プロジェクトを作成.
       if(argv_params.length > 3) {
-        require('./msful/project.js').createMsFulProject("" + argv_params[3]);
+        require('./msful/project.js').create("" + argv_params[3]);
       } else {
-        require('./msful/project.js').createMsFulProject();
+        require('./msful/project.js').create();
       }
       return;
     
     // ヘルプ.
     } else if (cmd == "help" || cmd == "-h") {
       // ヘルプ情報を表示.
-      require('./msful/help.js').helpMsFul(argsCmd);
+      require('./msful/help.js').help(argsCmd);
       return;
     
     // サーバIDを再生成.
@@ -146,9 +148,9 @@
       var nanoTime = file.isFile(_SYSTEM_NANO_TIME_FILE) ?
         _getSystemNanoTime() : nums.getNanoTime();
 
-      cons.createConsole("" + argv_params[3], env, msfulId, nanoTime);
+      cons.create("" + argv_params[3], env, msfulId, nanoTime);
     } else {
-      cons.createConsole(null, env, msfulId, nums.getNanoTime());
+      cons.create(null, env, msfulId, nums.getNanoTime());
     }
     return;
   }
@@ -199,6 +201,6 @@
   } else {
     
     // ワーカー起動.
-    require('./msful/index.js').createMsFUL(port, timeout, contentsCache, env, msfulId, _getSystemNanoTime());
+    require('./msful/index.js').create(port, timeout, contentsCache, env, msfulId, _getSystemNanoTime());
   }
 })()

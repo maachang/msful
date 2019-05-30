@@ -1,7 +1,7 @@
 // help msful.
 //
 
-module.exports.helpMsFul = function (argsCmd) {
+module.exports.help = function (argsCmd) {
   'use strict';
   var out = function(n) {process.stdout.write(n);}
   var constants = require("./constants");

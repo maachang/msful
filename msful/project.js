@@ -3,7 +3,7 @@
 
 // プロジェクト名を指定した場合、そのプロジェクト名のフォルダを作成し
 // その下に各フォルダをセットする.
-module.exports.createMsFulProject = function (projectName) {
+module.exports.create = function (projectName) {
   'use strict';
   var out = function(n) {process.stdout.write(n);}
   var constants = require("./constants");

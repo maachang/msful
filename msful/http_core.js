@@ -158,49 +158,8 @@ module.exports = (function () {
     headers['Content-Length'] = bodyLength;
   }
 
-  // エラー返却処理.
-  var _errorFileResult = function(status, err, res, notCache, closeFlag) {
-    var headers = {};
-    var body = "";
-    var message = null;
-
-    // fs.statでファイルが見つからないエラーの場合.
-    if (err && err.code && err.code == 'ENOENT') {
-      status = 404;
-      message = "not found";
-    } else if(err) {
-      if(err.message) {
-        message = err.message;
-      } else {
-        message = "" + err;
-      }
-    } else if (status >= 500) {
-      if(err != null) {
-        console.error("status:" + status, err);
-      } else {
-        console.error("error: " + status);
-      }
-    }
-    // 静的ファイルでも、JSONエラーを返却させる.
-    headers['Content-Type'] = "text/javascript; charset=utf-8;";
-    body = "{\"result\": \"error\", \"status\": " + status;
-    if(message) {
-      body += ", \"message\": \"" + message + "\"}";
-    } else {
-      body += "}";
-    }
-    // 送信処理.
-    try {
-      _setCrosHeader(headers, _utf8Length(body), notCache, closeFlag);
-      res.writeHead(status, headers);
-      res.end(body);
-    } catch(e) {
-      console.debug(e);
-    }
-  }
-
-   // ファイル拡張子からMimeTypeを返却.
-   var _mimeType = function (name, conf) {
+  // ファイル拡張子からMimeTypeを返却.
+  var _mimeType = function (name, conf) {
     var p = name.lastIndexOf(".");
     if (p == -1) {
       return "text/plain";
@@ -260,75 +219,6 @@ module.exports = (function () {
     return "application/octet-stream";
   }
 
-  // レスポンス送信.
-  var _send = function(res, headers, body, status, notCache, closeFlag) {
-    if((status|0) <= 0) {
-      status = res.statusCode;
-      if((status|0) <= 0) {
-        status = 200;
-      }
-    }
-    if(!headers) {
-      headers = {};
-    }
-    try {
-      res.statusCode = status;
-      _setCrosHeader(headers, _utf8Length(body), notCache, closeFlag);
-
-      // mimeタイプが設定されていない場合.
-      if(!headers['Content-Type']) {
-
-        // html返却として処理.
-        headers['Content-Type'] = "text/html; charset=utf-8;"
-      }
-
-      // 書き込み処理.
-      res.writeHead(status, headers);
-      res.end(body);
-      return true;
-    } catch (e) {
-      // エラーをデバッグ出力.
-      console.debug(e);
-      // レスポンスソケットクローズ.
-      try {
-        res.socket.destroy();
-      } catch (ee) {}
-      return false;
-    }
-  }
-
-  // jsonレスポンス送信.
-  var _sendJson = function(res, headers, body, status, notCache, closeFlag) {
-    if(!headers) {
-      headers = {};
-    }
-    headers['Content-Type'] = 'application/json; charset=utf-8;';
-    return _send(res, headers, JSON.stringify(body), status, notCache, closeFlag);
-  }
-
-  // /favicon.ico を返却.
-  // 404で返却します.
-  var _sendFaviconIco = function(res, headers, notCache, closeFlag) {
-    try {
-      res.statusCode = 404;
-      _setCrosHeader(headers, 0, notCache, closeFlag);
-      headers['Content-Type'] = "text/html; charset=utf-8;"
-
-      // 書き込み処理.
-      res.writeHead(404, headers);
-      res.end("");
-      return true;
-    } catch(e) {
-      // エラーをデバッグ出力.
-      console.debug(e);
-      // レスポンスソケットクローズ.
-      try {
-        res.socket.destroy();
-      } catch (ee) {}
-    }
-    return false;
-  }
-
   var o = {};
 
   // パス不正チェック.
@@ -341,30 +231,9 @@ module.exports = (function () {
     _request(req, res, call);
   }
 
-  // レスポンス送信.
-  o.send = function(res, headers, body, status, notCache, closeFlag) {
-    return _send(res, headers, body, status, notCache, closeFlag);
-  }
-
-  // JSONレスポンス送信.
-  o.sendJson = function(res, headers, body, status, notCache, closeFlag) {
-    return _sendJson(res, headers, body, status, notCache, closeFlag);
-  }
-
-  // /facicon.icoを返却.
-  // 空の404を返却する.
-  o.sendFaviconIco = function(res, headers, closeFlag) {
-    return _sendFaviconIco(res, headers, true, closeFlag);
-  }
-
   // クロスヘッダを付与する.
   o.setCrosHeader = function(headers, bodyLength, notCache, closeFlag) {
     return _setCrosHeader(headers, bodyLength, notCache, closeFlag);
-  }
-
-  // エラー処理返却.
-  o.errorFileResult = function(status, err, res, closeFlag) {
-    _errorFileResult(status, err, res, true, closeFlag);
   }
 
   // mimeTypeを取得.

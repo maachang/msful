@@ -1,7 +1,7 @@
 // console msful.
 //
 
-module.exports.createConsole = function (fileName, args_env, msfulId, systemNanoTime) {
+module.exports.create = function (fileName, args_env, msfulId, systemNanoTime) {
   'use strict';
   var _u = undefined;
   var out = function(n) {process.stdout.write(n);}

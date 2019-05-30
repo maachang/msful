@@ -1,30 +1,22 @@
-// micro json server.
+// micro service RESTful.
 //
 //
 
-module.exports.createMsFUL = function (port, timeout, contentsCacheMode, args_env, msfulId, systemNanoTime) {
+module.exports.create = function (port, timeout, contentsCacheMode, args_env, msfulId, systemNanoTime) {
   'use strict';
   var http = require('http');
   var constants = require("./constants");
   var core = require("./core");
 
+  // httpCore.
+  var httpCore = require("./http_core");
+
   // exec系.
   var execApi = require("./exec/api");
   var execHtml = require("./exec/html");
 
-  // httpCore.
-  var httpCore = require("./http_core");
-  
-  // httpサーバ生成.
-  var createHttp = function (call) {
-    return http.createServer(function (req, res) {
-      var c = call; call = null;
-      httpCore.request(req, res, c);
-    })
-  }
-
   // 正しいURLを取得.
-  var _getUrl = function (req) {
+  var getUrl = function (req) {
     var u = req.url;
     var p = u.indexOf("?");
     if (p == -1) {
@@ -36,7 +28,7 @@ module.exports.createMsFUL = function (port, timeout, contentsCacheMode, args_en
   // HTTP実行.
   var execute = async function(req, res, data) {
     // URLを取得.
-    var url = _getUrl(req);
+    var url = getUrl(req);
     
     // APIアクセス.
     if (url.indexOf(constants.URL_API_PATH) == 0) {
@@ -45,6 +37,14 @@ module.exports.createMsFUL = function (port, timeout, contentsCacheMode, args_en
     } else {
       execHtml.execute(req, res, url);
     }
+  }
+
+  // httpサーバ生成.
+  var createHttp = function (call) {
+    return http.createServer(function (req, res) {
+      var c = call; call = null;
+      httpCore.request(req, res, c);
+    })
   }
 
   // プロセス例外ハンドラ.
@@ -76,7 +76,7 @@ module.exports.createMsFUL = function (port, timeout, contentsCacheMode, args_en
   // exec系の展開.
   execApi = execApi.create(core, sysParams.isNotCache(), sysParams.isCloseFlag());
   execHtml = execHtml.create(core, sysParams.isNotCache(), sysParams.isCloseFlag());
-  
+
   // サーバー生成.
   var server = createHttp(execute);
   
