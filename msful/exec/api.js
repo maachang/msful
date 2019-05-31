@@ -68,13 +68,19 @@ module.exports.create = function (core, notCache, closeFlag) {
     // バッファデータの場合.
     if(data instanceof Buffer) {
       return data;
+    // Uint8Arrayデータの場合.
+    } else if(data instanceof Uint8Array) {
+      return Buffer.from(data);
     // json系の場合.
     } else if (req.headers["content-type"].indexOf("application/json") == 0) {
       // /jsonが含まれる場合はjson変換.
       return JSON.parse(data);
-    } else {
-      // それ以外は、Queryパラメータ変換.
+    } else if (typeof(data) == "string") {
+      // 文字列の場合はQueryパラメータ変換.
       return _analysisParams(data);
+    } else {
+      // それ以外はそのまま返却.
+      return data;
     }
   }
 
@@ -110,7 +116,8 @@ module.exports.create = function (core, notCache, closeFlag) {
       ret = !("response" in m) ||
         (!(_EXIT_SEND_SCRIPT_FLG in m) &&
           m[_EXIT_SEND_SCRIPT_FLG]) ||
-          (!(_EXIT_SEND_ERROR_SCRIPT_FLG in m) && m[_EXIT_SEND_ERROR_SCRIPT_FLG]);
+        (!(_EXIT_SEND_ERROR_SCRIPT_FLG in m) &&
+          m[_EXIT_SEND_ERROR_SCRIPT_FLG]);
     } catch(e) {
       console.log("error _endSendScript:", e);
     }
@@ -161,10 +168,13 @@ module.exports.create = function (core, notCache, closeFlag) {
     }
     // bodyが文字列の場合はBufferに変換.
     if (body instanceof String) {
-      if(charset == _u || charset == null || charset == "") {
+      if(!charset || charset == "") {
         charset = "uft-8";
       }
       body = Buffer.from(body, charset);
+    // Uint8Arrayの場合は、バッファ変換.
+    } else if(body instanceof Uint8Array) {
+      body = Buffer.from(body);
     }
     // bodyがBufferでない場合は、エラー.
     if (!(body instanceof Buffer)) {
