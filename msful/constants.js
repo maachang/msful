@@ -7,7 +7,7 @@ module.exports = Object.freeze((function () {
   var o = {};
   
   // バージョン.
-  o.VERSION = "0.1.33";
+  o.VERSION = "0.1.34";
   
   // アプリ名.
   o.NAME = "msful";
@@ -39,11 +39,17 @@ module.exports = Object.freeze((function () {
   // ライブラリフォルダ.
   o.LIB_DIR = "./lib";
 
+  // ログフォルダ.
+  o.LOG_DIR = "./log";
+
   // フィルターファイル名.
   o.FILTER_FILE = "@filter.js";
 
   // 禁止パス.
   o.FORBIDDEN_URL = "/@";
+
+  // スタートアップ用スクリプト.
+  o.STARTUP_SCRIPT = "./startup.js"
   
   // デフォルト: バインドポート.
   o.PORT = 3333;

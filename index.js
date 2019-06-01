@@ -42,15 +42,6 @@
   // 起動パラメータをargsCmdにセット.
   var argv_params = argsCmd.getArgv();
 
-  // プロジェクトが存在するかチェック.
-  if(!file.isDir(constants.HTML_DIR) ||
-    !file.isDir(constants.API_DIR) ||
-    !file.isDir(constants.CONF_DIR) ||
-    !file.isDir(constants.LIB_DIR)) {
-    console.log("not msful project directory.");
-    process.exit(1);
-  }
-
   // パラメータ取得.
   port = argsCmd.registrationParams("number", "number Set the server bind port number.", ["-p", "--port"]);
   timeout = argsCmd.registrationParams("number", "Set HTTP response timeout value.", ["-t", "--timeout"]);
@@ -137,6 +128,15 @@
   // systemNanoTimeを取得.
   var _getSystemNanoTime = function() {
     return parseInt(file.readByString(_SYSTEM_NANO_TIME_FILE));
+  }
+
+  // プロジェクトが存在するかチェック.
+  if(!file.isDir(constants.HTML_DIR) ||
+    !file.isDir(constants.API_DIR) ||
+    !file.isDir(constants.CONF_DIR) ||
+    !file.isDir(constants.LIB_DIR)) {
+    console.log("not msful project directory.");
+    process.exit(1);
   }
 
   // コンソール実行.

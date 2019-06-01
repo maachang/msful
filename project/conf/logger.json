@@ -1,0 +1,6 @@
+{
+  "system": {
+    "level": "info",
+    "maxFileSize": 1048576
+  }
+}

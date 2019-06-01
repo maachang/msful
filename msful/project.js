@@ -14,6 +14,7 @@ module.exports.create = function (projectName) {
   var apiDir = constants.API_DIR.substring(2);
   var libDir = constants.LIB_DIR.substring(2);
   var confDir = constants.CONF_DIR.substring(2);
+  var logDir = constants.LOG_DIR.substring(2);
   
   // プロジェクト名が設定されている場合は、フォルダを作成して、
   // その下にプロジェクトフォルダ構成を作成する.
@@ -43,6 +44,7 @@ module.exports.create = function (projectName) {
   try { fs.mkdirSync(baseDir + apiDir); } catch(e) {}
   try { fs.mkdirSync(baseDir + libDir); } catch(e) {}
   try { fs.mkdirSync(baseDir + confDir); } catch(e) {}
+  try { fs.mkdirSync(baseDir + logDir); } catch(e) {}
   
   // package.jsonを新規プロジェクト用に生成してコピー.
   var value = fs.readFileSync(__dirname + "/../project/package.json");
@@ -51,6 +53,23 @@ module.exports.create = function (projectName) {
   value = strs.changeString(value, "{{user}}", process.env['username'] || process.env['USER'] || "");
   fs.writeFileSync(baseDir + "package.json", value);
 
+  // スタートアップ用スクリプトファイルの作成.
+  fs.writeFileSync(baseDir + constants.STARTUP_SCRIPT,
+    "// Write a script that will be executed at msful startup.\n\n" +
+    "module.exports = function(_g) {\n" +
+    "  'use strict';\n" +
+    "  \n" +
+    "  // Set the initial condition to `startup`.\n" +
+    "  const startup = {};\n" +
+    "  \n" +
+    "  \n" +
+    "  \n" +
+    "  \n" +
+    "  \n" +
+    "  return startup;\n" +
+    "})(global);\n" +
+    "\n");
+  
   // サーバIDを生成.
   // 起動引数で、プロジェクト名設定で作成されている場合は、そのフォルダ配下にサーバIDを生成する.
   // そうでない場合は、カレントディレクトリにサーバIDを生成する.
@@ -78,5 +97,7 @@ module.exports.create = function (projectName) {
   out("   This is a folder for storing JS libraries.\n");
   out(" ["+confDir+"] directory.\n");
   out("   This is a folder for storing configuration information in JSON format.\n");
+  out(" ["+logDir+"] directory.\n");
+  out("   It is the output destination folder of the log file.\n");
   out("\nid: " + id + "\n\n");
 }
