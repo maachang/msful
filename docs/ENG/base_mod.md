@@ -698,4 +698,88 @@ _
 
 _
 
+# phttpc
+
+Provides HttpClient to access HTTP server.
+
+These processes correspond to Promise.
+
+_
+
+_
+
+# phttpc.get, phttpc.post, phttpc.json, phttpc.put, phttpc.delete, phttpc.client
+
+Perform http client processing for each method.
+
+### phttpc.get (option)
+### phttpc.post (option)
+### phttpc.json (option)
+### phttpc.put (option)
+### phttpc.delete (option)
+
+```javascript
+
+// options: The following can be set as options.
+// url: Connection destination URL.
+// body: Body data.
+// headers: header information.
+
+phttpc.get(option) {
+  ....
+}
+
+// method: Set httpMethod.
+
+phttpc.client(method, option) {
+  ....
+}
+
+```
+
+#### Example of use
+
+```javascript
+
+phttpc.get({
+  url: "http://localhost:3333/test/testGet",
+  body: {name: "Carl Orwell", age:24, sex: 1},
+  headers: {"x-test": "test"}
+}).then(result) {
+  console.log("result:" +   JSON.stringify(result));
+}.catch(err) {
+  console.log("error:" + JSON.stringify(err));
+}
+
+```
+
+#### Processing result
+
+If the processing result is normal:
+```javascript
+result: {
+  status: 200,
+  body:{
+    status: 200,
+    message: "success"
+  },
+  headers: {
+    server: "msful(0.1.33)",
+    pragma: "no-cache",
+    "access-control-allow-origin": "*",
+    "access-control-allow-headers": "content-type, *",
+    "access-control-allow-methods": "GET, POST, DELETE, PUT, HEAD, PATCH, OPTIONS",
+    connection: "close",
+    expire: "-1",
+    date: "Fri, 31 May 2019 15:27:04 GMT",
+    "content-length": "20",
+    "content-type": "application/json; charset=utf-8;"
+  }
+```
+※ Indented to make it easy to see.
+
+_
+
+_
+
 Return to the readme.md documentation [readme](https://github.com/maachang/msful/blob/master/README.md)

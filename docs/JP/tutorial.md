@@ -142,6 +142,8 @@ msfulの固有機能 jwt や closable や validate や entity これらは以下
 
 [entity](https://github.com/maachang/msful/blob/master/docs/JP/base_mod.md#entity)
 
+[phttpc](https://github.com/maachang/msful/blob/master/docs/JP/base_mod.md#phttpc)
+
 _
 
 _

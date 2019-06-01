@@ -142,6 +142,8 @@ msful specific functions jwt, closable, validate, entity Please check the follow
 
 [entity](https://github.com/maachang/msful/blob/master/docs/ENG/base_mod.md#entity)
 
+[phttpc](https://github.com/maachang/msful/blob/master/docs/ENG/base_mod.md#phttpc)
+
 _
 
 _

@@ -693,4 +693,88 @@ _
 
 _
 
+# phttpc
+
+HTTPサーバにアクセスするための、HttpClientを提供します.
+
+これらの処理は、Promiseに対応しています.
+
+_
+
+_
+
+# phttpc.get, phttpc.post, phttpc.json, phttpc.put, phttpc.delete, phttpc.client
+
+各method毎の http client処理を行います.
+
+### phttpc.get(option)
+### phttpc.post(option)
+### phttpc.json(option)
+### phttpc.put(option)
+### phttpc.delete(option)
+
+```javascript
+
+// options: 以下がオプションで設定できます.
+//          url : 接続先URL.
+//          body : ボディデータ.
+//          headers : ヘッダ情報.
+
+phttpc.get(option) {
+  ....
+}
+
+// method: httpMethodを設定します.
+
+phttpc.client(method, option) {
+  ....
+}
+
+```
+
+#### 使用例
+
+```javascript
+
+phttpc.get({
+  url: "http://localhost:3333/test/testGet",
+  body: {name: "Carl Orwell", age:24, sex: 1},
+  headers: {"x-test": "test"}
+}).then(result) {
+  console.log("result:" +   JSON.stringify(result));
+}.catch(err) {
+  console.log("error:" + JSON.stringify(err));
+}
+
+```
+
+#### 処理結果
+
+処理結果が正常な場合:
+```javascript
+result: {
+  status: 200,
+  body:{
+    status: 200,
+    message: "success"
+  },
+  headers: {
+    server: "msful(0.1.33)",
+    pragma: "no-cache",
+    "access-control-allow-origin": "*",
+    "access-control-allow-headers": "content-type, *",
+    "access-control-allow-methods": "GET, POST, DELETE, PUT, HEAD, PATCH, OPTIONS",
+    connection: "close",
+    expire: "-1",
+    date: "Fri, 31 May 2019 15:27:04 GMT",
+    "content-length": "20",
+    "content-type": "application/json; charset=utf-8;"
+  }
+```
+※ 見やすいように、インデント入れています.
+
+_
+
+_
+
 readme.mdのドキュメントに戻る [readme](https://github.com/maachang/msful/blob/master/README_JP.md)
