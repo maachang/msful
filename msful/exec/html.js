@@ -140,11 +140,25 @@ module.exports.create = function (core, notCache, closeFlag) {
 
   var o = {};
 
+  // 実行処理.
+  var _exec = async function(req, res, url) {
+    setImmediate(function() {
+      var rq = req; req = null;
+      var rs = res; res = null;
+      var u = url; url = null;
+      try {
+        readFile(rq, rs, u);
+      } catch(e) {
+        errorFileResult(500, e, rs);
+      }
+    });
+  }
+
   // HTML実行.
   o.execute = function(req, res, url) {
+
     // アクセス禁止URL.
     if (url.indexOf(constants.FORBIDDEN_URL) != -1) {
-      
       // アクセス禁止.
       errorFileResult(403, null, res);
       return false;
@@ -158,7 +172,7 @@ module.exports.create = function (core, notCache, closeFlag) {
     }
     
     // ファイル返却.
-    readFile(req, res, url);
+    _exec(req, res, url);
     return true;
   }
 

@@ -26,16 +26,16 @@ module.exports.create = function (port, timeout, contentsCacheMode, args_env, ms
   }
 
   // HTTP実行.
-  var execute = async function(req, res, data) {
+  var execute = function(req, res, data) {
     // URLを取得.
     var url = getUrl(req);
     
     // APIアクセス.
     if (url.indexOf(constants.URL_API_PATH) == 0) {
-      execApi.execute(req, res, url, data);
+      return execApi.execute(req, res, url, data);
     // コンテンツアクセス.
     } else {
-      execHtml.execute(req, res, url);
+      return execHtml.execute(req, res, url);
     }
   }
 

@@ -244,6 +244,14 @@ module.exports.create = function (core, notCache, closeFlag) {
     return _send(m, status, body);
   }
 
+  // エラー処理(readApi外でエラー処理を呼び出す場合)
+  var _outError = function(res, e, status, trace, headers) {
+    return _errorApi({
+      response: res,
+      headers: (!headers) ? {} : headers
+    }, e, status, trace);
+  }
+
   // Respオブジェクト.
   var ResponseContext = function(mm) {
     this._m = mm;
@@ -862,25 +870,39 @@ module.exports.create = function (core, notCache, closeFlag) {
 
   var o = {};
 
+  // 実行処理.
+  var _exec = async function(req, res, url, data) {
+    setImmediate(function() {
+      var rq = req; req = null;
+      var rs = res; res = null;
+      try {
+        var d = data; data = null;
+        var u = url; url = null;
+        readApi(rq, rs, d, u);
+      } catch(e) {
+        _outError(rs, e);
+      }
+    })
+  }
+
   // API実行.
   o.execute = function(req, res, url, data) {
 
     // アクセス禁止URL.
     if (url.indexOf(constants.FORBIDDEN_URL) != -1) {
-      
       // アクセス禁止.
-      _errorApi({headers:{}, response: res}, {status: 403, message: "error: 403"}, 403);
+      _outError(res, {status: 403, message: "error: 403"}, 403);
       return false;
     }
     
     // WebAPIのパスチェック.
     if(!httpCore.checkPath(constants.API_PATH, baseApiPath, url, res)) {
-      _errorApi({headers:{}, response: res}, {status: 403, message: "It is an illegal URL."}, 403);
+      _outError(res, {status: 403, message: "It is an illegal URL."}, 403);
       return false;
     }
     
-    // WebApi返却.
-    readApi(req, res, data, url);
+    // WebApi返却(非同期).
+    _exec(req, res, url, data);
     return true;
   }
 
