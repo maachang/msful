@@ -27,6 +27,7 @@ module.exports = (function (_g) {
   o.loadModules = function(consoleFlag) {
     consoleFlag = consoleFlag == true;
     modules["file"] = Object.freeze(file);
+    modules["pfile"] = Object.freeze(require("../lib/pfile")); 
     modules["psync"] = Object.freeze(require("../lib/psync")(sysParams.getSystemNanoTime()));
     modules["jwt"] = Object.freeze(require("../lib/jwt"));
     modules["strs"] = Object.freeze(require("../lib/strs"));
