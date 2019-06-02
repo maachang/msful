@@ -36,17 +36,18 @@ module.exports.create = function (
     
     // APIアクセス.
     if (url.indexOf(constants.URL_API_PATH) == 0) {
-      return execApi.execute(req, res, url, data);
+      execApi.execute(req, res, url, data);
     // コンテンツアクセス.
     } else {
-      return execHtml.execute(req, res, url);
+      execHtml.execute(req, res, url);
     }
   }
 
   // httpサーバ生成.
   var createHttp = function (call) {
+    var cc = call;
     return http.createServer(function (req, res) {
-      var c = call; call = null;
+      var c = cc;
       httpCore.request(req, res, c);
     })
   }

@@ -511,7 +511,7 @@ module.exports.create = function (_g, core, notCache, closeFlag) {
 
   // エラー.
   var _error = function(mm) {
-    var _m = mm; mm = null;
+    var _m = mm;
     return function(e, status, err) {
       try {
         return _errorApi(_m, e, status, (err == _u) ? e: err);
@@ -522,7 +522,7 @@ module.exports.create = function (_g, core, notCache, closeFlag) {
   
   // サーバエラー.
   var _serverError = function(mm) {
-    var _m = mm; mm = null;
+    var _m = mm;
     return function(status, message, e) {
       try {
         if(message == _u) {
@@ -561,7 +561,7 @@ module.exports.create = function (_g, core, notCache, closeFlag) {
   var __setImmediate = global.setImmediate;
   var _setImmediate = function(mm) {
     return function() {
-      var m = mm; mm = null;
+      var m = mm;
       var call = arguments[0];
       var args = [];
       if(arguments.length > 1) {
@@ -569,8 +569,8 @@ module.exports.create = function (_g, core, notCache, closeFlag) {
       }
       return __setImmediate(function() {
         var im = m; m = null;
-        var icall = call; call = null;
-        var iargs = args; args = null;
+        var icall = call;
+        var iargs = args;
         try {
           icall.apply(null, iargs);
         } catch(e) {
@@ -584,7 +584,7 @@ module.exports.create = function (_g, core, notCache, closeFlag) {
   var __setInterval = global.setInterval;
   var _setInterval = function(mm) {
     return function() {
-      var m = mm; mm = null;
+      var m = mm;
       var call = arguments[0];
       var time = arguments[1];
       var args = [];
@@ -592,9 +592,9 @@ module.exports.create = function (_g, core, notCache, closeFlag) {
         args = _Array_prototype_slice_object.call(arguments, 2);
       }
       return __setInterval(function() {
-        var im = m; m = null;
-        var icall = call; call = null;
-        var iargs = args; args = null;
+        var im = m;
+        var icall = call;
+        var iargs = args;
         try {
           icall.apply(null, iargs);
         } catch(e) {
@@ -608,7 +608,7 @@ module.exports.create = function (_g, core, notCache, closeFlag) {
   var __setTimeout = global.setTimeout;
   var _setTimeout = function(mm) {
     return function() {
-      var m = mm; mm = null;
+      var m = mm;
       var call = arguments[0];
       var time = arguments[1];
       var args = [];
@@ -616,9 +616,9 @@ module.exports.create = function (_g, core, notCache, closeFlag) {
         args = _Array_prototype_slice_object.call(arguments, 2);
       }
       return __setTimeout(function() {
-        var im = m; m = null;
-        var icall = call; call = null;
-        var iargs = args; args = null;
+        var im = m;
+        var icall = call;
+        var iargs = args;
         try {
           icall.apply(null, iargs);
         } catch(e) {
@@ -750,13 +750,13 @@ module.exports.create = function (_g, core, notCache, closeFlag) {
       fs.stat(apiFile, function(err, stat) {
         var filterTime, apiTime;
         try {
-
-          // エラー処理.
-          if (err) throw err;
           
           // 初期化.
           var memory = createMemory(req, res, data);
           var status = 200;
+
+          // エラー処理.
+          if (err) throw err;
           
           // APIファイル時間を取得.
           apiTime = stat.mtime.getTime();
@@ -888,13 +888,13 @@ module.exports.create = function (_g, core, notCache, closeFlag) {
   var o = {};
 
   // 実行処理.
-  var _exec = async function(req, res, url, data) {
+  var _exec = function(req, res, url, data) {
     setImmediate(function() {
-      var rq = req; req = null;
-      var rs = res; res = null;
+      var rq = req;
+      var rs = res;
       try {
-        var d = data; data = null;
-        var u = url; url = null;
+        var d = data;
+        var u = url;
         readApi(rq, rs, d, u);
       } catch(e) {
         _outError(rs, e);
@@ -903,24 +903,23 @@ module.exports.create = function (_g, core, notCache, closeFlag) {
   }
 
   // API実行.
-  o.execute = function(req, res, url, data) {
+  o.execute = async function(req, res, url, data) {
 
     // アクセス禁止URL.
     if (url.indexOf(constants.FORBIDDEN_URL) != -1) {
       // アクセス禁止.
       _outError(res, {status: 403, message: "error: 403"}, 403);
-      return false;
     }
-    
     // WebAPIのパスチェック.
-    if(!httpCore.checkPath(constants.API_PATH, baseApiPath, url, res)) {
+    else if(!httpCore.checkPath(constants.API_PATH, baseApiPath, url, res)) {
       _outError(res, {status: 403, message: "It is an illegal URL."}, 403);
-      return false;
     }
-    
-    // WebApi返却(非同期).
-    _exec(req, res, url, data);
-    return true;
+    // 実行処理
+    else {
+      
+      // WebApi返却(非同期).
+      _exec(req, res, url, data);
+    }
   }
 
   return o;

@@ -17,7 +17,7 @@ module.exports = (function () {
     if(!name || !logger) {
       return;
     }
-    var _lg = logger; logger = null;
+    var _lg = logger;
     _logger[name] = {
       isTraceEnabled: function() {
         return _lg.isTraceEnabled();

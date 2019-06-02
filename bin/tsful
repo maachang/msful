@@ -1,0 +1,2 @@
+ARGS=${*}
+node --trace-opt ${MSFUL_HOME}/index ${ARGS}

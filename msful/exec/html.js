@@ -8,12 +8,14 @@ module.exports.create = function (_g, core, notCache, closeFlag) {
   var fs = require('fs');
   var path = require('path');
   var constants = require("../constants");
+  var file = require("../../lib/file");
 
   // httpCore処理.
   var httpCore = require('../http_core');
 
   // sysParams.
   var sysParams = core.getSysParams();
+  var configEnv = sysParams.getConfigEnv()
 
   // システムロガー.
   var log = msfulLogger().get("system");
@@ -27,88 +29,87 @@ module.exports.create = function (_g, core, notCache, closeFlag) {
       url += "index.html";
     }
     var name = constants.HTML_DIR + url;
-    var mime = httpCore.mimeType(url, sysParams.getConfigEnv());
-    var headers = { 'Server': constants.SERVER_NAME, 'Content-Type': mime };
+    var mime = httpCore.mimeType(url, configEnv);
+    var headers = {
+      'Server': constants.SERVER_NAME,
+      'Content-Type': mime
+    };
     if((mime.indexOf("text/") != -1 || mime.indexOf("xml") != -1) &&
       req.headers["accept-encoding"] && req.headers["accept-encoding"].indexOf("gzip") != -1) {
       headers["Content-Encoding"] = "gzip";
-      readTargetFile(req, res, name + ".gz", headers, function(errorState, errorFileName, e) {
-        if(errorState == 404) {
-          delete headers["Content-Encoding"]
-          readTargetFile(req, res, name, headers, function(errorState, errorFileName, e) {
-            errorFileResult(errorState, e, res);
-          });
-        } else {
-          errorFileResult(errorState, e, res);
-        }
-      });
+      if(file.isFile(name)) {
+        readTargetFile(req, res, name + ".gz", headers);
+      } else {
+        readTargetFile(req, res, name, headers);
+      }
     } else {
-      readTargetFile(req, res, name, headers, function(errorState, errorFileName, e) {
-        errorFileResult(errorState, e, res);
-      });
+      readTargetFile(req, res, name, headers);
     }
   }
 
   // 指定１ファイル読み込み.
-  var readTargetFile = function(req, res, name, appendHeaders, errorCall) {
-    fs.stat(name, function (err, stat) {
-      try {
-        if (err) throw err;
-        var status = 200;
-        var headers = {};
-        var body = "";
-        var bodyLength = 0;
-        // フォルダアクセスの場合は403返却.
-        if(stat.isDirectory()) {
-          errorFileResult(403, null, res);
+  var readTargetFile = function(req, res, name, appendHeaders) {
+    var stat = file.stat(name);
+    if(stat == null) {
+      errorFileResult(404, null, res);
+      return;
+    }
+    try {
+      var status = 200;
+      var headers = {};
+      var body = "";
+      var bodyLength = 0;
+      // フォルダアクセスの場合は403返却.
+      if(stat.isDirectory()) {
+        errorFileResult(403, null, res);
+        return;
+      }
+      var mtime = stat.mtime.getTime();
+      headers['Last-Modified'] = httpCore.toRfc822(new Date(mtime));
+      if(appendHeaders != null) {
+        for(var k in appendHeaders) {
+          headers[k] = appendHeaders[k];
+        }
+      }
+      // リクエストヘッダを見て、If-Modified-Sinceと、ファイル日付を比較.
+      if (req.headers["if-modified-since"] != _u) {
+        if (sysParams.isContentCache() && httpCore.isCache(mtime, req.headers["if-modified-since"])) {
+          
+          // キャッシュの場合.
+          status = 304;
+          
+          // 返却処理.
+          try {
+            // クロスヘッダ対応. 
+            httpCore.setCrosHeader(headers, bodyLength, notCache, closeFlag);
+            res.writeHead(status, headers);
+            res.end(body);
+          } catch(e) {
+            log.debug("exception", e);
+          }
           return;
         }
-        var mtime = stat.mtime.getTime();
-        headers['Last-Modified'] = httpCore.toRfc822(new Date(mtime));
-        if(appendHeaders != null) {
-          for(var k in appendHeaders) {
-            headers[k] = appendHeaders[k];
-          }
-        }
-        // リクエストヘッダを見て、If-Modified-Sinceと、ファイル日付を比較.
-        if (req.headers["if-modified-since"] != _u) {
-          if (sysParams.isContentCache() && httpCore.isCache(mtime, req.headers["if-modified-since"])) {
-            
-            // キャッシュの場合.
-            status = 304;
-            
-            // 返却処理.
-            try {
-              // クロスヘッダ対応. 
-              httpCore.setCrosHeader(headers, bodyLength, notCache, closeFlag);
-              res.writeHead(status, headers);
-              res.end(body);
-            } catch(e) {
-              log.debug(e);
-            }
-            return;
-          }
-        }
-        
-        // 返却処理.
-        try {
-          // ファイル情報は非同期で読む(クロスヘッダ対応).
-          httpCore.setCrosHeader(headers, stat.size, notCache, closeFlag);
-          res.writeHead(status, headers);
-          var readableStream = fs.createReadStream(name);
-          readableStream.on('data', function (data) {
-            res.write(data);
-          });
-          readableStream.on('end', function () {
-            res.end();
-          });
-        } catch(e) {
-          log.debug("exception", e);
-        }
-      } catch (e) {
-        errorCall((e.code && e.code == 'ENOENT') ? 404 : 500, name, e);
       }
-    });
+      
+      // 返却処理.
+      try {
+        // ファイル情報は非同期で読む(クロスヘッダ対応).
+        httpCore.setCrosHeader(headers, stat.size, notCache, closeFlag);
+        res.writeHead(status, headers);
+        var readableStream = fs.createReadStream(name);
+        readableStream.on('data', function (data) {
+          res.write(data);
+        });
+        readableStream.on('end', function () {
+          res.end();
+        });
+      } catch(e) {
+        log.debug("exception", e);
+      }
+    } catch (e) {
+      // それ以外のエラー.
+      errorFileResult(500, e, res);
+    }
   }
 
   // 静的ファイル用エラー返却処理.
@@ -144,11 +145,11 @@ module.exports.create = function (_g, core, notCache, closeFlag) {
   var o = {};
 
   // 実行処理.
-  var _exec = async function(req, res, url) {
+  var _exec = function(req, res, url) {
     setImmediate(function() {
-      var rq = req; req = null;
-      var rs = res; res = null;
-      var u = url; url = null;
+      var rq = req;
+      var rs = res;
+      var u = url;
       try {
         readFile(rq, rs, u);
       } catch(e) {
@@ -158,25 +159,24 @@ module.exports.create = function (_g, core, notCache, closeFlag) {
   }
 
   // HTML実行.
-  o.execute = function(req, res, url) {
+  o.execute = async function(req, res, url) {
 
     // アクセス禁止URL.
     if (url.indexOf(constants.FORBIDDEN_URL) != -1) {
       // アクセス禁止.
       errorFileResult(403, null, res);
-      return false;
     }
     
     // 静的ファイルパスチェック.
-    if(!httpCore.checkPath(constants.HTML_DIR, baseHtmlPath, url, res)) {
+    else if(!httpCore.checkPath(constants.HTML_DIR, baseHtmlPath, url, res)) {
       // アクセス禁止.
       errorFileResult(403, null, res);
-      return false;
     }
-    
-    // ファイル返却.
-    _exec(req, res, url);
-    return true;
+    // 実行処理.
+    else {
+      // ファイル返却.
+      _exec(req, res, url);
+    }
   }
 
   return o;

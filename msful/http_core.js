@@ -98,8 +98,9 @@ module.exports = (function () {
           binLen = null;
           var len = body.length;
           for(var i = 0; i < len; i ++) {
-            n = body[i]; body[i] = null;
+            n = body[i];
             n.copy(abuf, off);
+            body[i] = null;
             off += n.length;
           }
           body = null;
