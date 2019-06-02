@@ -814,17 +814,10 @@ module.exports.create = function (_g, core, notCache, closeFlag) {
               "})(_mm);\n" +
               "_mm=undefined;\n" +
               
-              // unhandledRejection の例外ハンドリング.
-              "var _ur = null;\n" +
+              // システムログを取得.
+              "var systemLog = logger.get('system');\n" +
               
               "try {\n" +
-                
-                // unhandledRejection の例外ハンドリング(EventEmitterの上限を超えるので、現状除外).
-                "//_ur = process.once('unhandledRejection', function(reason, p) {\n" +
-                  "//try {\n" +
-                    "//_serverError(500, 'Unknonw Error.', reason);\n" +
-                  "//} catch(e){}\n" +
-                "//});\n" +
                 
                 // api実行用メソッドをResp.next実行用にセット.
                 "rtx.push(function() {\n" +
@@ -847,12 +840,8 @@ module.exports.create = function (_g, core, notCache, closeFlag) {
                 // キャッシュ削除と、closeableが動かないエラー返却を行う.
                 "cacheApi.remove(_api_name);\n" +
                 "_error(e);\n" +
+                "systemLog.error('exception', e);\n" +
               "} finally {\n" +
-              
-                // unhandledRejection の例外ハンドリングクリア(EventEmitterの上限を超えるので、現状除外).
-                "//if (_ur != null) {\n" +
-                  "//try { process.removeEventLister('unhandledRejection', _ur); } catch(ee){}\n" +
-                "//}\n" +
               "}\n" +
             "}\n" +
           "})();";
