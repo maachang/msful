@@ -36,8 +36,8 @@ module.exports.create = function (_g, core, notCache, closeFlag) {
     };
     if((mime.indexOf("text/") != -1 || mime.indexOf("xml") != -1) &&
       req.headers["accept-encoding"] && req.headers["accept-encoding"].indexOf("gzip") != -1) {
-      headers["Content-Encoding"] = "gzip";
-      if(file.isFile(name)) {
+      if(file.isFile(name + ".gz")) {
+        headers["Content-Encoding"] = "gzip";
         readTargetFile(req, res, name + ".gz", headers);
       } else {
         readTargetFile(req, res, name, headers);

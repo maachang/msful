@@ -230,7 +230,7 @@ module.exports.create = function (_g, core, notCache, closeFlag) {
         message = "internal server error";
       }
       if(core.getSysParams().getDebugMode() || status >= 500) {
-        error.error("http_error: status: " + status + " message: " + message, trace);
+        log.error("http_error: status: " + status + " message: " + message, trace);
       }
     } else if(status >= 500) {
       log.error("http_error: status: " + status + " message: " + message);
