@@ -20,42 +20,42 @@ module.exports = (function () {
     var _lg = logger; logger = null;
     _logger[name] = {
       isTraceEnabled: function() {
-        _lg.isTraceEnabled();
+        return _lg.isTraceEnabled();
       },
       trace: function(m, e) {
         _lg.trace(m, e);
         return this;
       },
       isDebugEnabled: function() {
-        _lg.isDebugEnabled();
+        return _lg.isDebugEnabled();
       },
       debug: function(m, e) {
         _lg.debug(m, e);
         return this;
       },
       isInfoEnabled: function() {
-        _lg.isInfoEnabled();
+        return _lg.isInfoEnabled();
       },
       info: function(m, e) {
         _lg.info(m, e);
         return this;
       },
       isWarnEnabled: function() {
-        _lg.isWarnEnabled();
+        return _lg.isWarnEnabled();
       },
       warn: function(m, e) {
         _lg.warn(m, e);
         return this;
       },
       isErrorEnabled: function() {
-        _lg.isErrorEnabled();
+        return _lg.isErrorEnabled();
       },
       error: function(m, e) {
         _lg.error(m, e);
         return this;
       },
       isFatalEnabled: function() {
-        _lg.isFatalEnabled();
+        return _lg.isFatalEnabled();
       },
       fatal: function(m, e) {
         _lg.fatal(m, e);

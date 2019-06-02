@@ -315,9 +315,6 @@ return users;
 
 ```javascript
 
-// Load msful's logger.
-const logger = msfulLogger();
-
 // Load log4js "system" logger.
 const log = logger.get("system");
 
