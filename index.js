@@ -174,7 +174,7 @@
       conf.getConfig() : conf.getConfig()[targetEnv];
 
     // スタートアップ処理.
-    users = require("./msful/startup")(_g, envConf, targetEnv, msfulId);
+    users = require("./msful/startup")(_g, envConf, targetEnv, consoleFlag, msfulId);
     if(!users) {
       users = {};
     }

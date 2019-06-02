@@ -19,43 +19,43 @@ module.exports = (function () {
     }
     var _lg = logger; logger = null;
     _logger[name] = {
-      isTrace: function() {
-        _lg.isTrace();
+      isTraceEnabled: function() {
+        _lg.isTraceEnabled();
       },
       trace: function(m, e) {
         _lg.trace(m, e);
         return this;
       },
-      isDebug: function() {
-        _lg.isDebug();
+      isDebugEnabled: function() {
+        _lg.isDebugEnabled();
       },
       debug: function(m, e) {
         _lg.debug(m, e);
         return this;
       },
-      isInfo: function() {
-        _lg.isInfo();
+      isInfoEnabled: function() {
+        _lg.isInfoEnabled();
       },
       info: function(m, e) {
         _lg.info(m, e);
         return this;
       },
-      isWarn: function() {
-        _lg.isWarn();
+      isWarnEnabled: function() {
+        _lg.isWarnEnabled();
       },
       warn: function(m, e) {
         _lg.warn(m, e);
         return this;
       },
-      isError: function() {
-        _lg.isError();
+      isErrorEnabled: function() {
+        _lg.isErrorEnabled();
       },
       error: function(m, e) {
         _lg.error(m, e);
         return this;
       },
-      isFatal: function() {
-        _lg.isFatal();
+      isFatalEnabled: function() {
+        _lg.isFatalEnabled();
       },
       fatal: function(m, e) {
         _lg.fatal(m, e);
@@ -68,17 +68,17 @@ module.exports = (function () {
 
   // 空のロガー.
   var _BLANK = Object.freeze({
-    isTrace: function() { return true; },
+    isTraceEnabled: function() { return true; },
     trace: function(m, e) {return this;},
-    isDebug: function() { return true; },
+    isDebugEnabled: function() { return true; },
     debug: function(m, e) {return this;},
-    isInfo: function() { return true; },
+    isInfoEnabled: function() { return true; },
     info: function(m, e) {return this;},
-    isWarn: function() { return true; },
+    isWarnEnabled: function() { return true; },
     warn: function(m, e) {return this;},
-    isError: function() { return true; },
+    isErrorEnabled: function() { return true; },
     error: function(m, e) {return this;},
-    isFatal: function() { return true; },
+    isFatalEnabled: function() { return true; },
     fatal: function(m, e) {return this;}
   });
 

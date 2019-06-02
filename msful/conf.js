@@ -7,6 +7,9 @@ module.exports = function (baseDir) {
   var constants = require("./constants");
   var file = require("../lib/file");
 
+  // システムロガー.
+  var log = msfulLogger().get("system");
+
   // コンフィグ情報.
   var _CONFIG = null;
 
@@ -171,7 +174,7 @@ module.exports = function (baseDir) {
           _readConfig(sub, n)
         }
       } catch(e) {
-        console.error("config error (" + n + "):" + e,e);
+        log.error("config error (" + n + "):" + e,e);
       }
     }
   }

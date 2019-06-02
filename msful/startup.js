@@ -1,7 +1,7 @@
 // msful スタートアップ処理.
 //
 
-module.exports = function (_g, conf, envName, serverId) {
+module.exports = function (_g, conf, envName, consoleFlag, serverId) {
   'use strict';
   var _u = undefined;
 
@@ -34,8 +34,8 @@ module.exports = function (_g, conf, envName, serverId) {
   if(file.isFile(constants.USER_STARTUP_JS)) {
 
     // jsファイルをロード.
-    return (new Function("_g", "conf", "envName", "serverId", file.readByString(constants.USER_STARTUP_JS)))
-      (_g, conf, envName, serverId);
+    return (new Function("_g", "conf", "envName", "consoleFlag", "serverId", file.readByString(constants.USER_STARTUP_JS)))
+      (_g, conf, envName, consoleFlag, serverId);
   }
 
   return {};

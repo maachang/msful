@@ -15,6 +15,9 @@ module.exports.create = function (_g, core, notCache, closeFlag) {
   // sysParams.
   var sysParams = core.getSysParams();
 
+  // システムロガー.
+  var log = msfulLogger().get("system");
+
   // 基本htmlパス.
   var baseHtmlPath = path.resolve(constants.HTML_DIR);
 
@@ -81,7 +84,7 @@ module.exports.create = function (_g, core, notCache, closeFlag) {
               res.writeHead(status, headers);
               res.end(body);
             } catch(e) {
-              console.debug(e);
+              log.debug(e);
             }
             return;
           }
@@ -100,7 +103,7 @@ module.exports.create = function (_g, core, notCache, closeFlag) {
             res.end();
           });
         } catch(e) {
-          console.debug(e);
+          log.debug("exception", e);
         }
       } catch (e) {
         errorCall((e.code && e.code == 'ENOENT') ? 404 : 500, name, e);
@@ -114,9 +117,9 @@ module.exports.create = function (_g, core, notCache, closeFlag) {
     var body = "";
     if (status >= 500) {
       if(err != null) {
-        console.error(err + " status:" + status, err);
+        log.error(err + " status:" + status, err);
       } else {
-        console.error("error: " + status);
+        log.error("error: " + status);
       }
     }
     // 静的ファイルでも、JSONエラーを返却させる.
@@ -134,7 +137,7 @@ module.exports.create = function (_g, core, notCache, closeFlag) {
       res.writeHead(status, headers);
       res.end(body);
     } catch(e) {
-      console.debug(e);
+      log.debug("exception", e);
     }
   }
 

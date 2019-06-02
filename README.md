@@ -72,6 +72,8 @@ The following document describes msful. It would be appreciated if you could bet
 
 ・ [Description for msful base module](https://github.com/maachang/msful/blob/master/docs/ENG/base_mod.md)
 
+・ [Msful initialization, description for built-in](https://github.com/maachang/msful/blob/master/docs/ENG/built_in.md)
+
 _
 
 _

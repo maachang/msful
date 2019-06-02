@@ -12,6 +12,9 @@ module.exports.create = function (_g, core, notCache, closeFlag) {
   var u = require("../../lib/u");
   var caches = require("../../lib/subs/caches");
 
+  // システムロガー.
+  var log = msfulLogger().get("system");
+
   // httpCore処理.
   var httpCore = require('../http_core');
 
@@ -119,7 +122,7 @@ module.exports.create = function (_g, core, notCache, closeFlag) {
         (!(_EXIT_SEND_ERROR_SCRIPT_FLG in m) &&
           m[_EXIT_SEND_ERROR_SCRIPT_FLG]);
     } catch(e) {
-      console.log("error _endSendScript:", e);
+      log.warn("exception", e);
     }
     return ret;
   }
@@ -148,7 +151,7 @@ module.exports.create = function (_g, core, notCache, closeFlag) {
       return true;
     } catch (e) {
       // エラーをデバッグ出力.
-      console.debug(e);
+      log.debug("exception", e);
       // レスポンスソケットクローズ.
       try {
         m.response.socket.destroy();
@@ -227,13 +230,10 @@ module.exports.create = function (_g, core, notCache, closeFlag) {
         message = "internal server error";
       }
       if(core.getSysParams().getDebugMode() || status >= 500) {
-        console.error("http_error: status: " + status + " message: " + message);
-        if(trace != _u) {
-          console.trace(trace);
-        }
+        error.error("http_error: status: " + status + " message: " + message, trace);
       }
     } else if(status >= 500) {
-      console.error("http_error: status: " + status + " message: " + message);
+      log.error("http_error: status: " + status + " message: " + message);
     }
     var headers = m.headers;
     var body = "{\"result\": \"error\", \"error\": " + status + ", \"message\": \"" + message + "\"}";
@@ -348,7 +348,7 @@ module.exports.create = function (_g, core, notCache, closeFlag) {
       m.response.statusCode = status;
       _successApi(m, status, JSON.stringify(body));
     } catch(e) {
-      console.debug(e);
+      log.debug("exception", e);
     } finally {
       _closeable(m);
     }
@@ -379,7 +379,7 @@ module.exports.create = function (_g, core, notCache, closeFlag) {
       m.response.statusCode = status;
       _successBinary(m, status, body, charset);
     } catch(e) {
-      console.debug(e);
+      log.debug("exception", e);
     } finally {
       _closeable(m);
     }
@@ -405,7 +405,7 @@ module.exports.create = function (_g, core, notCache, closeFlag) {
       m.headers['Location'] = url;
       m.rtx.success("", status);
     } catch(e) {
-      console.debug(e);
+      log.debug("exception", e);
     } finally {
       _closeable(m);
     }
@@ -425,7 +425,24 @@ module.exports.create = function (_g, core, notCache, closeFlag) {
         _errorApi(m, {status: status, message: message}, status, e);
       }
     } catch(ee) {
-      console.debug(ee);
+      log.debug("exception", ee);
+    } finally {
+      this._sendBuffer = null;
+      _closeable(m);
+    }
+  };
+
+  // 例外出力時に呼び出す.
+  ResponseContext.prototype.exception = function(e, status) {
+    var m = this._m;
+    status = status|0;
+    if(status <= 0) {
+      status = 500;
+    }
+    try {
+      _errorApi(m, e, status, e);
+    } catch(ee) {
+      log.debug("exception", ee);
     } finally {
       this._sendBuffer = null;
       _closeable(m);
@@ -483,7 +500,7 @@ module.exports.create = function (_g, core, notCache, closeFlag) {
             return "OK";
         }
       } catch(e) {
-        console.debug(e);
+        log.debug("exception", e);
       } finally {
         _closeable(m);
       }
@@ -514,7 +531,7 @@ module.exports.create = function (_g, core, notCache, closeFlag) {
           return _errorApi(_m, {status: status, message: message}, status, e);
         }
       } catch(ee) {
-        console.debug(ee);
+        log.debug("exception", ee);
       } finally {
         this._sendBuffer = null;
         _closeable(_m);

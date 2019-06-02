@@ -72,6 +72,8 @@ _
 
 ・[msful基本モジュールに対する説明](https://github.com/maachang/msful/blob/master/docs/JP/base_mod.md)
 
+・[msful初期化、組み込みに対する説明](https://github.com/maachang/msful/blob/master/docs/JP/built_in.md)
+
 _
 
 _

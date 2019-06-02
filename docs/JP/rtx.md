@@ -128,6 +128,35 @@ _
 
 _
 
+## rtx.exception = function(e, status)
+```
+ 例外を返却します.
+
+  e : 例外情報を設定します.
+
+  status : エラーステータスを設定します.
+
+```
+
+```javascript
+// 例
+fs.stat("xxxx.jpg", function(err, value) {
+  if(err) {
+    rtx.exception(err);
+  } else {
+    // ・・・・・・・・・・・
+  }
+});
+
+> httpエラー500 で 、mimeTypeが `application/json; charset=utf-8;` で
+  body情報が {result: "error", error: 500, message: "Error: ENOENT: no such file or directory, stat 'xxxx.jpg'"} 
+  が返却されます.
+```
+
+_
+
+_
+
 ## rtx.status = function(status)
 ```
  返却ステータスを設定します.

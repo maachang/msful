@@ -128,6 +128,34 @@ _
 
 _
 
+## rtx.exception = function(e, status)
+```
+  Exception will be returned.
+
+   e: Set exception information.
+
+   status: Sets the error status.
+```
+
+```javascript
+// Example
+fs.stat("xxxx.jpg", function (err, value) {
+  if(err) {
+    rtx.exception(err);
+  } else {
+    // ...
+  }
+});
+
+> With http error 500, mimeType is `application/json; charset = utf-8;`
+   body information is {result: "error", error: 500, message: "Error: ENOENT: no such file or directory, stat 'xxxx.jpg'"}
+   Will be returned.
+```
+
+_
+
+_
+
 ## rtx.status = function(status)
 ```
  Set the return status.

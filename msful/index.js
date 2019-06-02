@@ -9,6 +9,9 @@ module.exports.create = function (
   var constants = require("./constants");
   var core = require("./core");
 
+  // システムロガー.
+  var log = msfulLogger().get("system");
+
   // httpCore.
   var httpCore = require("./http_core");
 
@@ -50,12 +53,12 @@ module.exports.create = function (
 
   // プロセス例外ハンドラ.
   process.on('uncaughtException', function(e) {
-    console.trace(e);
+    log.trace("error uncaughtException", e);
   });
 
   // promise例外ハンドラ.
   process.on('unhandledRejection', (reason) => {
-    console.trace(reason);
+    log.trace("error unhandledRejection", reason);
   });
 
   // システムパラメータを生成.
