@@ -16,7 +16,6 @@ module.exports.create = function(users, conf, port, timeout, env, serverId,
 
   // スタートアップ定義.
   var _USERS = users;
-  users = null;
 
   // confが文字列の場合は、コンフィグフォルダとして、コンフィグ情報をロード.
   // それ以外はconfオブジェクトとして、利用.
