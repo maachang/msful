@@ -7,8 +7,11 @@
  * MIT Licensed
  */
 
-(function() {
+(function(_g) {
   'use strict';
+
+  // クラスタ.
+  var cluster = require('cluster');
 
   // 基本定義情報を取得..
   var constants = require('./msful/constants');
@@ -27,6 +30,33 @@
 
   // ファイル情報.
   var file = require("./lib/file");
+
+  // msfulLoggerをグローバル展開.
+  var logger = require("./msful/logger");
+  _g.msfulLogger = function() {
+    return logger;
+  }
+
+  // systemNanoTimeを保持するファイル名.
+  var _SYSTEM_NANO_TIME_FILE = "./.systemNanoTime";
+
+  // systemNanoTimeを生成.
+  var _createSystemNanoTime = function() {
+    var nano = nums.getNanoTime();
+    file.writeByString(_SYSTEM_NANO_TIME_FILE, ""+ nano);
+    return nano;
+  }
+
+  // systemNanoTimeを取得.
+  var _getSystemNanoTime = function() {
+    return parseInt(file.readByString(_SYSTEM_NANO_TIME_FILE));
+  }
+
+  // コンフィグ情報.
+  var conf = null;
+
+  // スタートアップ情報.
+  var users = null;
 
   // コマンド引数.
   var p = null;
@@ -112,24 +142,6 @@
   // argsCmdのヘルプ情報を破棄.
   argsCmd.destroy();
 
-  // サーバIDを生成.
-  var msfulId = serverId.getId();
-
-  // systemNanoTimeを保持するファイル名.
-  var _SYSTEM_NANO_TIME_FILE = "./.systemNanoTime";
-
-  // systemNanoTimeを生成.
-  var _createSystemNanoTime = function() {
-    var nano = nums.getNanoTime();
-    file.writeByString(_SYSTEM_NANO_TIME_FILE, ""+ nano);
-    return nano;
-  }
-
-  // systemNanoTimeを取得.
-  var _getSystemNanoTime = function() {
-    return parseInt(file.readByString(_SYSTEM_NANO_TIME_FILE));
-  }
-
   // プロジェクトが存在するかチェック.
   if(!file.isDir(constants.HTML_DIR) ||
     !file.isDir(constants.API_DIR) ||
@@ -137,6 +149,35 @@
     !file.isDir(constants.LIB_DIR)) {
     console.log("not msful project directory.");
     process.exit(1);
+  }
+
+  // サーバIDを生成.
+  var msfulId = serverId.getId();
+
+  // クラスタがマスターでない、コンソール起動の場合.
+  if(!cluster.isMaster || consoleFlag) {
+    // 実行環境名を取得.
+    var targetEnv = env;
+    if(!targetEnv) {
+      targetEnv = process.env[constants.ENV_ENV];
+      if(!targetEnv) {
+        // 何も設定されていない場合のデフォルト値.
+        targetEnv = constants.DEFAULT_ENV;
+      }
+    }
+
+    // コンフィグ情報.
+    conf = require("./msful/conf")(constants.CONF_DIR);
+
+    // 実行環境用のコンフィグが存在する場合は、そちらを取得.
+    var envConf = (!conf.getConfig()[targetEnv]) ?
+      conf.getConfig() : conf.getConfig()[targetEnv];
+
+    // スタートアップ処理.
+    users = require("./msful/startup")(_g, envConf, targetEnv, msfulId);
+    if(!users) {
+      users = {};
+    }
   }
 
   // コンソール実行.
@@ -148,15 +189,16 @@
       var nanoTime = file.isFile(_SYSTEM_NANO_TIME_FILE) ?
         _getSystemNanoTime() : nums.getNanoTime();
 
-      cons.create("" + argv_params[3], env, msfulId, nanoTime);
+      cons.create(
+        _g, "" + argv_params[3], users, conf, env, msfulId, nanoTime);
     } else {
-      cons.create(null, env, msfulId, nums.getNanoTime());
+      cons.create(
+        _g, null, users, conf, env, msfulId, nums.getNanoTime());
     }
     return;
   }
 
   // クラスタ起動.
-  var cluster = require('cluster');
   if (cluster.isMaster) {
 
     // psyncを初期化.
@@ -201,6 +243,7 @@
   } else {
     
     // ワーカー起動.
-    require('./msful/index.js').create(port, timeout, contentsCache, env, msfulId, _getSystemNanoTime());
+    require('./msful/index.js').create(
+      _g, users, conf, port, timeout, contentsCache, env, msfulId, _getSystemNanoTime());
   }
-})()
+})(global)

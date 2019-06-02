@@ -26,6 +26,10 @@ module.exports = (function (_g) {
   // モジュールの読み込み.
   o.loadModules = function(consoleFlag) {
     consoleFlag = consoleFlag == true;
+    
+    modules["logger"] = Object.freeze(msfulLogger());
+    modules["users"] = Object.freeze(sysParams.getUsers());
+
     modules["file"] = Object.freeze(file);
     modules["pfile"] = Object.freeze(require("../lib/pfile")); 
     modules["psync"] = Object.freeze(require("../lib/psync")(sysParams.getSystemNanoTime()));
@@ -36,7 +40,7 @@ module.exports = (function (_g) {
     modules["fcipher"] = Object.freeze(require("../lib/fcipher"));
     modules["uniqueId"] = Object.freeze(require("../lib/uniqueId"));
     modules["httpClient"] = Object.freeze(require("../lib/http_client"));
-    modules["phttpc"] = Object.freeze(require("../lib/phttpc")); 
+    modules["phttpc"] = Object.freeze(require("../lib/phttpc"));
     
     // インスタンス生成側.
     if(!consoleFlag) {

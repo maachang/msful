@@ -2,13 +2,14 @@
 //
 //
 
-module.exports = (function(_g) {
-  'use strict';
+// _g : Global variable.
+// conf : Configuration definition is set.
+// envName: The execution environment name is set.
+'use strict';
 
-  // Set the initial condition to `startup`.
-  const startup = {};
+// Set the initial condition to `users`.
+const users = {};
 
 
 
-  return startup;
-})(global);
+return users;

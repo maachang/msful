@@ -2,7 +2,8 @@
 //
 //
 
-module.exports.create = function (port, timeout, contentsCacheMode, args_env, msfulId, systemNanoTime) {
+module.exports.create = function (
+  _g, users, conf, port, timeout, contentsCacheMode, args_env, msfulId, systemNanoTime) {
   'use strict';
   var http = require('http');
   var constants = require("./constants");
@@ -60,7 +61,7 @@ module.exports.create = function (port, timeout, contentsCacheMode, args_env, ms
   // システムパラメータを生成.
   var sysParams = require("./sysparams");
   sysParams = sysParams.create(
-    constants.CONF_DIR,
+    users, conf,
     port, timeout, args_env, msfulId,
     contentsCacheMode, null, null, null, 
     systemNanoTime, null
@@ -74,8 +75,8 @@ module.exports.create = function (port, timeout, contentsCacheMode, args_env, ms
   core.loadModules();
 
   // exec系の展開.
-  execApi = execApi.create(core, sysParams.isNotCache(), sysParams.isCloseFlag());
-  execHtml = execHtml.create(core, sysParams.isNotCache(), sysParams.isCloseFlag());
+  execApi = execApi.create(_g, core, sysParams.isNotCache(), sysParams.isCloseFlag());
+  execHtml = execHtml.create(_g, core, sysParams.isNotCache(), sysParams.isCloseFlag());
 
   // サーバー生成.
   var server = createHttp(execute);

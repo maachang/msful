@@ -7,13 +7,13 @@ module.exports = Object.freeze((function () {
   var o = {};
   
   // バージョン.
-  o.VERSION = "0.1.34";
+  o.VERSION = "0.1.35";
   
   // アプリ名.
   o.NAME = "msful";
   
   // アプリ詳細名.
-  o.DETAIL_NAME="micro service RESTFul API Server";
+  o.DETAIL_NAME = "micro service RESTFul API Server";
   
   // copyright.
   o.COPY_RIGHT = "Copyright(c) 2019 maachang.";
@@ -102,6 +102,16 @@ module.exports = Object.freeze((function () {
 
   // 環境変数: 通信クローズモード.
   o.ENV_CLOSE_FLAG = "MSFUL_CLOSE_FLAG";
+
+
+  // コンフィグ: ロガー用コンフィグ.
+  o.CONF_LOGGER_NAME = "logConf";
+
+  // ユーザスタートアップファイル名.
+  o.USER_STARTUP_FILE = "startup.js";
+
+  // ユーザスタートアップ定義.
+  o.USER_STARTUP_JS = "./" + o.USER_STARTUP_FILE;
   
   // タイトル表示.
   o.viewTitle = function(out,enter) {

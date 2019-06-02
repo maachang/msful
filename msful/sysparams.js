@@ -8,11 +8,21 @@
 //
 //
 
-module.exports.create = function(confDir, port, timeout, env, serverId,
+module.exports.create = function(users, conf, port, timeout, env, serverId,
   contentCache, contentClose, notCache, closeFlag, systemNanoTime, debugMode) {
 
+  // 定義.
   var constants = require("./constants");
-  var conf = require("./conf")(confDir);
+
+  // スタートアップ定義.
+  var _USERS = users;
+  users = null;
+
+  // confが文字列の場合は、コンフィグフォルダとして、コンフィグ情報をロード.
+  // それ以外はconfオブジェクトとして、利用.
+  if(typeof(conf) == "string") {
+    conf = require("./conf")(conf);
+  }
 
   // バインドポート.
   var _PORT = port;
@@ -53,6 +63,11 @@ module.exports.create = function(confDir, port, timeout, env, serverId,
   var _DEBUG_MODE = debugMode;
 
   var o = {};
+
+  // スタートアップ定義オブジェクト.
+  o.getUsers = function() {
+    return _USERS;
+  }
 
   // 現状の動作条件を取得.
   o.getEnvironment = function() {

@@ -157,7 +157,7 @@ module.exports = function (baseDir) {
         // ファイルの場合.
         if(file.isFile(n)) {
           v = new Function(
-            "return (function(_g){\nreturn (" + _cutComment(file.readByString(n)) + ")\n})(global);"
+            "return (function(_g){\nreturn (" + _cutComment(file.readByString(n)) + ");\n})(global);"
           )();
           p = name.indexOf(".");
           if(p != -1) {

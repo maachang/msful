@@ -2,7 +2,7 @@
 //
 //
 
-module.exports.create = function (core, notCache, closeFlag) {
+module.exports.create = function (_g, core, notCache, closeFlag) {
   'use strict';
   var _u = undefined
   var fs = require('fs');

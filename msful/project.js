@@ -52,23 +52,17 @@ module.exports.create = function (projectName) {
   value = strs.changeString(value, "{{projectName}}", projectName);
   value = strs.changeString(value, "{{user}}", process.env['username'] || process.env['USER'] || "");
   fs.writeFileSync(baseDir + "package.json", value);
+  value = null;
 
-  // スタートアップ用スクリプトファイルの作成.
-  fs.writeFileSync(baseDir + constants.STARTUP_SCRIPT,
-    "// Write a script that will be executed at msful startup.\n\n" +
-    "module.exports = function(_g) {\n" +
-    "  'use strict';\n" +
-    "  \n" +
-    "  // Set the initial condition to `startup`.\n" +
-    "  const startup = {};\n" +
-    "  \n" +
-    "  \n" +
-    "  \n" +
-    "  \n" +
-    "  \n" +
-    "  return startup;\n" +
-    "})(global);\n" +
-    "\n");
+  // conf/logConf.jsをコピー.
+  value = fs.readFileSync(__dirname + "/../project/conf/logConf.js");
+  fs.writeFileSync(baseDir + "conf/logConf.js", value);
+  value = null;
+
+  // startup.jsをコピー.
+  value = fs.readFileSync(__dirname + "/../project/startup.js");
+  fs.writeFileSync(baseDir + "startup.js", value);
+  value = null;
   
   // サーバIDを生成.
   // 起動引数で、プロジェクト名設定で作成されている場合は、そのフォルダ配下にサーバIDを生成する.

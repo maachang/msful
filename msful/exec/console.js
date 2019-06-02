@@ -1,7 +1,7 @@
 // console msful.
 //
 
-module.exports.create = function (fileName, args_env, msfulId, systemNanoTime) {
+module.exports.create = function (_g, fileName, users, conf, args_env, msfulId, systemNanoTime) {
   'use strict';
   var _u = undefined;
   var out = function(n) {process.stdout.write(n);}
@@ -22,7 +22,7 @@ module.exports.create = function (fileName, args_env, msfulId, systemNanoTime) {
 
     var sysParams = require("../sysparams");
     sysParams = sysParams.create(
-      constants.CONF_DIR,null, null, env, id, null, null, null, null, nanoTime, null
+      users, conf,null, null, env, id, null, null, null, null, nanoTime, null
     )
     core.setSysParams(sysParams);
 
