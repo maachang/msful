@@ -9,9 +9,6 @@ module.exports.create = function (
   var constants = require("./constants");
   var core = require("./core");
 
-  // システムロガー.
-  var log = msfulLogger().get("system");
-
   // httpCore.
   var httpCore = require("./http_core");
 
@@ -49,7 +46,7 @@ module.exports.create = function (
     return http.createServer(function (req, res) {
       var c = cc;
       httpCore.request(req, res, c);
-    })
+    });
   }
 
   // プロセス例外ハンドラ.
