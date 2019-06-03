@@ -846,7 +846,6 @@ module.exports.create = function (_g, core, notCache, closeFlag) {
                 // キャッシュ削除と、closeableが動かないエラー返却を行う.
                 "cacheApi.remove(_api_name);\n" +
                 "_error(e);\n" +
-                "systemLog.error('exception', e);\n" +
               "} finally {\n" +
               "}\n" +
             "}\n" +
