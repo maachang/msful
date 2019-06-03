@@ -216,18 +216,18 @@ module.exports.create = function (_g, core, notCache, closeFlag) {
         status = e["status"]|0;
         if(e["message"]) {
           message = "" + e["message"];
-        } else {
-          message = "error " + status;
         }
       }
       // 例外が発生した場合は、エラー返却.
       // ただし、ファイルが存在しない場合は、４０４返却.
       else if (e.code && e.code == 'ENOENT') {
         status = 404;
-        message = "not found";
       } else {
         status = 500;
-        message = "internal server error";
+      }
+      // メッセージが存在しない.
+      if(!message) {
+        message = httpCore.getMessaeg(status);
       }
       if(core.getSysParams().getDebugMode() || status >= 500) {
         if(log.isErrorEnabled()) {
@@ -241,6 +241,10 @@ module.exports.create = function (_g, core, notCache, closeFlag) {
           "[" + httpCore.getIp(m.request) + "]");
       }
     }
+    // error 404 と 500 の場合は、メッセージを書き換える.
+    if(status == 404 || status == 500) {
+      message = httpCore.getMessage(status);
+    }
     var headers = m.headers;
     var body = "{\"result\": \"error\", \"error\": " + status + ", \"message\": \"" + message + "\"}";
     httpCore.setCrosHeader(headers, httpCore.utf8Length(body), notCache, closeFlag);
@@ -251,8 +255,9 @@ module.exports.create = function (_g, core, notCache, closeFlag) {
   }
 
   // エラー処理(readApi外でエラー処理を呼び出す場合)
-  var _outError = function(res, e, status, trace, headers) {
+  var _outError = function(req, res, e, status, trace, headers) {
     return _errorApi({
+      request: req,
       response: res,
       headers: (!headers) ? {} : headers
     }, e, status, trace);
@@ -891,7 +896,7 @@ module.exports.create = function (_g, core, notCache, closeFlag) {
         var u = url;
         readApi(rq, rs, d, u);
       } catch(e) {
-        _outError(rs, e);
+        _outError(rq, rs, e);
       }
     })
   }
@@ -902,11 +907,11 @@ module.exports.create = function (_g, core, notCache, closeFlag) {
     // アクセス禁止URL.
     if (url.indexOf(constants.FORBIDDEN_URL) != -1) {
       // アクセス禁止.
-      _outError(res, {status: 403, message: "error: 403"}, 403);
+      _outError(req, res, {status: 403, message: "error: 403"}, 403);
     }
     // WebAPIのパスチェック.
     else if(!httpCore.checkPath(constants.API_PATH, baseApiPath, url, res)) {
-      _outError(res, {status: 403, message: "It is an illegal URL."}, 403);
+      _outError(req, res, {status: 403, message: "It is an illegal URL."}, 403);
     }
     // 実行処理
     else {

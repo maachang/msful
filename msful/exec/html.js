@@ -114,25 +114,34 @@ module.exports.create = function (_g, core, notCache, closeFlag) {
 
   // 静的ファイル用エラー返却処理.
   var errorFileResult = function(status, err, res, req) {
+    status = status|0;
+    if(status <= 0) {
+      status = 500;
+    }
     var headers = {};
     var body = "";
-    if (status >= 500) {
+    var message = (err && err['message']) ? err['message'] : httpCore.getMessage(status);
+    if(status >= 500) {
       if(log.isErrorEnabled()) {
-        if(err != null) {
-          log.error(err + " status:" + status,
+        if(err) {
+          log.error("status: " + status + " message: " + message,
             "[" + httpCore.getIp(req) + "]", err);
         } else {
-          log.error("error: " + status,
+          log.error("statis: " + status + " message: " + message,
             "[" + httpCore.getIp(req) + "]");
         }
       }
+    }
+    // error 404 と 500 の場合は、メッセージを書き換える.
+    if(status == 404 || status == 500) {
+      message = httpCore.getMessage(status);
     }
     // 静的ファイルでも、JSONエラーを返却させる.
     headers['Content-Type'] = "text/javascript; charset=utf-8;";
     headers['Pragma'] = 'no-cache';
     body = "{\"result\": \"error\", \"status\": " + status;
-    if(err) {
-      body += ", \"message\": \"" + err["message"] + "\"}";
+    if(message) {
+      body += ", \"message\": \"" + message + "\"}";
     } else {
       body += "}";
     }
