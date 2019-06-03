@@ -227,7 +227,7 @@ module.exports.create = function (_g, core, notCache, closeFlag) {
       }
       // メッセージが存在しない.
       if(!message) {
-        message = httpCore.getMessaeg(status);
+        message = httpCore.getMessage(status);
       }
       if(core.getSysParams().getDebugMode() || status >= 500) {
         if(log.isErrorEnabled()) {

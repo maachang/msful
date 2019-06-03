@@ -54,12 +54,12 @@ module.exports.create = function (
 
   // プロセス例外ハンドラ.
   process.on('uncaughtException', function(e) {
-    log.trace("error uncaughtException", e);
+    console.trace("error uncaughtException", e);
   });
 
   // promise例外ハンドラ.
   process.on('unhandledRejection', (reason) => {
-    log.trace("error unhandledRejection", reason);
+    console.trace("error unhandledRejection", reason);
   });
 
   // システムパラメータを生成.
