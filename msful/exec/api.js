@@ -230,10 +230,16 @@ module.exports.create = function (_g, core, notCache, closeFlag) {
         message = "internal server error";
       }
       if(core.getSysParams().getDebugMode() || status >= 500) {
-        log.error("http_error: status: " + status + " message: " + message, trace);
+        if(log.isErrorEnabled()) {
+          log.error("http_error: status: " + status + " message: " + message,
+            "[" + httpCore.getIp(m.request) + "]", trace);
+        }
       }
     } else if(status >= 500) {
-      log.error("http_error: status: " + status + " message: " + message);
+      if(log.isErrorEnabled()) {
+        log.error("http_error: status: " + status + " message: " + message,
+          "[" + httpCore.getIp(m.request) + "]");
+      }
     }
     var headers = m.headers;
     var body = "{\"result\": \"error\", \"error\": " + status + ", \"message\": \"" + message + "\"}";

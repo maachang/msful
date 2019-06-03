@@ -45,6 +45,19 @@ module.exports = (function () {
     return ret;
   }
 
+  // ipアドレスを取得.
+  var _getIp = function(request) {
+    return request.headers['x-forwarded-for']
+      ? request.headers['x-forwarded-for']
+      : (request.connection && request.connection.remoteAddress)
+      ? request.connection.remoteAddress
+      : (request.connection.socket && request.connection.socket.remoteAddress)
+      ? request.connection.socket.remoteAddress
+      : (request.socket && request.socket.remoteAddress)
+      ? request.socket.remoteAddress
+      : '0.0.0.0';
+  }
+
   // httpサーバ開始処理.
   var _request = function(req, res, call) {
     // postデータのダウンロード.
@@ -258,6 +271,11 @@ module.exports = (function () {
   // trueの場合は、キャッシュデータ.
   o.isCache = function(a, b) {
     return parseInt(a / 1000) == parseInt(new Date(b).getTime() / 1000);
+  }
+
+  // ipアドレスを取得.
+  o.getIp = function(req) {
+    return _getIp(req);
   }
 
   return o;

@@ -51,7 +51,7 @@ module.exports.create = function (_g, core, notCache, closeFlag) {
   var readTargetFile = function(req, res, name, appendHeaders) {
     var stat = file.stat(name);
     if(stat == null) {
-      errorFileResult(404, null, res);
+      errorFileResult(404, null, res, req);
       return;
     }
     try {
@@ -61,7 +61,7 @@ module.exports.create = function (_g, core, notCache, closeFlag) {
       var bodyLength = 0;
       // フォルダアクセスの場合は403返却.
       if(stat.isDirectory()) {
-        errorFileResult(403, null, res);
+        errorFileResult(403, null, res, req);
         return;
       }
       var mtime = stat.mtime.getTime();
@@ -108,19 +108,23 @@ module.exports.create = function (_g, core, notCache, closeFlag) {
       }
     } catch (e) {
       // それ以外のエラー.
-      errorFileResult(500, e, res);
+      errorFileResult(500, e, res, req);
     }
   }
 
   // 静的ファイル用エラー返却処理.
-  var errorFileResult = function(status, err, res) {
+  var errorFileResult = function(status, err, res, req) {
     var headers = {};
     var body = "";
     if (status >= 500) {
-      if(err != null) {
-        log.error(err + " status:" + status, err);
-      } else {
-        log.error("error: " + status);
+      if(log.isErrorEnabled()) {
+        if(err != null) {
+          log.error(err + " status:" + status,
+            "[" + httpCore.getIp(req) + "]", err);
+        } else {
+          log.error("error: " + status,
+            "[" + httpCore.getIp(req) + "]");
+        }
       }
     }
     // 静的ファイルでも、JSONエラーを返却させる.
@@ -153,7 +157,7 @@ module.exports.create = function (_g, core, notCache, closeFlag) {
       try {
         readFile(rq, rs, u);
       } catch(e) {
-        errorFileResult(500, e, rs);
+        errorFileResult(500, e, rs, rq);
       }
     });
   }
@@ -164,13 +168,13 @@ module.exports.create = function (_g, core, notCache, closeFlag) {
     // アクセス禁止URL.
     if (url.indexOf(constants.FORBIDDEN_URL) != -1) {
       // アクセス禁止.
-      errorFileResult(403, null, res);
+      errorFileResult(403, null, res, req);
     }
     
     // 静的ファイルパスチェック.
     else if(!httpCore.checkPath(constants.HTML_DIR, baseHtmlPath, url, res)) {
       // アクセス禁止.
-      errorFileResult(403, null, res);
+      errorFileResult(403, null, res, req);
     }
     // 実行処理.
     else {
