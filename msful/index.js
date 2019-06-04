@@ -28,7 +28,7 @@ module.exports.create = function (
   });
 
   // promise例外ハンドラ.
-  process.on('unhandledRejection', (reason) => {
+  process.on('unhandledRejection', function(reason) {
     console.trace("error unhandledRejection", reason);
   });
 
@@ -75,12 +75,16 @@ module.exports.create = function (
   server.setTimeout(sysParams.getTimeout());
 
   // キープアライブタイムアウトをセット.
-  if(typeof(server.keepAliveTimeout) == "function") {
-    server.keepAliveTimeout(1500);
-  }
+  server.keepAliveTimeout = 2500;
 
   // maxHeadersCountはゼロにセット.
   server.maxHeadersCount = 0;
+
+  // http.socketオプションを設定.
+  server.on("connection", function(socket) {
+    socket.setNoDelay(true);
+    socket.setKeepAlive(false, 0);
+  });
 
   // 指定ポートで待つ.
   server.listen(sysParams.getPort());
