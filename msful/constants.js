@@ -7,7 +7,7 @@ module.exports = Object.freeze((function () {
   var o = {};
   
   // バージョン.
-  o.VERSION = "0.1.39";
+  o.VERSION = "0.1.40";
   
   // アプリ名.
   o.NAME = "msful";

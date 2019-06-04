@@ -2,7 +2,7 @@
 //
 //
 
-module.exports.create = function (_g, core, notCache, closeFlag) {
+module.exports.create = function (_g, core) {
   'use strict';
   var _u = undefined
   var fs = require('fs');
@@ -11,6 +11,11 @@ module.exports.create = function (_g, core, notCache, closeFlag) {
   var constants = require("../constants");
   var u = require("../../lib/u");
   var caches = require("../../lib/subs/caches");
+
+  var sysParams = core.getSysParams();
+  var notCache = sysParams.isNotCache();
+  var closeFlag = sysParams.isCloseFlag();
+  var debugMode = sysParams.getDebugMode();
 
   // システムロガー.
   var log = msfulLogger().get("system");
@@ -229,17 +234,13 @@ module.exports.create = function (_g, core, notCache, closeFlag) {
       if(!message) {
         message = httpCore.getMessage(status);
       }
-      if(core.getSysParams().getDebugMode() || status >= 500) {
-        if(log.isErrorEnabled()) {
-          log.error("http_error: status: " + status + " message: " + message,
-            "[" + httpCore.getIp(m.request) + "]", trace);
-        }
-      }
-    } else if(status >= 500) {
-      if(log.isErrorEnabled()) {
+      if((debugMode || status >= 500) && log.isErrorEnabled()) {
         log.error("http_error: status: " + status + " message: " + message,
-          "[" + httpCore.getIp(m.request) + "]");
+          "[" + httpCore.getIp(m.request) + "]", trace);
       }
+    } else if((debugMode || status >= 500) && log.isErrorEnabled()) {
+      log.error("http_error: status: " + status + " message: " + message,
+        "[" + httpCore.getIp(m.request) + "]");
     }
     // error 404 と 500 の場合は、メッセージを書き換える.
     if(status == 404 || status == 500) {
@@ -902,7 +903,7 @@ module.exports.create = function (_g, core, notCache, closeFlag) {
   }
 
   // API実行.
-  o.execute = async function(req, res, url, data) {
+  o.execute = function(req, res, url, data) {
 
     // アクセス禁止URL.
     if (url.indexOf(constants.FORBIDDEN_URL) != -1) {

@@ -2,7 +2,7 @@
 //
 //
 
-module.exports.create = function (_g, core, notCache, closeFlag) {
+module.exports.create = function (_g, core) {
   'use strict';
   var _u = undefined
   var fs = require('fs');
@@ -16,6 +16,9 @@ module.exports.create = function (_g, core, notCache, closeFlag) {
   // sysParams.
   var sysParams = core.getSysParams();
   var configEnv = sysParams.getConfigEnv()
+  var notCache = sysParams.isNotCache();
+  var closeFlag = sysParams.isCloseFlag();
+  var contentCache = sysParams.isContentCache();
 
   // システムロガー.
   var log = msfulLogger().get("system");
@@ -73,7 +76,7 @@ module.exports.create = function (_g, core, notCache, closeFlag) {
       }
       // リクエストヘッダを見て、If-Modified-Sinceと、ファイル日付を比較.
       if (req.headers["if-modified-since"] != _u) {
-        if (sysParams.isContentCache() && httpCore.isCache(mtime, req.headers["if-modified-since"])) {
+        if (contentCache && httpCore.isCache(mtime, req.headers["if-modified-since"])) {
           
           // キャッシュの場合.
           status = 304;
@@ -172,7 +175,7 @@ module.exports.create = function (_g, core, notCache, closeFlag) {
   }
 
   // HTML実行.
-  o.execute = async function(req, res, url) {
+  o.execute = function(req, res, url) {
 
     // アクセス禁止URL.
     if (url.indexOf(constants.FORBIDDEN_URL) != -1) {

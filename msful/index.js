@@ -12,10 +12,6 @@ module.exports.create = function (
   // httpCore.
   var httpCore = require("./http_core");
 
-  // exec系.
-  var execApi = require("./exec/api");
-  var execHtml = require("./exec/html");
-
   // 正しいURLを取得.
   var getUrl = function (req) {
     var u = req.url;
@@ -24,29 +20,6 @@ module.exports.create = function (
       return u;
     }
     return u.substring(0, p);
-  }
-
-  // HTTP実行.
-  var execute = function(req, res, data) {
-    // URLを取得.
-    var url = getUrl(req);
-    
-    // APIアクセス.
-    if (url.indexOf(constants.URL_API_PATH) == 0) {
-      execApi.execute(req, res, url, data);
-    // コンテンツアクセス.
-    } else {
-      execHtml.execute(req, res, url);
-    }
-  }
-
-  // httpサーバ生成.
-  var createHttp = function (call) {
-    var cc = call;
-    return http.createServer(function (req, res) {
-      var c = cc;
-      httpCore.request(req, res, c);
-    });
   }
 
   // プロセス例外ハンドラ.
@@ -76,14 +49,38 @@ module.exports.create = function (
   core.loadModules();
 
   // exec系の展開.
-  execApi = execApi.create(_g, core, sysParams.isNotCache(), sysParams.isCloseFlag());
-  execHtml = execHtml.create(_g, core, sysParams.isNotCache(), sysParams.isCloseFlag());
+  var execApi = require("./exec/api").create(_g, core);
+  var execHtml = require("./exec/html").create(_g, core);
+
+  // HTTP実行.
+  var execute = function(req, res, data) {
+    // URLを取得.
+    var url = getUrl(req);
+    
+    // APIアクセス.
+    if (url.indexOf(constants.URL_API_PATH) == 0) {
+      execApi.execute(req, res, url, data);
+    // コンテンツアクセス.
+    } else {
+      execHtml.execute(req, res, url);
+    }
+  }
 
   // サーバー生成.
-  var server = createHttp(execute);
+  var server = http.createServer(function (req, res) {
+    httpCore.request(req, res, execute);
+  });
   
   // タイムアウトセット.
   server.setTimeout(sysParams.getTimeout());
+
+  // キープアライブタイムアウトをセット.
+  if(typeof(server.keepAliveTimeout) == "function") {
+    server.keepAliveTimeout(1500);
+  }
+
+  // maxHeadersCountはゼロにセット.
+  server.maxHeadersCount = 0;
 
   // 指定ポートで待つ.
   server.listen(sysParams.getPort());
