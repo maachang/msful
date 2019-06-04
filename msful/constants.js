@@ -7,7 +7,7 @@ module.exports = Object.freeze((function () {
   var o = {};
   
   // バージョン.
-  o.VERSION = "0.1.40";
+  o.VERSION = "0.1.41";
   
   // アプリ名.
   o.NAME = "msful";
@@ -100,7 +100,7 @@ module.exports = Object.freeze((function () {
   // 環境変数: WebAPIキャッシュモード.
   o.ENV_NOT_CACHE = "MSFUL_NOT_CACHE";
 
-  // 環境変数: 通信クローズモード.
+  // 環境変数: WebAPIクローズモード.
   o.ENV_CLOSE_FLAG = "MSFUL_CLOSE_FLAG";
 
 

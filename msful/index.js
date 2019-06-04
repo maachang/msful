@@ -3,7 +3,8 @@
 //
 
 module.exports.create = function (
-  _g, users, conf, port, timeout, contentsCacheMode, args_env, msfulId, systemNanoTime) {
+  _g, users, conf, port, timeout, contentsCacheMode,
+  contentsClose, args_env, msfulId, systemNanoTime) {
   'use strict';
   var http = require('http');
   var constants = require("./constants");
@@ -37,7 +38,7 @@ module.exports.create = function (
   sysParams = sysParams.create(
     users, conf,
     port, timeout, args_env, msfulId,
-    contentsCacheMode, null, null, null, 
+    contentsCacheMode, contentsClose, null, null, 
     systemNanoTime, null
   )
 

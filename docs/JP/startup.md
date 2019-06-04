@@ -115,6 +115,28 @@ _
 
 _
 
+## 静的なコンテンツ送信後に、コネクションクローズする.
+
+http通信ではkeepAliveと言う機能がありますが、この機能を利用すると、通信の再利用をしてくれます.
+
+静的なコンテンツの場合は、特別な理由が無い限りkeepAliveはONにしとくと良いでしょう。
+
+ただ、コネクションクローズをしたい場合は(true)を設定することで、keepAliveを無効に出来ます。
+
+```
+ msful -s false
+```
+
+or 
+
+```
+ msful --close false
+```
+
+_
+
+_
+
 ## 通信タイムアウト値を設定.
 
 このオプションはレスポンスを返却するタイムアウトを設定します。またこの単位は「ミリ秒」単位で設定します
@@ -185,6 +207,10 @@ MSFUL_TIMEOUT
 MSFUL_CONTENTS_CACHE
   export MSFUL_CONTENTS_CACHE=false
   静的なコンテンツに対して、キャッシュをする(true)、しない(false)を設定します.
+
+MSFUL_CONTENTS_CLOSE
+  export MSFUL_CONTENTS_CLOSE=false
+  静的なコンテンツに対して、送信後クローズする場合は(true)、しない(false)を設定します.
 
 MSFUL_ENV
   export MSFUL_ENV=staging

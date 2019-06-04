@@ -16,9 +16,8 @@ module.exports.create = function (_g, core) {
   // sysParams.
   var sysParams = core.getSysParams();
   var configEnv = sysParams.getConfigEnv()
-  var notCache = sysParams.isNotCache();
-  var closeFlag = sysParams.isCloseFlag();
   var contentCache = sysParams.isContentCache();
+  var contentClose = sysParams.isContentClose();
 
   // システムロガー.
   var log = msfulLogger().get("system");
@@ -84,7 +83,7 @@ module.exports.create = function (_g, core) {
           // 返却処理.
           try {
             // クロスヘッダ対応. 
-            httpCore.setCrosHeader(headers, bodyLength, notCache, closeFlag);
+            httpCore.setCrosHeader(headers, bodyLength, contentCache, contentClose);
             res.writeHead(status, headers);
             res.end(body);
           } catch(e) {
@@ -97,7 +96,7 @@ module.exports.create = function (_g, core) {
       // 返却処理.
       try {
         // ファイル情報は非同期で読む(クロスヘッダ対応).
-        httpCore.setCrosHeader(headers, stat.size, notCache, closeFlag);
+        httpCore.setCrosHeader(headers, stat.size, contentCache, contentClose);
         res.writeHead(status, headers);
         var readableStream = fs.createReadStream(name);
         readableStream.on('data', function (data) {
@@ -150,7 +149,7 @@ module.exports.create = function (_g, core) {
     }
     try {
       // クロスヘッダ対応.
-      httpCore.setCrosHeader(headers, httpCore.utf8Length(body), notCache, closeFlag);
+      httpCore.setCrosHeader(headers, httpCore.utf8Length(body), contentCache, contentClose);
       res.writeHead(status, headers);
       res.end(body);
     } catch(e) {

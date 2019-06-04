@@ -102,6 +102,7 @@ msful [cmd]
    -p [--port] number Set the server bind port number.
    -t [--timeout] Set HTTP response timeout value.
    -c [--cache] [true/false] Configure the content cache.
+   -s [--close] [true/false] Close after sending content.
    -e [--env] Set the execution environment conditions of msful.
    -l [--cluster] Set the number of clusters of HTTP execution part of msful.
 ```

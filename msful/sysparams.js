@@ -10,6 +10,7 @@
 
 module.exports.create = function(users, conf, port, timeout, env, serverId,
   contentCache, contentClose, notCache, closeFlag, systemNanoTime, debugMode) {
+  'use strict';
 
   // 定義.
   var constants = require("./constants");
@@ -70,9 +71,9 @@ module.exports.create = function(users, conf, port, timeout, env, serverId,
 
   // 現状の動作条件を取得.
   o.getEnvironment = function() {
-    if(!_ENV) {
+    if(_ENV == null) {
       _ENV = process.env[_ENV_ENV];
-      if(!_ENV) {
+      if(_ENV == null) {
         // 何も設定されていない場合のデフォルト値.
         _ENV = constants.DEFAULT_ENV;
       }
@@ -82,9 +83,9 @@ module.exports.create = function(users, conf, port, timeout, env, serverId,
 
   // バインドポートを取得.
   o.getPort = function() {
-    if(!_PORT) {
+    if(_PORT == null) {
       _PORT = process.env[_ENV_PORT];
-      if(!_PORT) {
+      if(_PORT == null) {
         // 何も設定されていない場合のデフォルト値.
         _PORT = constants.PORT;
       }
@@ -94,9 +95,9 @@ module.exports.create = function(users, conf, port, timeout, env, serverId,
 
   // 通信タイムアウトを取得.
   o.getTimeout = function() {
-    if(!_TIMEOUT) {
+    if(_TIMEOUT == null) {
       _TIMEOUT = process.env[_ENV_TIMEOUT];
-      if(!_TIMEOUT) {
+      if(_TIMEOUT == null) {
         // 何も設定されていない場合のデフォルト値.
         _TIMEOUT = constants.TIMEOUT;
       }
@@ -106,9 +107,9 @@ module.exports.create = function(users, conf, port, timeout, env, serverId,
 
  // コンテンツキャッシュ条件を取得.
   o.isContentCache = function() {
-    if(!_CONTENT_CACHE) {
+    if(_CONTENT_CACHE == null) {
       _CONTENT_CACHE = process.env[_ENV_CONTENT_CACHE];
-      if(!_CONTENT_CACHE) {
+      if(_CONTENT_CACHE == null) {
         // 何も設定されていない場合のデフォルト値.
         _CONTENT_CACHE = constants.CONTENT_CACHE;
       }
@@ -118,21 +119,21 @@ module.exports.create = function(users, conf, port, timeout, env, serverId,
 
  // コンテンツクローズ条件を取得.
  o.isContentClose = function() {
-  if(!_CONTENT_CLOSE) {
+  if(_CONTENT_CLOSE == null) {
     _CONTENT_CLOSE = process.env[_ENV_CONTENT_CLOSE];
-    if(!_CONTENT_CLOSE) {
+    if(_CONTENT_CLOSE == null) {
       // 何も設定されていない場合のデフォルト値.
       _CONTENT_CLOSE = constants.CONTENT_CLOSE;
     }
   }
-  return _CONTENT_CACHE;
+  return _CONTENT_CLOSE;
 }
 
   // 通信キャッシュOffを取得.
   o.isNotCache = function() {
-    if(!_NOT_CACHE) {
+    if(_NOT_CACHE == null) {
       _NOT_CACHE = process.env[_ENV_NOT_CACHE];
-      if(!_NOT_CACHE) {
+      if(_NOT_CACHE == null) {
         // 何も設定されていない場合のデフォルト値.
         _NOT_CACHE = constants.NOT_CACHE;
       }
@@ -142,9 +143,9 @@ module.exports.create = function(users, conf, port, timeout, env, serverId,
 
   // 通信Close条件を取得.
   o.isCloseFlag = function() {
-    if(!_CLOSE_FLAG) {
+    if(_CLOSE_FLAG == null) {
       _CLOSE_FLAG = process.env[_ENV_CLOSE_FLAG];
-      if(!_CLOSE_FLAG) {
+      if(_CLOSE_FLAG == null) {
         // 何も設定されていない場合のデフォルト値.
         _CLOSE_FLAG = constants.CLOSE_FLAG;
       }
@@ -154,9 +155,9 @@ module.exports.create = function(users, conf, port, timeout, env, serverId,
 
   // デバッグモードを取得.
   o.getDebugMode = function() {
-    if(!_DEBUG_MODE) {
+    if(_DEBUG_MODE == null) {
       _DEBUG_MODE = process.env[_ENV_DEBUG];
-      if(!_DEBUG_MODE) {
+      if(_DEBUG_MODE == null) {
         // 何も設定されていない場合のデフォルト値.
         _DEBUG_MODE = constants.DEBUG_MODE;
       }

@@ -63,6 +63,7 @@
   var port = null;
   var timeout = null;
   var contentsCache = null;
+  var contentsClose = null;
   var env = null;
   var cmd = null;
   var consoleFlag = false;
@@ -76,6 +77,7 @@
   port = argsCmd.registrationParams("number", "number Set the server bind port number.", ["-p", "--port"]);
   timeout = argsCmd.registrationParams("number", "Set HTTP response timeout value.", ["-t", "--timeout"]);
   contentsCache = argsCmd.registrationParams("boolean", "[true/false] Configure the content cache.",["-c", "--cache"]);
+  contentsClose = argsCmd.registrationParams("boolean", "[true/false] Close after sending content.",["-s", "--close"]);
   env = argsCmd.registrationParams("string", "Set the execution environment conditions of msful.", ["-e", "--env"]);
   maxClusterSize = argsCmd.registrationParams("number", "Set the number of clusters of HTTP execution part of msful.", ["-l", "--cluster"]);
 
@@ -244,6 +246,7 @@
     
     // ワーカー起動.
     require('./msful/index.js').create(
-      _g, users, conf, port, timeout, contentsCache, env, msfulId, _getSystemNanoTime());
+      _g, users, conf, port, timeout, contentsCache,
+      contentsClose, env, msfulId, _getSystemNanoTime());
   }
 })(global)

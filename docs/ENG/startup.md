@@ -115,6 +115,28 @@ _
 
 _
 
+# Close connection after sending static content.
+
+There is a function called keepAlive in http communication, but with this function, you can reuse communication.
+
+For static content, keepAlive should be on unless there is a special reason.
+
+However, if you want to close the connection, you can disable keepAlive by setting (true).
+
+```
+  msful -s false
+```
+
+or
+
+```
+  msful --close false
+```
+
+_
+
+_
+
 ## Set communication timeout value.
 
 This option sets the timeout for returning the response. Also, this unit is set in "milliseconds"
@@ -185,6 +207,10 @@ MSFUL_TIMEOUT
 MSFUL_CONTENTS_CACHE
   export MSFUL_CONTENTS_CACHE = false
   Set caching(true) and not(false) for static content.
+
+MSFUL_CONTENTS_CLOSE
+  export MSFUL_CONTENTS_CLOSE = false
+  If you want to close after sending (static) for static content, set it not (false).
 
 MSFUL_ENV
   export MSFUL_ENV = staging
