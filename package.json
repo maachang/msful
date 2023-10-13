@@ -3,8 +3,9 @@
   "bin": {
     "msful": "index.js"
   },
-  "version": "0.1.42",
+  "version": "0.1.43",
   "description": "Web API server for micro service.",
+  "copyright": "Copyright(c) 2023 maachang.",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -28,7 +29,7 @@
   },
   "homepage": "https://github.com/maachang/msful#readme",
   "dependencies": {
-    "big-integer": "^1.6.43"
+    "big-integer": "^1.6.51"
   },
   "devDependencies": {}
 }

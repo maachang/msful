@@ -88,7 +88,8 @@ module.exports.create = function (
   });
 
   // 指定ポートで待つ.
-  server.listen(sysParams.getPort());
+  // ipv4設定(node17からBIND先のIPアドレス設定してない場合はipv6となるので0.0.0.0でBIND).
+  server.listen(sysParams.getPort(), "0.0.0.0");
 
   // 起動結果をログ出力.
   console.info("## listen: " + sysParams.getPort() +

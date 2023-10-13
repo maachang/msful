@@ -4,19 +4,22 @@
 module.exports = Object.freeze((function () {
   'use strict';
   
+  // package.json.
+  const pkg = require("../package.json");
+
   var o = {};
   
   // バージョン.
-  o.VERSION = "0.1.42";
+  o.VERSION = pkg.version;
   
   // アプリ名.
-  o.NAME = "msful";
+  o.NAME = pkg.name;
   
   // アプリ詳細名.
-  o.DETAIL_NAME = "micro service RESTFul API Server";
+  o.DETAIL_NAME = pkg.dependencies;
   
   // copyright.
-  o.COPY_RIGHT = "Copyright(c) 2019 maachang.";
+  o.COPY_RIGHT = pkg.copyright;
   
   // HTMLフォルダ.
   o.HTML_DIR = "./html";
